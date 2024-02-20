@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=69.1.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "impresso"
+authors = [
+  { name="Daniele Guido", email="daniele.guido@uni.lu"}
+]
+description = "A Python package to explore the impresso API"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+dynamic = ["version"]
+
+dependencies = [
+  "python-socketio",
+  "requests",
+  "black"
+]
+
+[project.urls]
+Homepage = "https://github.com/impresso/impresso-py"
+Documentaton = "https://impresso-py.readthedocs.io/en/latest/" 
+Issues = "https://github.com/impresso/impresso-py/issues"
+Endpoint = "https://dev.impresso-project.ch/api/public"
+
+[tool.setuptools.dynamic]
+version = {attr = "impresso.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["impresso", "impresso.*"]
+namespaces = false
