@@ -35,6 +35,7 @@ requires = ["poetry-core"]
 in-project = true
 
 [tool.poetry.dependencies]
+PyJWT = "2.8.0"
 pydantic = "2.6.4"
 python = "^3.11.0"
 python-dateutil = "2.9.0"
