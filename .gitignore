@@ -1,2 +1,19 @@
+# Pycharm
+.idea/
+__pycache__/
+/.pytest_cache/
+
+# jupyter
+.ipynb_checkpoints/
+
+.mypy_cache/
+
+.DS_Store
+.venv
+.env
+.env.*
+!.env.example
 
 impresso.egg-info/*
+tmp/
+dist/
