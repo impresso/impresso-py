@@ -1,10 +1,11 @@
 """Impresso Python client library."""
 
-from impresso.api_client import ApiClient, Configuration
+from impresso.api_client import AuthenticatedClient
+from impresso.client_base import ImpressoApiResourcesBase
 from impresso.util.token import get_jwt_status
 
 
-class ImpressoClient:
+class ImpressoClient(ImpressoApiResourcesBase):
     """
     Client class for the impresso Python libary. This is the context for all
     interactions with the impresso API.
@@ -13,10 +14,10 @@ class ImpressoClient:
     def __init__(self, api_url: str, api_bearer_token: str):
         self._api_url = api_url
         self._api_bearer_token = api_bearer_token
-        self._api_client = ApiClient(
-            Configuration(
-                host=self._api_url,
-                access_token=self._api_bearer_token,
+        super().__init__(
+            AuthenticatedClient(
+                base_url=self._api_url,
+                token=self._api_bearer_token,
             )
         )
 

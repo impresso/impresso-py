@@ -1,5 +1,5 @@
 import unittest
-from impresso import echo
+from impresso.echo import echo
 
 
 class TestEcho(unittest.TestCase):

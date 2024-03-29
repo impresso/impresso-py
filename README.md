@@ -15,7 +15,7 @@ poetry build
 
 We are using Poetry for dependency management. To install the package in development mode, run the following command in the root directory of the project:
 
-```
+```shell
 poetry install
 ```
 
@@ -23,39 +23,47 @@ This will create and activate a virtual environment with all the dependencies in
 
 ## Testing
 
-```
+```shell
 poetry run pytest
+```
+
+## Linting
+
+```shell
+poetry run pytest
+poetry run flake8 impresso tests
+poetry run mypy impresso tests
 ```
 
 ## OpenAPI client generation
 
-The OpenAPI client is generated using the OpenAPI Generator. The following command generates the client code in the `tmp/generated` directory:
+The OpenAPI client is generated using the OpenAPI Generator. The following command generates the client code in the `tmp/generated` directory and copies it over to the source directory:
 
 ```shell
-# Download the OpenAPI spec because we cannot reach localhost from the docker container
-wget http://localhost:3030/swagger.json -P tmp/
-
-# Generate the client code
-docker run --rm \
-  -v ${PWD}:/local openapitools/openapi-generator-cli generate \
-  -i /local/tmp/swagger.json \
-  -g python \
-  -o /local/tmp/generated \
-  --skip-validate-spec \
-  --additional-properties=generateSourceCodeOnly=true,packageName=impresso.api_client
+rm -rf tmp/generated
+mkdir -p tmp/generated
+pushd .
+cd tmp/generated
+poetry run openapi-python-client \
+  generate \
+  --url http://localhost:3030/swagger.json \
+  --config ../../.apigen.yml
+popd
+rm -rf impresso/api_client
+mv tmp/generated/impresso/api_client impresso/
 ```
 
-The code is generated in the `tmp/generated` directory. We keep the generated code in a different place so a bit of manual work is needed to get it there:
+We also need to generate Pydantic models from the OpenAPI spec. This is done separately as follows:
 
 ```shell
-# copy to source directory
-cp -r tmp/generated/impresso/api_client impresso/
-# move tests to tests/ directory
-mkdir -p tests/api_client
-mv impresso/api_client/test/* tests/api_client/
-# remove the test directory
-rm -r impresso/api_client/test
-
-# remove the generated directory and swagger.json
-rm -r tmp/generated tmp/swagger.json
+poetry run datamodel-codegen \
+  --url http://localhost:3030/swagger.json \
+  --input-file-type openapi \
+  --output impresso/api_models.py \
+  --disable-timestamp \
+  --field-constraints \
+  --enum-field-as-literal all \
+  --use-annotated \
+  --use-generic-container-types \
+  --output-model-type pydantic_v2.BaseModel
 ```

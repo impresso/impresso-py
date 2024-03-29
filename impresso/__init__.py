@@ -1,1 +1,1 @@
-from impresso.client import connect
+from impresso.client import connect  # noqa
