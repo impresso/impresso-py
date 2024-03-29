@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Literal
 
 
 class GetSearchOrderBy(str, Enum):
@@ -13,3 +14,15 @@ class GetSearchOrderBy(str, Enum):
 
     def __str__(self) -> str:
         return str(self.value)
+
+
+GetSearchOrderByLiteral = Literal[
+    "date",
+    "id",
+    "name",
+    "relevance",
+    "-date",
+    "-relevance",
+    "-name",
+    "-id",
+]

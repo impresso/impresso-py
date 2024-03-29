@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Literal
 
 
 class GetArticlesOrderBy(str, Enum):
@@ -9,3 +10,11 @@ class GetArticlesOrderBy(str, Enum):
 
     def __str__(self) -> str:
         return str(self.value)
+
+
+GetArticlesOrderByLiteral = Literal[
+    "date",
+    "relevance",
+    "-date",
+    "-relevance",
+]

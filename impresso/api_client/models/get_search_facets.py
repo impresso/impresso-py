@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Literal
 
 
 class GetSearchFacets(str, Enum):
@@ -20,3 +21,22 @@ class GetSearchFacets(str, Enum):
 
     def __str__(self) -> str:
         return str(self.value)
+
+
+GetSearchFacetsLiteral = Literal[
+    "accessRight",
+    "collection",
+    "contentLength",
+    "country",
+    "daterange",
+    "language",
+    "location",
+    "month",
+    "nag",
+    "newspaper",
+    "partner",
+    "person",
+    "topic",
+    "type",
+    "year",
+]

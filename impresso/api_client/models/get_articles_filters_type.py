@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Literal
 
 
 class GetArticlesFiltersType(str, Enum):
@@ -10,3 +11,12 @@ class GetArticlesFiltersType(str, Enum):
 
     def __str__(self) -> str:
         return str(self.value)
+
+
+GetArticlesFiltersTypeLiteral = Literal[
+    "hasTextContents",
+    "issue",
+    "newspaper",
+    "page",
+    "uid",
+]
