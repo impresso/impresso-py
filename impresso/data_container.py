@@ -1,5 +1,6 @@
 from typing import Any, Generic, TypeVar
 from pydantic import BaseModel
+from pandas import DataFrame
 
 IT = TypeVar("IT")
 T = TypeVar("T", bound=BaseModel)
@@ -23,3 +24,8 @@ class DataContainer(Generic[IT, T]):
     def pydantic(self) -> T:
         """Return the data as a pydantic model."""
         return self._pydantic_model.model_validate(self.raw)
+
+    @property
+    def df(self) -> DataFrame:
+        """Return the data as a pandas dataframe."""
+        return DataFrame.from_dict(self._data)
