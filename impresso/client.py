@@ -38,14 +38,14 @@ Click on the following link to access the login page: {URL}
 
 
 def connect(
-    public_api_url: str = "api.impresso-project.ch",
+    public_api_url: str = "https://api.impresso-project.ch",
 ) -> ImpressoClient:
     """
     Connect to the Impresso API and return a client object.
     """
 
     # Show a prompt to the user with the explanations on how to get the token.
-    print(_PROMPT.format(URL=f"https://{public_api_url}/login"))
+    print(_PROMPT.format(URL=f"{public_api_url}/login"))
     token = input("🔑 Enter your token: ")
     token_status, _ = get_jwt_status(token)
 

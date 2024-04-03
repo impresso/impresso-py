@@ -1,5 +1,7 @@
 from typing import List, Union
 
+from pandas import DataFrame, json_normalize
+
 from impresso.api_client.api.search import get_search
 from impresso.api_client.models.get_search_facets import (
     GetSearchFacets,
@@ -7,8 +9,8 @@ from impresso.api_client.models.get_search_facets import (
 )
 from impresso.api_client.models.get_search_filters_item import GetSearchFiltersItem
 from impresso.api_client.models.get_search_group_by import (
-    GetSearchGroupByLiteral,
     GetSearchGroupBy,
+    GetSearchGroupByLiteral,
 )
 from impresso.api_client.models.get_search_order_by import (
     GetSearchOrderBy,
@@ -19,6 +21,15 @@ from impresso.api_models import SearchResponseSchema
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
 from impresso.util.py import get_enum_from_literal
+
+
+class SearchDataContainer(DataContainer):
+    """Response of a search call."""
+
+    @property
+    def df(self) -> DataFrame:
+        """Return the data as a pandas dataframe."""
+        return json_normalize(self._data.to_dict()["data"]).set_index("uid")
 
 
 class SearchResource(Resource):
@@ -46,4 +57,4 @@ class SearchResource(Resource):
             limit=limit,
             skip=skip,
         )
-        return DataContainer(result, SearchResponseSchema)
+        return SearchDataContainer(result, SearchResponseSchema)
