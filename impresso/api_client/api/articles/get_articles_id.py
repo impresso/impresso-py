@@ -10,7 +10,7 @@ from ...types import Response
 
 
 def _get_kwargs(
-    id: int,
+    id: str,
 ) -> Dict[str, Any]:
     _kwargs: Dict[str, Any] = {
         "method": "get",
@@ -54,14 +54,14 @@ def _build_response(
 
 
 def sync_detailed(
-    id: int,
+    id: str,
     *,
     client: AuthenticatedClient,
 ) -> Response[Union[Any, Article]]:
-    """Retrieves a single resource with the given id from the service.
+    """Get an article by its UID
 
     Args:
-        id (int):
+        id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -83,14 +83,14 @@ def sync_detailed(
 
 
 def sync(
-    id: int,
+    id: str,
     *,
     client: AuthenticatedClient,
 ) -> Optional[Union[Any, Article]]:
-    """Retrieves a single resource with the given id from the service.
+    """Get an article by its UID
 
     Args:
-        id (int):
+        id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -107,14 +107,14 @@ def sync(
 
 
 async def asyncio_detailed(
-    id: int,
+    id: str,
     *,
     client: AuthenticatedClient,
 ) -> Response[Union[Any, Article]]:
-    """Retrieves a single resource with the given id from the service.
+    """Get an article by its UID
 
     Args:
-        id (int):
+        id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -129,19 +129,18 @@ async def asyncio_detailed(
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
-
     return _build_response(client=client, response=response)
 
 
 async def asyncio(
-    id: int,
+    id: str,
     *,
     client: AuthenticatedClient,
 ) -> Optional[Union[Any, Article]]:
-    """Retrieves a single resource with the given id from the service.
+    """Get an article by its UID
 
     Args:
-        id (int):
+        id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

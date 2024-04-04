@@ -48,7 +48,7 @@ black = "24.3.0"
 datamodel-code-generator = "0.25.5"
 flake8 = "7.0.0"
 mypy = "1.9.0"
+# openapi-python-client = "0.19.1"
 # Waiting for a PR to be accepted. Meanwhile update with:
-# poetry run pip install --ignore-installed https://github.com/theorm/openapi-python-client/archive/refs/heads/main.zip
-openapi-python-client = "0.19.1"
+openapi-python-client = {git = "https://github.com/theorm/openapi-python-client.git#name=openapi-python-client", branch = "main"}
 pytest = "8.1.1"
