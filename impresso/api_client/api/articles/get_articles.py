@@ -5,10 +5,11 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.article_search_response import ArticleSearchResponse
+from ...models.error import Error
 from ...models.get_articles_filters import GetArticlesFilters
 from ...models.get_articles_order_by import GetArticlesOrderBy
 from ...models.get_articles_resolve import GetArticlesResolve
+from ...models.get_articles_response_200 import GetArticlesResponse200
 from ...types import UNSET, Response, Unset
 
 
@@ -57,14 +58,27 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Any, ArticleSearchResponse]]:
+) -> Optional[Union[Any, Error, GetArticlesResponse200]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = ArticleSearchResponse.from_dict(response.json())
+        response_200 = GetArticlesResponse200.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
-        response_401 = cast(Any, None)
+        response_401 = Error.from_dict(response.json())
+
         return response_401
+    if response.status_code == HTTPStatus.FORBIDDEN:
+        response_403 = Error.from_dict(response.json())
+
+        return response_403
+    if response.status_code == HTTPStatus.NOT_FOUND:
+        response_404 = Error.from_dict(response.json())
+
+        return response_404
+    if response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
+        response_422 = Error.from_dict(response.json())
+
+        return response_422
     if response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
         response_500 = cast(Any, None)
         return response_500
@@ -76,7 +90,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Any, ArticleSearchResponse]]:
+) -> Response[Union[Any, Error, GetArticlesResponse200]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -93,7 +107,7 @@ def sync_detailed(
     filters: Union[Unset, "GetArticlesFilters"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     skip: Union[Unset, int] = UNSET,
-) -> Response[Union[Any, ArticleSearchResponse]]:
+) -> Response[Union[Any, Error, GetArticlesResponse200]]:
     """Find articles that match the given query
 
     Args:
@@ -108,7 +122,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, ArticleSearchResponse]]
+        Response[Union[Any, Error, GetArticlesResponse200]]
     """
 
     kwargs = _get_kwargs(
@@ -134,7 +148,7 @@ def sync(
     filters: Union[Unset, "GetArticlesFilters"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     skip: Union[Unset, int] = UNSET,
-) -> Optional[Union[Any, ArticleSearchResponse]]:
+) -> Optional[Union[Any, Error, GetArticlesResponse200]]:
     """Find articles that match the given query
 
     Args:
@@ -149,7 +163,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, ArticleSearchResponse]
+        Union[Any, Error, GetArticlesResponse200]
     """
 
     return sync_detailed(
@@ -170,7 +184,7 @@ async def asyncio_detailed(
     filters: Union[Unset, "GetArticlesFilters"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     skip: Union[Unset, int] = UNSET,
-) -> Response[Union[Any, ArticleSearchResponse]]:
+) -> Response[Union[Any, Error, GetArticlesResponse200]]:
     """Find articles that match the given query
 
     Args:
@@ -185,7 +199,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, ArticleSearchResponse]]
+        Response[Union[Any, Error, GetArticlesResponse200]]
     """
 
     kwargs = _get_kwargs(
@@ -209,7 +223,7 @@ async def asyncio(
     filters: Union[Unset, "GetArticlesFilters"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     skip: Union[Unset, int] = UNSET,
-) -> Optional[Union[Any, ArticleSearchResponse]]:
+) -> Optional[Union[Any, Error, GetArticlesResponse200]]:
     """Find articles that match the given query
 
     Args:
@@ -224,7 +238,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, ArticleSearchResponse]
+        Union[Any, Error, GetArticlesResponse200]
     """
 
     return (

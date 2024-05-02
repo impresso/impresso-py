@@ -2,22 +2,22 @@ from typing import Any, Dict, Type, TypeVar
 
 from attrs import define as _attrs_define
 
-from ..models.authentication_request_strategy import AuthenticationRequestStrategy
+from ..models.authentication_create_request_strategy import AuthenticationCreateRequestStrategy
 
-T = TypeVar("T", bound="AuthenticationRequest")
+T = TypeVar("T", bound="AuthenticationCreateRequest")
 
 
 @_attrs_define
-class AuthenticationRequest:
-    """Authentication request
+class AuthenticationCreateRequest:
+    """Request body for the authentication endpoint
 
     Attributes:
-        strategy (AuthenticationRequestStrategy):
+        strategy (AuthenticationCreateRequestStrategy):
         email (str):
         password (str):
     """
 
-    strategy: AuthenticationRequestStrategy
+    strategy: AuthenticationCreateRequestStrategy
     email: str
     password: str
 
@@ -42,16 +42,16 @@ class AuthenticationRequest:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        strategy = AuthenticationRequestStrategy(d.pop("strategy"))
+        strategy = AuthenticationCreateRequestStrategy(d.pop("strategy"))
 
         email = d.pop("email")
 
         password = d.pop("password")
 
-        authentication_request = cls(
+        authentication_create_request = cls(
             strategy=strategy,
             email=email,
             password=password,
         )
 
-        return authentication_request
+        return authentication_create_request

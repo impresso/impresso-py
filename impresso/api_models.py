@@ -3,27 +3,14 @@
 
 from __future__ import annotations
 
-from typing import Any, Mapping, Optional, Sequence
+from datetime import date
+from typing import Any, Mapping, Optional, Sequence, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, RootModel
 from typing_extensions import Annotated, Literal
 
 
-class User(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    id: int
-    username: str
-    firstname: str
-    lastname: str
-    isStaff: bool
-    isActive: bool
-    isSuperuser: bool
-    uid: str
-
-
-class AuthRequestSchema(BaseModel):
+class AuthenticationCreateRequest(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
@@ -37,13 +24,96 @@ class Authentication(BaseModel):
     payload: Optional[Mapping[str, Any]] = None
 
 
-class AuthResponseSchema(BaseModel):
+class BaseFind(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    accessToken: str
-    authentication: Authentication
-    user: User
+    limit: Annotated[
+        int, Field(description='The number of items returned in this response')
+    ]
+    skip: Annotated[
+        int, Field(description='The number of items skipped in this response')
+    ]
+    total: Annotated[
+        int, Field(description='The total number of items matching the query')
+    ]
+    info: Annotated[
+        Mapping[str, Any],
+        Field(description='Additional information about the response.'),
+    ]
+    data: Sequence
+
+
+class BaseUser(BaseModel):
+    uid: Annotated[
+        str,
+        Field(
+            examples=['local-dg'],
+            pattern='^([a-zA-Z-]+)$',
+            title='unique identifier for the user',
+        ),
+    ]
+    username: Annotated[
+        str,
+        Field(
+            examples=['daniele.guido'],
+            pattern='^([a-z.]+)$',
+            title='unique username for the user for other humans',
+        ),
+    ]
+
+
+class Collection(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(max_length=50, min_length=2)]
+    name: Annotated[str, Field(max_length=50, min_length=2)]
+    description: Annotated[str, Field(max_length=500)]
+    status: Annotated[
+        str,
+        Field(
+            examples=['PRI'],
+            max_length=3,
+            min_length=2,
+            title='Status of the collection',
+        ),
+    ]
+    creationDate: str
+    lastModifiedDate: str
+    countItems: Annotated[
+        Union[int, str], Field(title='Number of items in the collection')
+    ]
+    creator: BaseUser
+    labels: Optional[Sequence[str]] = None
+
+
+class Params(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[Optional[str], Field(None, description='The collection id')]
+    status: Annotated[
+        Optional[Literal['DEL']], Field(None, description='The status of the operation')
+    ]
+
+
+class Task(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    task_id: Annotated[Optional[str], Field(None, description='The ID of the task')]
+    creationDate: Annotated[
+        Optional[str], Field(None, description='When task was created')
+    ]
+
+
+class CollectionsRemoveResponse(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    params: Params
+    task: Annotated[Task, Field(description='Deletion task details')]
 
 
 class Entity(BaseModel):
@@ -56,6 +126,87 @@ class Entity(BaseModel):
     ]
 
 
+class Error(BaseModel):
+    message: str
+    data: Optional[Mapping[str, Any]] = None
+
+
+class Q(RootModel[str]):
+    root: Annotated[str, Field(max_length=500, min_length=2)]
+
+
+class QItem(RootModel[str]):
+    root: Annotated[str, Field(max_length=500, min_length=2)]
+
+
+class Filter(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    context: Optional[Literal['include', 'exclude']] = 'include'
+    op: Optional[Literal['AND', 'OR']] = 'OR'
+    type: Annotated[
+        str,
+        Field(
+            description="Possible values are in 'search.validators:eachFilterValidator.type.choices'"
+        ),
+    ]
+    precision: Optional[Literal['fuzzy', 'soft', 'exact', 'partial']] = 'exact'
+    q: Optional[Union[Q, Sequence[QItem]]] = None
+    daterange: Annotated[
+        Optional[str],
+        Field(
+            None,
+            pattern='\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z TO \\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z',
+        ),
+    ]
+    uids: Optional[str] = None
+    uid: Optional[str] = None
+
+
+class NewCollection(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    name: Annotated[str, Field(max_length=50, min_length=2)]
+    description: Annotated[Optional[str], Field(None, max_length=500)]
+    status: Annotated[
+        Optional[str],
+        Field(
+            None,
+            examples=['PRI'],
+            max_length=3,
+            min_length=2,
+            title='Status of the collection',
+        ),
+    ]
+
+
+class NewspaperIssue(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='The unique identifier of the issue')]
+    cover: Annotated[str, Field(description='TODO')]
+    labels: Annotated[Sequence[str], Field(description='The labels of the issue')]
+    fresh: Annotated[bool, Field(description='TODO')]
+    accessRights: Annotated[str, Field(description='TODO: list available options')]
+    date: Annotated[AwareDatetime, Field(description='The date of the issue')]
+    year: Annotated[str, Field(description='The year of the issue')]
+
+
+class NewspaperProperty(BaseModel):
+    model_config = ConfigDict(
+        extra='allow',
+    )
+    name: Annotated[str, Field(description='The name of the property')]
+    value: Annotated[str, Field(description='The value of the property')]
+    label: Annotated[str, Field(description='The label of the property')]
+    isUrl: Annotated[
+        Optional[bool], Field(None, description='Whether the value is a URL')
+    ]
+
+
 class Page(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -64,9 +215,7 @@ class Page(BaseModel):
     num: Annotated[int, Field(description='The number of the page')]
     issueUid: Annotated[str, Field(description='Reference to the article')]
     newspaperUid: Annotated[str, Field(description='Unique ID of the newspaper')]
-    iiif: Annotated[
-        Optional[str], Field(None, description='The IIF image file name of the page')
-    ]
+    iiif: Annotated[str, Field(description='The IIF image file name of the page')]
     iiifThumbnail: Annotated[
         str, Field(description='The IIF image thumbnail file name of the page')
     ]
@@ -90,6 +239,244 @@ class Page(BaseModel):
     ]
 
 
+class TimeCoverage(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    from_: Annotated[Optional[date], Field(None, alias='from')]
+    to: Optional[date] = None
+
+
+class TextReuseCluster(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[
+        str,
+        Field(
+            description='ID of the text reuse passage',
+            examples=['abc123'],
+            pattern='^[a-zA-Z0-9-_]+$',
+            title='Passage ID',
+        ),
+    ]
+    lexicalOverlap: Annotated[
+        Optional[float],
+        Field(
+            None,
+            description='Percentage of overlap between passages in the cluster',
+            ge=0.0,
+            le=100.0,
+        ),
+    ]
+    clusterSize: Annotated[
+        Optional[float],
+        Field(None, description='Number of passages in cluster', ge=0.0),
+    ]
+    connectedClustersCount: Annotated[
+        Optional[float], Field(None, description='Number of connected clusters', ge=0.0)
+    ]
+    timeCoverage: Annotated[
+        Optional[TimeCoverage],
+        Field(None, description='Time window covered by documents in the cluster'),
+    ]
+
+
+class Facet(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    type: Annotated[Optional[str], Field(None, description='Facet type')]
+    numBuckets: Annotated[Optional[int], Field(None, description='Number of buckets')]
+    buckets: Optional[Sequence[Mapping[str, Any]]] = None
+
+
+class TextReuseClusterDetails(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    facets: Sequence[Facet]
+    resolution: Annotated[
+        Optional[Literal['year', 'month', 'day']],
+        Field(None, description="Resolution for the 'date' facet"),
+    ]
+
+
+class Article1(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='ID of the article', title='Article ID')]
+
+
+class TextReuseCluster1(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='ID of the cluster', title='Cluster ID')]
+    clusterSize: Annotated[
+        int, Field(description='The size of the cluster', title='Cluster size')
+    ]
+    timeDifferenceDay: Annotated[
+        Optional[int],
+        Field(
+            None,
+            description='The time difference in days between the two articles',
+            title='Time difference in days',
+        ),
+    ]
+    lexicalOverlap: Annotated[
+        Optional[float],
+        Field(
+            None,
+            description='The lexical overlap between the two articles',
+            title='Lexical overlap',
+        ),
+    ]
+
+
+class ConnectedClusters(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='ID of the connected cluster')]
+
+
+class Newspaper1(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='ID of the newspaper')]
+
+
+class Issue(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='ID of the issue')]
+
+
+class TextReusePassage(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[
+        str,
+        Field(
+            description='ID of the text reuse passage',
+            examples=['abc123'],
+            pattern='^[a-zA-Z0-9-_@:]+$',
+            title='Passage ID',
+        ),
+    ]
+    article: Annotated[
+        Article1,
+        Field(
+            description='Details of the article the passage belongs to',
+            title='Article details',
+        ),
+    ]
+    textReuseCluster: Annotated[
+        TextReuseCluster1,
+        Field(
+            description='Details of the cluster the passage belongs to',
+            title='Cluster details',
+        ),
+    ]
+    offsetStart: Annotated[
+        int, Field(description='Offset of the passage in the article text', ge=0)
+    ]
+    offsetEnd: Annotated[
+        int, Field(description='Offset of the passage in the article text', ge=0)
+    ]
+    content: Annotated[str, Field(description='Textual content of the passage')]
+    title: Annotated[
+        str,
+        Field(
+            description='Title of the content item (article) where this passage was found'
+        ),
+    ]
+    connectedClusters: Annotated[
+        Optional[ConnectedClusters],
+        Field(None, description='Details of the connected clusters'),
+    ]
+    isFront: Annotated[Optional[bool], Field(None, description='TBD')]
+    size: Annotated[Optional[int], Field(None, description='Size of the passage')]
+    newspaper: Annotated[
+        Optional[Newspaper1], Field(None, description='Newspaper details')
+    ]
+    issue: Annotated[Optional[Issue], Field(None, description='Issue details')]
+    date: Annotated[
+        Optional[AwareDatetime],
+        Field(
+            None, description='Date of the item (article) where this passage was found'
+        ),
+    ]
+    pageRegions: Annotated[
+        Sequence[str], Field(description='Bounding box of the passage in the page')
+    ]
+    pageNumbers: Annotated[
+        Sequence[int],
+        Field(description='Numbers of the pages where the passage was found'),
+    ]
+    collections: Annotated[
+        Sequence[str], Field(description='Collection IDs the passage belongs to')
+    ]
+
+
+class User(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: int
+    username: str
+    firstname: str
+    lastname: str
+    isStaff: bool
+    isActive: bool
+    isSuperuser: bool
+    uid: str
+
+
+class Solr(BaseModel):
+    endpoints: Optional[Mapping[str, str]] = None
+
+
+class Mysql(BaseModel):
+    endpoint: Optional[str] = None
+
+
+class ApiVersion(BaseModel):
+    branch: Optional[str] = None
+    revision: Optional[str] = None
+    version: Optional[str] = None
+
+
+class DocumentsDateSpan(BaseModel):
+    model_config = ConfigDict(
+        extra='allow',
+    )
+    start: Optional[AwareDatetime] = None
+    end: Optional[AwareDatetime] = None
+
+
+class Newspapers(BaseModel):
+    name: Optional[str] = None
+
+
+class VersionDetails(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    solr: Solr
+    mysql: Mysql
+    version: str
+    apiVersion: ApiVersion
+    documentsDateSpan: DocumentsDateSpan
+    newspapers: Mapping[str, Newspapers]
+    features: Mapping[str, Mapping[str, Any]]
+
+
 class Article(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -108,21 +495,88 @@ class Article(BaseModel):
     persons: Optional[Sequence[Entity]] = None
 
 
-class SearchResponseSchema(BaseModel):
+class AuthenticationCreateResponse(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    data: Sequence[Article]
-    limit: Annotated[
-        int, Field(description='The number of articles returned in this response')
+    accessToken: str
+    authentication: Authentication
+    user: User
+
+
+class CollectableItemGroup(BaseModel):
+    itemId: Annotated[
+        Optional[str], Field(None, description='The id of the collectable item group')
     ]
-    skip: Annotated[
-        int, Field(description='The number of articles skipped in this response')
+    contentType: Annotated[
+        Optional[Literal['A', 'E', 'P', 'I']],
+        Field(
+            None,
+            description='Content type of the collectable item group: (A)rticle, (E)ntities, (P)ages, (I)ssues',
+        ),
     ]
-    total: Annotated[
-        int, Field(description='The total number of articles matching the query')
+    collectionIds: Annotated[
+        Optional[Sequence[str]], Field(None, description='Ids of the collections')
     ]
-    info: Annotated[
-        Mapping[str, Any],
-        Field(description='Additional information about the search response.'),
+    searchQueries: Annotated[
+        Optional[Sequence[str]], Field(None, description='Search queries')
     ]
+    collections: Annotated[
+        Optional[Sequence[Collection]], Field(None, description='Collection objects')
+    ]
+    latestDateAdded: Annotated[
+        Optional[AwareDatetime],
+        Field(None, description='The latest date added to the collectable item group'),
+    ]
+
+
+class Newspaper(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='The unique identifier of the newspaper')]
+    acronym: Annotated[str, Field(description='The acronym of the newspaper')]
+    labels: Annotated[Sequence[str], Field(description='The labels of the newspaper')]
+    languages: Annotated[
+        Sequence[str],
+        Field(description='Language codes of the languages used in the newspaper'),
+    ]
+    properties: Annotated[
+        Optional[Sequence[NewspaperProperty]], Field(None, description='TODO')
+    ]
+    included: Annotated[bool, Field(description='TODO')]
+    name: Annotated[str, Field(description='Title of the newspaper')]
+    endYear: Annotated[
+        str, Field(description='Last available year of the newspaper articles')
+    ]
+    startYear: Annotated[
+        str, Field(description='First available year of the newspaper articles')
+    ]
+    firstIssue: Annotated[
+        NewspaperIssue, Field(description='First available issue of the newspaper')
+    ]
+    lastIssue: Annotated[
+        NewspaperIssue, Field(description='Last available issue of the newspaper')
+    ]
+    countArticles: Annotated[
+        int, Field(description='The number of articles in the newspaper')
+    ]
+    countIssues: Annotated[
+        int, Field(description='The number of issues in the newspaper')
+    ]
+    countPages: Annotated[
+        int, Field(description='The number of pages in the newspaper')
+    ]
+    fetched: Annotated[Optional[bool], Field(None, description='TODO')]
+    deltaYear: Annotated[
+        int, Field(description='The number of years of the newspaper available')
+    ]
+
+
+class TextReuseClusterCompound(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    cluster: TextReuseCluster
+    textSample: str
+    details: Optional[TextReuseClusterDetails] = None

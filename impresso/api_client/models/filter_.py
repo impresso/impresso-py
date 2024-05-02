@@ -2,23 +2,23 @@ from typing import Any, Dict, List, Type, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 
-from ..models.get_search_filters_item_context import GetSearchFiltersItemContext
-from ..models.get_search_filters_item_op import GetSearchFiltersItemOp
-from ..models.get_search_filters_item_precision import GetSearchFiltersItemPrecision
+from ..models.filter_context import FilterContext
+from ..models.filter_op import FilterOp
+from ..models.filter_precision import FilterPrecision
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="GetSearchFiltersItem")
+T = TypeVar("T", bound="Filter")
 
 
 @_attrs_define
-class GetSearchFiltersItem:
+class Filter:
     """A single filter criteria
 
     Attributes:
         type (str): Possible values are in 'search.validators:eachFilterValidator.type.choices'
-        context (Union[Unset, GetSearchFiltersItemContext]):  Default: GetSearchFiltersItemContext.INCLUDE.
-        op (Union[Unset, GetSearchFiltersItemOp]):  Default: GetSearchFiltersItemOp.OR.
-        precision (Union[Unset, GetSearchFiltersItemPrecision]):  Default: GetSearchFiltersItemPrecision.EXACT.
+        context (Union[Unset, FilterContext]):  Default: FilterContext.INCLUDE.
+        op (Union[Unset, FilterOp]):  Default: FilterOp.OR.
+        precision (Union[Unset, FilterPrecision]):  Default: FilterPrecision.EXACT.
         q (Union[List[str], Unset, str]):
         daterange (Union[Unset, str]):
         uids (Union[Unset, str]):
@@ -26,9 +26,9 @@ class GetSearchFiltersItem:
     """
 
     type: str
-    context: Union[Unset, GetSearchFiltersItemContext] = GetSearchFiltersItemContext.INCLUDE
-    op: Union[Unset, GetSearchFiltersItemOp] = GetSearchFiltersItemOp.OR
-    precision: Union[Unset, GetSearchFiltersItemPrecision] = GetSearchFiltersItemPrecision.EXACT
+    context: Union[Unset, FilterContext] = FilterContext.INCLUDE
+    op: Union[Unset, FilterOp] = FilterOp.OR
+    precision: Union[Unset, FilterPrecision] = FilterPrecision.EXACT
     q: Union[List[str], Unset, str] = UNSET
     daterange: Union[Unset, str] = UNSET
     uids: Union[Unset, str] = UNSET
@@ -93,25 +93,25 @@ class GetSearchFiltersItem:
         type = d.pop("type")
 
         _context = d.pop("context", UNSET)
-        context: Union[Unset, GetSearchFiltersItemContext]
+        context: Union[Unset, FilterContext]
         if isinstance(_context, Unset):
             context = UNSET
         else:
-            context = GetSearchFiltersItemContext(_context)
+            context = FilterContext(_context)
 
         _op = d.pop("op", UNSET)
-        op: Union[Unset, GetSearchFiltersItemOp]
+        op: Union[Unset, FilterOp]
         if isinstance(_op, Unset):
             op = UNSET
         else:
-            op = GetSearchFiltersItemOp(_op)
+            op = FilterOp(_op)
 
         _precision = d.pop("precision", UNSET)
-        precision: Union[Unset, GetSearchFiltersItemPrecision]
+        precision: Union[Unset, FilterPrecision]
         if isinstance(_precision, Unset):
             precision = UNSET
         else:
-            precision = GetSearchFiltersItemPrecision(_precision)
+            precision = FilterPrecision(_precision)
 
         def _parse_q(data: object) -> Union[List[str], Unset, str]:
             if isinstance(data, Unset):
@@ -134,7 +134,7 @@ class GetSearchFiltersItem:
 
         uid = d.pop("uid", UNSET)
 
-        get_search_filters_item = cls(
+        filter_ = cls(
             type=type,
             context=context,
             op=op,
@@ -145,4 +145,4 @@ class GetSearchFiltersItem:
             uid=uid,
         )
 
-        return get_search_filters_item
+        return filter_

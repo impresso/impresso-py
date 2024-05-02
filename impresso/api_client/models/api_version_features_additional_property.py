@@ -3,12 +3,12 @@ from typing import Any, Dict, List, Type, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="ArticleSearchResponseInfo")
+T = TypeVar("T", bound="APIVersionFeaturesAdditionalProperty")
 
 
 @_attrs_define
-class ArticleSearchResponseInfo:
-    """Additional information about the search response."""
+class APIVersionFeaturesAdditionalProperty:
+    """ """
 
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
@@ -21,10 +21,10 @@ class ArticleSearchResponseInfo:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        article_search_response_info = cls()
+        api_version_features_additional_property = cls()
 
-        article_search_response_info.additional_properties = d
-        return article_search_response_info
+        api_version_features_additional_property.additional_properties = d
+        return api_version_features_additional_property
 
     @property
     def additional_keys(self) -> List[str]:

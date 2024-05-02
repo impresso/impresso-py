@@ -12,7 +12,7 @@ T = TypeVar("T", bound="AuthenticationResponse")
 
 @_attrs_define
 class AuthenticationResponse:
-    """Authentication response
+    """Authentication Response
 
     Attributes:
         access_token (str):

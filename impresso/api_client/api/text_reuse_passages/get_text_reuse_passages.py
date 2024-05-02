@@ -7,41 +7,35 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
 from ...models.filter_ import Filter
-from ...models.get_search_facets import GetSearchFacets
-from ...models.get_search_group_by import GetSearchGroupBy
-from ...models.get_search_order_by import GetSearchOrderBy
-from ...models.get_search_response_200 import GetSearchResponse200
+from ...models.get_text_reuse_passages_addons import GetTextReusePassagesAddons
+from ...models.get_text_reuse_passages_groupby import GetTextReusePassagesGroupby
+from ...models.get_text_reuse_passages_order_by import GetTextReusePassagesOrderBy
+from ...models.get_text_reuse_passages_response_200 import GetTextReusePassagesResponse200
 from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
-    q: Union[Unset, str] = UNSET,
-    group_by: GetSearchGroupBy = GetSearchGroupBy.ARTICLES,
-    order_by: Union[Unset, GetSearchOrderBy] = UNSET,
-    facets: Union[Unset, GetSearchFacets] = UNSET,
+    order_by: Union[Unset, GetTextReusePassagesOrderBy] = UNSET,
+    groupby: Union[Unset, GetTextReusePassagesGroupby] = UNSET,
     filters: Union[Unset, List["Filter"]] = UNSET,
+    addons: Union[Unset, "GetTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     skip: Union[Unset, int] = UNSET,
 ) -> Dict[str, Any]:
     params: Dict[str, Any] = {}
 
-    params["q"] = q
-
-    json_group_by = group_by.value
-    params["group_by"] = json_group_by
-
     json_order_by: Union[Unset, str] = UNSET
     if not isinstance(order_by, Unset):
         json_order_by = order_by.value
 
-    params["order_by"] = json_order_by
+    params["orderBy"] = json_order_by
 
-    json_facets: Union[Unset, str] = UNSET
-    if not isinstance(facets, Unset):
-        json_facets = facets.value
+    json_groupby: Union[Unset, str] = UNSET
+    if not isinstance(groupby, Unset):
+        json_groupby = groupby.value
 
-    params["facets"] = json_facets
+    params["groupby"] = json_groupby
 
     json_filters: Union[Unset, List[Dict[str, Any]]] = UNSET
     if not isinstance(filters, Unset):
@@ -50,7 +44,13 @@ def _get_kwargs(
             filters_item = filters_item_data.to_dict()
             json_filters.append(filters_item)
 
-    params["filters"] = json_filters
+    params["filters[]"] = json_filters
+
+    json_addons: Union[Unset, Dict[str, Any]] = UNSET
+    if not isinstance(addons, Unset):
+        json_addons = addons.to_dict()
+    if not isinstance(json_addons, Unset):
+        params.update(json_addons)
 
     params["limit"] = limit
 
@@ -60,7 +60,7 @@ def _get_kwargs(
 
     _kwargs: Dict[str, Any] = {
         "method": "get",
-        "url": "/search",
+        "url": "/text-reuse-passages",
         "params": params,
     }
 
@@ -69,9 +69,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Any, Error, GetSearchResponse200]]:
+) -> Optional[Union[Any, Error, GetTextReusePassagesResponse200]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = GetSearchResponse200.from_dict(response.json())
+        response_200 = GetTextReusePassagesResponse200.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -101,7 +101,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Any, Error, GetSearchResponse200]]:
+) -> Response[Union[Any, Error, GetTextReusePassagesResponse200]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -113,22 +113,20 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    group_by: GetSearchGroupBy = GetSearchGroupBy.ARTICLES,
-    order_by: Union[Unset, GetSearchOrderBy] = UNSET,
-    facets: Union[Unset, GetSearchFacets] = UNSET,
+    order_by: Union[Unset, GetTextReusePassagesOrderBy] = UNSET,
+    groupby: Union[Unset, GetTextReusePassagesGroupby] = UNSET,
     filters: Union[Unset, List["Filter"]] = UNSET,
+    addons: Union[Unset, "GetTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     skip: Union[Unset, int] = UNSET,
-) -> Response[Union[Any, Error, GetSearchResponse200]]:
-    """Find articles that match the given query
+) -> Response[Union[Any, Error, GetTextReusePassagesResponse200]]:
+    """Find text reuse passages
 
     Args:
-        q (Union[Unset, str]):
-        group_by (GetSearchGroupBy):  Default: GetSearchGroupBy.ARTICLES.
-        order_by (Union[Unset, GetSearchOrderBy]):
-        facets (Union[Unset, GetSearchFacets]):
+        order_by (Union[Unset, GetTextReusePassagesOrderBy]):
+        groupby (Union[Unset, GetTextReusePassagesGroupby]):
         filters (Union[Unset, List['Filter']]):
+        addons (Union[Unset, GetTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         skip (Union[Unset, int]):
 
@@ -137,15 +135,14 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, Error, GetSearchResponse200]]
+        Response[Union[Any, Error, GetTextReusePassagesResponse200]]
     """
 
     kwargs = _get_kwargs(
-        q=q,
-        group_by=group_by,
         order_by=order_by,
-        facets=facets,
+        groupby=groupby,
         filters=filters,
+        addons=addons,
         limit=limit,
         skip=skip,
     )
@@ -160,22 +157,20 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    group_by: GetSearchGroupBy = GetSearchGroupBy.ARTICLES,
-    order_by: Union[Unset, GetSearchOrderBy] = UNSET,
-    facets: Union[Unset, GetSearchFacets] = UNSET,
+    order_by: Union[Unset, GetTextReusePassagesOrderBy] = UNSET,
+    groupby: Union[Unset, GetTextReusePassagesGroupby] = UNSET,
     filters: Union[Unset, List["Filter"]] = UNSET,
+    addons: Union[Unset, "GetTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     skip: Union[Unset, int] = UNSET,
-) -> Optional[Union[Any, Error, GetSearchResponse200]]:
-    """Find articles that match the given query
+) -> Optional[Union[Any, Error, GetTextReusePassagesResponse200]]:
+    """Find text reuse passages
 
     Args:
-        q (Union[Unset, str]):
-        group_by (GetSearchGroupBy):  Default: GetSearchGroupBy.ARTICLES.
-        order_by (Union[Unset, GetSearchOrderBy]):
-        facets (Union[Unset, GetSearchFacets]):
+        order_by (Union[Unset, GetTextReusePassagesOrderBy]):
+        groupby (Union[Unset, GetTextReusePassagesGroupby]):
         filters (Union[Unset, List['Filter']]):
+        addons (Union[Unset, GetTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         skip (Union[Unset, int]):
 
@@ -184,16 +179,15 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, Error, GetSearchResponse200]
+        Union[Any, Error, GetTextReusePassagesResponse200]
     """
 
     return sync_detailed(
         client=client,
-        q=q,
-        group_by=group_by,
         order_by=order_by,
-        facets=facets,
+        groupby=groupby,
         filters=filters,
+        addons=addons,
         limit=limit,
         skip=skip,
     ).parsed
@@ -202,22 +196,20 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    group_by: GetSearchGroupBy = GetSearchGroupBy.ARTICLES,
-    order_by: Union[Unset, GetSearchOrderBy] = UNSET,
-    facets: Union[Unset, GetSearchFacets] = UNSET,
+    order_by: Union[Unset, GetTextReusePassagesOrderBy] = UNSET,
+    groupby: Union[Unset, GetTextReusePassagesGroupby] = UNSET,
     filters: Union[Unset, List["Filter"]] = UNSET,
+    addons: Union[Unset, "GetTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     skip: Union[Unset, int] = UNSET,
-) -> Response[Union[Any, Error, GetSearchResponse200]]:
-    """Find articles that match the given query
+) -> Response[Union[Any, Error, GetTextReusePassagesResponse200]]:
+    """Find text reuse passages
 
     Args:
-        q (Union[Unset, str]):
-        group_by (GetSearchGroupBy):  Default: GetSearchGroupBy.ARTICLES.
-        order_by (Union[Unset, GetSearchOrderBy]):
-        facets (Union[Unset, GetSearchFacets]):
+        order_by (Union[Unset, GetTextReusePassagesOrderBy]):
+        groupby (Union[Unset, GetTextReusePassagesGroupby]):
         filters (Union[Unset, List['Filter']]):
+        addons (Union[Unset, GetTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         skip (Union[Unset, int]):
 
@@ -226,15 +218,14 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, Error, GetSearchResponse200]]
+        Response[Union[Any, Error, GetTextReusePassagesResponse200]]
     """
 
     kwargs = _get_kwargs(
-        q=q,
-        group_by=group_by,
         order_by=order_by,
-        facets=facets,
+        groupby=groupby,
         filters=filters,
+        addons=addons,
         limit=limit,
         skip=skip,
     )
@@ -247,22 +238,20 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    group_by: GetSearchGroupBy = GetSearchGroupBy.ARTICLES,
-    order_by: Union[Unset, GetSearchOrderBy] = UNSET,
-    facets: Union[Unset, GetSearchFacets] = UNSET,
+    order_by: Union[Unset, GetTextReusePassagesOrderBy] = UNSET,
+    groupby: Union[Unset, GetTextReusePassagesGroupby] = UNSET,
     filters: Union[Unset, List["Filter"]] = UNSET,
+    addons: Union[Unset, "GetTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     skip: Union[Unset, int] = UNSET,
-) -> Optional[Union[Any, Error, GetSearchResponse200]]:
-    """Find articles that match the given query
+) -> Optional[Union[Any, Error, GetTextReusePassagesResponse200]]:
+    """Find text reuse passages
 
     Args:
-        q (Union[Unset, str]):
-        group_by (GetSearchGroupBy):  Default: GetSearchGroupBy.ARTICLES.
-        order_by (Union[Unset, GetSearchOrderBy]):
-        facets (Union[Unset, GetSearchFacets]):
+        order_by (Union[Unset, GetTextReusePassagesOrderBy]):
+        groupby (Union[Unset, GetTextReusePassagesGroupby]):
         filters (Union[Unset, List['Filter']]):
+        addons (Union[Unset, GetTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         skip (Union[Unset, int]):
 
@@ -271,17 +260,16 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, Error, GetSearchResponse200]
+        Union[Any, Error, GetTextReusePassagesResponse200]
     """
 
     return (
         await asyncio_detailed(
             client=client,
-            q=q,
-            group_by=group_by,
             order_by=order_by,
-            facets=facets,
+            groupby=groupby,
             filters=filters,
+            addons=addons,
             limit=limit,
             skip=skip,
         )

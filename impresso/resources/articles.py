@@ -15,7 +15,13 @@ from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
 from impresso.api_client.api.articles import get_articles, get_articles_id
 from impresso.util.py import get_enum_from_literal
-from impresso.api_models import Article, SearchResponseSchema
+from impresso.api_models import Article, BaseFind
+
+
+class ArticlesResponseSchema(BaseFind):
+    """Schema for the articles response."""
+
+    data: list[Article]
 
 
 class ArticlesDataContainer(DataContainer):
@@ -68,7 +74,7 @@ class ArticlesResource(Resource):
             skip=skip,
         )
 
-        return ArticlesDataContainer(result, SearchResponseSchema)
+        return ArticlesDataContainer(result, ArticlesResponseSchema)
 
     def get(self, id: str):
         result = get_articles_id.sync(client=self._api_client, id=id)

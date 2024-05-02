@@ -20,13 +20,13 @@ class Page:
         num (int): The number of the page
         issue_uid (str): Reference to the article
         newspaper_uid (str): Unique ID of the newspaper
+        iiif (str): The IIF image file name of the page
         iiif_thumbnail (str): The IIF image thumbnail file name of the page
         access_rights (str): The access rights code
         labels (List[str]): Page labels
         has_coords (bool): Whether the page has coordinates
         has_errors (bool): Whether the page has errors
         regions (List['PageRegionsItem']): Regions of the page
-        iiif (Union[Unset, str]): The IIF image file name of the page
         obfuscated (Union[Unset, bool]): Whether the page image has been obfuscated because the user is not authorised
             to access it
         iiif_fragment (Union[Unset, str]): The IIIF fragment of the page, image file name
@@ -36,13 +36,13 @@ class Page:
     num: int
     issue_uid: str
     newspaper_uid: str
+    iiif: str
     iiif_thumbnail: str
     access_rights: str
     labels: List[str]
     has_coords: bool
     has_errors: bool
     regions: List["PageRegionsItem"]
-    iiif: Union[Unset, str] = UNSET
     obfuscated: Union[Unset, bool] = UNSET
     iiif_fragment: Union[Unset, str] = UNSET
 
@@ -54,6 +54,8 @@ class Page:
         issue_uid = self.issue_uid
 
         newspaper_uid = self.newspaper_uid
+
+        iiif = self.iiif
 
         iiif_thumbnail = self.iiif_thumbnail
 
@@ -70,8 +72,6 @@ class Page:
             regions_item = regions_item_data.to_dict()
             regions.append(regions_item)
 
-        iiif = self.iiif
-
         obfuscated = self.obfuscated
 
         iiif_fragment = self.iiif_fragment
@@ -83,6 +83,7 @@ class Page:
                 "num": num,
                 "issueUid": issue_uid,
                 "newspaperUid": newspaper_uid,
+                "iiif": iiif,
                 "iiifThumbnail": iiif_thumbnail,
                 "accessRights": access_rights,
                 "labels": labels,
@@ -91,8 +92,6 @@ class Page:
                 "regions": regions,
             }
         )
-        if iiif is not UNSET:
-            field_dict["iiif"] = iiif
         if obfuscated is not UNSET:
             field_dict["obfuscated"] = obfuscated
         if iiif_fragment is not UNSET:
@@ -113,6 +112,8 @@ class Page:
 
         newspaper_uid = d.pop("newspaperUid")
 
+        iiif = d.pop("iiif")
+
         iiif_thumbnail = d.pop("iiifThumbnail")
 
         access_rights = d.pop("accessRights")
@@ -130,8 +131,6 @@ class Page:
 
             regions.append(regions_item)
 
-        iiif = d.pop("iiif", UNSET)
-
         obfuscated = d.pop("obfuscated", UNSET)
 
         iiif_fragment = d.pop("iiifFragment", UNSET)
@@ -141,13 +140,13 @@ class Page:
             num=num,
             issue_uid=issue_uid,
             newspaper_uid=newspaper_uid,
+            iiif=iiif,
             iiif_thumbnail=iiif_thumbnail,
             access_rights=access_rights,
             labels=labels,
             has_coords=has_coords,
             has_errors=has_errors,
             regions=regions,
-            iiif=iiif,
             obfuscated=obfuscated,
             iiif_fragment=iiif_fragment,
         )

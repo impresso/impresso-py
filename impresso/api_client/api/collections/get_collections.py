@@ -5,17 +5,33 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.article import Article
 from ...models.error import Error
-from ...types import Response
+from ...models.get_collections_order_by import GetCollectionsOrderBy
+from ...models.get_collections_response_200 import GetCollectionsResponse200
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
-    id: str,
+    *,
+    uids: Union[Unset, str] = UNSET,
+    q: Union[Unset, str] = UNSET,
+    order_by: GetCollectionsOrderBy = GetCollectionsOrderBy.VALUE_0,
 ) -> Dict[str, Any]:
+    params: Dict[str, Any] = {}
+
+    params["uids"] = uids
+
+    params["q"] = q
+
+    json_order_by = order_by.value
+    params["order_by"] = json_order_by
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+
     _kwargs: Dict[str, Any] = {
         "method": "get",
-        "url": f"/articles/{id}",
+        "url": "/collections",
+        "params": params,
     }
 
     return _kwargs
@@ -23,9 +39,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Any, Article, Error]]:
+) -> Optional[Union[Any, Error, GetCollectionsResponse200]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = Article.from_dict(response.json())
+        response_200 = GetCollectionsResponse200.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -55,7 +71,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Any, Article, Error]]:
+) -> Response[Union[Any, Error, GetCollectionsResponse200]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -65,25 +81,31 @@ def _build_response(
 
 
 def sync_detailed(
-    id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[Union[Any, Article, Error]]:
-    """Get an article by its UID
+    uids: Union[Unset, str] = UNSET,
+    q: Union[Unset, str] = UNSET,
+    order_by: GetCollectionsOrderBy = GetCollectionsOrderBy.VALUE_0,
+) -> Response[Union[Any, Error, GetCollectionsResponse200]]:
+    """Find collections
 
     Args:
-        id (str):
+        uids (Union[Unset, str]):
+        q (Union[Unset, str]):
+        order_by (GetCollectionsOrderBy):  Default: GetCollectionsOrderBy.VALUE_0.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, Article, Error]]
+        Response[Union[Any, Error, GetCollectionsResponse200]]
     """
 
     kwargs = _get_kwargs(
-        id=id,
+        uids=uids,
+        q=q,
+        order_by=order_by,
     )
 
     response = client.get_httpx_client().request(
@@ -94,49 +116,61 @@ def sync_detailed(
 
 
 def sync(
-    id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[Union[Any, Article, Error]]:
-    """Get an article by its UID
+    uids: Union[Unset, str] = UNSET,
+    q: Union[Unset, str] = UNSET,
+    order_by: GetCollectionsOrderBy = GetCollectionsOrderBy.VALUE_0,
+) -> Optional[Union[Any, Error, GetCollectionsResponse200]]:
+    """Find collections
 
     Args:
-        id (str):
+        uids (Union[Unset, str]):
+        q (Union[Unset, str]):
+        order_by (GetCollectionsOrderBy):  Default: GetCollectionsOrderBy.VALUE_0.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, Article, Error]
+        Union[Any, Error, GetCollectionsResponse200]
     """
 
     return sync_detailed(
-        id=id,
         client=client,
+        uids=uids,
+        q=q,
+        order_by=order_by,
     ).parsed
 
 
 async def asyncio_detailed(
-    id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[Union[Any, Article, Error]]:
-    """Get an article by its UID
+    uids: Union[Unset, str] = UNSET,
+    q: Union[Unset, str] = UNSET,
+    order_by: GetCollectionsOrderBy = GetCollectionsOrderBy.VALUE_0,
+) -> Response[Union[Any, Error, GetCollectionsResponse200]]:
+    """Find collections
 
     Args:
-        id (str):
+        uids (Union[Unset, str]):
+        q (Union[Unset, str]):
+        order_by (GetCollectionsOrderBy):  Default: GetCollectionsOrderBy.VALUE_0.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, Article, Error]]
+        Response[Union[Any, Error, GetCollectionsResponse200]]
     """
 
     kwargs = _get_kwargs(
-        id=id,
+        uids=uids,
+        q=q,
+        order_by=order_by,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -145,26 +179,32 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[Union[Any, Article, Error]]:
-    """Get an article by its UID
+    uids: Union[Unset, str] = UNSET,
+    q: Union[Unset, str] = UNSET,
+    order_by: GetCollectionsOrderBy = GetCollectionsOrderBy.VALUE_0,
+) -> Optional[Union[Any, Error, GetCollectionsResponse200]]:
+    """Find collections
 
     Args:
-        id (str):
+        uids (Union[Unset, str]):
+        q (Union[Unset, str]):
+        order_by (GetCollectionsOrderBy):  Default: GetCollectionsOrderBy.VALUE_0.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, Article, Error]
+        Union[Any, Error, GetCollectionsResponse200]
     """
 
     return (
         await asyncio_detailed(
-            id=id,
             client=client,
+            uids=uids,
+            q=q,
+            order_by=order_by,
         )
     ).parsed

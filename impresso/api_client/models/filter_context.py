@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Literal
 
 
-class GetSearchFiltersItemContext(str, Enum):
+class FilterContext(str, Enum):
     EXCLUDE = "exclude"
     INCLUDE = "include"
 
@@ -10,7 +10,7 @@ class GetSearchFiltersItemContext(str, Enum):
         return str(self.value)
 
 
-GetSearchFiltersItemContextLiteral = Literal[
+FilterContextLiteral = Literal[
     "exclude",
     "include",
 ]

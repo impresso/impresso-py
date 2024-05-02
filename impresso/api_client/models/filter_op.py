@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Literal
 
 
-class GetSearchFiltersItemOp(str, Enum):
+class FilterOp(str, Enum):
     AND = "AND"
     OR = "OR"
 
@@ -10,7 +10,7 @@ class GetSearchFiltersItemOp(str, Enum):
         return str(self.value)
 
 
-GetSearchFiltersItemOpLiteral = Literal[
+FilterOpLiteral = Literal[
     "AND",
     "OR",
 ]

@@ -5,29 +5,39 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.article import Article
+from ...models.collection import Collection
 from ...models.error import Error
+from ...models.new_collection import NewCollection
 from ...types import Response
 
 
 def _get_kwargs(
-    id: str,
+    *,
+    body: NewCollection,
 ) -> Dict[str, Any]:
+    headers: Dict[str, Any] = {}
+
     _kwargs: Dict[str, Any] = {
-        "method": "get",
-        "url": f"/articles/{id}",
+        "method": "post",
+        "url": "/collections",
     }
 
+    _body = body.to_dict()
+
+    _kwargs["json"] = _body
+    headers["Content-Type"] = "application/json"
+
+    _kwargs["headers"] = headers
     return _kwargs
 
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Any, Article, Error]]:
-    if response.status_code == HTTPStatus.OK:
-        response_200 = Article.from_dict(response.json())
+) -> Optional[Union[Any, Collection, Error]]:
+    if response.status_code == HTTPStatus.CREATED:
+        response_201 = Collection.from_dict(response.json())
 
-        return response_200
+        return response_201
     if response.status_code == HTTPStatus.UNAUTHORIZED:
         response_401 = Error.from_dict(response.json())
 
@@ -36,10 +46,6 @@ def _parse_response(
         response_403 = Error.from_dict(response.json())
 
         return response_403
-    if response.status_code == HTTPStatus.NOT_FOUND:
-        response_404 = Error.from_dict(response.json())
-
-        return response_404
     if response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
         response_422 = Error.from_dict(response.json())
 
@@ -55,7 +61,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Any, Article, Error]]:
+) -> Response[Union[Any, Collection, Error]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -65,25 +71,25 @@ def _build_response(
 
 
 def sync_detailed(
-    id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[Union[Any, Article, Error]]:
-    """Get an article by its UID
+    body: NewCollection,
+) -> Response[Union[Any, Collection, Error]]:
+    """Create a new collection
 
     Args:
-        id (str):
+        body (NewCollection): Create new collection request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, Article, Error]]
+        Response[Union[Any, Collection, Error]]
     """
 
     kwargs = _get_kwargs(
-        id=id,
+        body=body,
     )
 
     response = client.get_httpx_client().request(
@@ -94,49 +100,49 @@ def sync_detailed(
 
 
 def sync(
-    id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[Union[Any, Article, Error]]:
-    """Get an article by its UID
+    body: NewCollection,
+) -> Optional[Union[Any, Collection, Error]]:
+    """Create a new collection
 
     Args:
-        id (str):
+        body (NewCollection): Create new collection request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, Article, Error]
+        Union[Any, Collection, Error]
     """
 
     return sync_detailed(
-        id=id,
         client=client,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[Union[Any, Article, Error]]:
-    """Get an article by its UID
+    body: NewCollection,
+) -> Response[Union[Any, Collection, Error]]:
+    """Create a new collection
 
     Args:
-        id (str):
+        body (NewCollection): Create new collection request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, Article, Error]]
+        Response[Union[Any, Collection, Error]]
     """
 
     kwargs = _get_kwargs(
-        id=id,
+        body=body,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -145,26 +151,26 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[Union[Any, Article, Error]]:
-    """Get an article by its UID
+    body: NewCollection,
+) -> Optional[Union[Any, Collection, Error]]:
+    """Create a new collection
 
     Args:
-        id (str):
+        body (NewCollection): Create new collection request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, Article, Error]
+        Union[Any, Collection, Error]
     """
 
     return (
         await asyncio_detailed(
-            id=id,
             client=client,
+            body=body,
         )
     ).parsed

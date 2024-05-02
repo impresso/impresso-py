@@ -1,18 +1,18 @@
 from http import HTTPStatus
-from typing import Any, Dict, Optional, Union, cast
+from typing import Any, Dict, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.authentication_request import AuthenticationRequest
+from ...models.authentication_create_request import AuthenticationCreateRequest
 from ...models.authentication_response import AuthenticationResponse
 from ...types import Response
 
 
 def _get_kwargs(
     *,
-    body: AuthenticationRequest,
+    body: AuthenticationCreateRequest,
 ) -> Dict[str, Any]:
     headers: Dict[str, Any] = {}
 
@@ -32,17 +32,11 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Any, AuthenticationResponse]]:
+) -> Optional[AuthenticationResponse]:
     if response.status_code == HTTPStatus.CREATED:
         response_201 = AuthenticationResponse.from_dict(response.json())
 
         return response_201
-    if response.status_code == HTTPStatus.UNAUTHORIZED:
-        response_401 = cast(Any, None)
-        return response_401
-    if response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
-        response_500 = cast(Any, None)
-        return response_500
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:
@@ -51,7 +45,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Any, AuthenticationResponse]]:
+) -> Response[AuthenticationResponse]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -63,19 +57,19 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    body: AuthenticationRequest,
-) -> Response[Union[Any, AuthenticationResponse]]:
+    body: AuthenticationCreateRequest,
+) -> Response[AuthenticationResponse]:
     """Authenticate user
 
     Args:
-        body (AuthenticationRequest): Authentication request
+        body (AuthenticationCreateRequest): Request body for the authentication endpoint
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, AuthenticationResponse]]
+        Response[AuthenticationResponse]
     """
 
     kwargs = _get_kwargs(
@@ -92,19 +86,19 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    body: AuthenticationRequest,
-) -> Optional[Union[Any, AuthenticationResponse]]:
+    body: AuthenticationCreateRequest,
+) -> Optional[AuthenticationResponse]:
     """Authenticate user
 
     Args:
-        body (AuthenticationRequest): Authentication request
+        body (AuthenticationCreateRequest): Request body for the authentication endpoint
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, AuthenticationResponse]
+        AuthenticationResponse
     """
 
     return sync_detailed(
@@ -116,19 +110,19 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    body: AuthenticationRequest,
-) -> Response[Union[Any, AuthenticationResponse]]:
+    body: AuthenticationCreateRequest,
+) -> Response[AuthenticationResponse]:
     """Authenticate user
 
     Args:
-        body (AuthenticationRequest): Authentication request
+        body (AuthenticationCreateRequest): Request body for the authentication endpoint
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, AuthenticationResponse]]
+        Response[AuthenticationResponse]
     """
 
     kwargs = _get_kwargs(
@@ -143,19 +137,19 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    body: AuthenticationRequest,
-) -> Optional[Union[Any, AuthenticationResponse]]:
+    body: AuthenticationCreateRequest,
+) -> Optional[AuthenticationResponse]:
     """Authenticate user
 
     Args:
-        body (AuthenticationRequest): Authentication request
+        body (AuthenticationCreateRequest): Request body for the authentication endpoint
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Any, AuthenticationResponse]
+        AuthenticationResponse
     """
 
     return (
