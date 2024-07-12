@@ -23,15 +23,15 @@ class Newspaper:
         languages (List[str]): Language codes of the languages used in the newspaper
         included (bool): TODO
         name (str): Title of the newspaper
-        end_year (str): Last available year of the newspaper articles
-        start_year (str): First available year of the newspaper articles
-        first_issue (NewspaperIssue):
-        last_issue (NewspaperIssue):
+        end_year (Any):
+        start_year (Any):
         count_articles (int): The number of articles in the newspaper
         count_issues (int): The number of issues in the newspaper
         count_pages (int): The number of pages in the newspaper
         delta_year (int): The number of years of the newspaper available
         properties (Union[Unset, List['NewspaperProperty']]): TODO
+        first_issue (Union[Unset, NewspaperIssue]):
+        last_issue (Union[Unset, NewspaperIssue]):
         fetched (Union[Unset, bool]): TODO
     """
 
@@ -41,15 +41,15 @@ class Newspaper:
     languages: List[str]
     included: bool
     name: str
-    end_year: str
-    start_year: str
-    first_issue: "NewspaperIssue"
-    last_issue: "NewspaperIssue"
+    end_year: Any
+    start_year: Any
     count_articles: int
     count_issues: int
     count_pages: int
     delta_year: int
     properties: Union[Unset, List["NewspaperProperty"]] = UNSET
+    first_issue: Union[Unset, "NewspaperIssue"] = UNSET
+    last_issue: Union[Unset, "NewspaperIssue"] = UNSET
     fetched: Union[Unset, bool] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,10 +69,6 @@ class Newspaper:
 
         start_year = self.start_year
 
-        first_issue = self.first_issue.to_dict()
-
-        last_issue = self.last_issue.to_dict()
-
         count_articles = self.count_articles
 
         count_issues = self.count_issues
@@ -88,6 +84,14 @@ class Newspaper:
                 properties_item = properties_item_data.to_dict()
                 properties.append(properties_item)
 
+        first_issue: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.first_issue, Unset):
+            first_issue = self.first_issue.to_dict()
+
+        last_issue: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.last_issue, Unset):
+            last_issue = self.last_issue.to_dict()
+
         fetched = self.fetched
 
         field_dict: Dict[str, Any] = {}
@@ -101,8 +105,6 @@ class Newspaper:
                 "name": name,
                 "endYear": end_year,
                 "startYear": start_year,
-                "firstIssue": first_issue,
-                "lastIssue": last_issue,
                 "countArticles": count_articles,
                 "countIssues": count_issues,
                 "countPages": count_pages,
@@ -111,6 +113,10 @@ class Newspaper:
         )
         if properties is not UNSET:
             field_dict["properties"] = properties
+        if first_issue is not UNSET:
+            field_dict["firstIssue"] = first_issue
+        if last_issue is not UNSET:
+            field_dict["lastIssue"] = last_issue
         if fetched is not UNSET:
             field_dict["fetched"] = fetched
 
@@ -138,10 +144,6 @@ class Newspaper:
 
         start_year = d.pop("startYear")
 
-        first_issue = NewspaperIssue.from_dict(d.pop("firstIssue"))
-
-        last_issue = NewspaperIssue.from_dict(d.pop("lastIssue"))
-
         count_articles = d.pop("countArticles")
 
         count_issues = d.pop("countIssues")
@@ -157,6 +159,20 @@ class Newspaper:
 
             properties.append(properties_item)
 
+        _first_issue = d.pop("firstIssue", UNSET)
+        first_issue: Union[Unset, NewspaperIssue]
+        if isinstance(_first_issue, Unset):
+            first_issue = UNSET
+        else:
+            first_issue = NewspaperIssue.from_dict(_first_issue)
+
+        _last_issue = d.pop("lastIssue", UNSET)
+        last_issue: Union[Unset, NewspaperIssue]
+        if isinstance(_last_issue, Unset):
+            last_issue = UNSET
+        else:
+            last_issue = NewspaperIssue.from_dict(_last_issue)
+
         fetched = d.pop("fetched", UNSET)
 
         newspaper = cls(
@@ -168,13 +184,13 @@ class Newspaper:
             name=name,
             end_year=end_year,
             start_year=start_year,
-            first_issue=first_issue,
-            last_issue=last_issue,
             count_articles=count_articles,
             count_issues=count_issues,
             count_pages=count_pages,
             delta_year=delta_year,
             properties=properties,
+            first_issue=first_issue,
+            last_issue=last_issue,
             fetched=fetched,
         )
 

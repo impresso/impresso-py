@@ -1,6 +1,7 @@
 from impresso.api_client.client import AuthenticatedClient
 from impresso.resources.articles import ArticlesResource
 from impresso.resources.search import SearchResource
+from impresso.resources.search_facets import SearchFacetsResource
 
 
 class ImpressoApiResourcesBase:
@@ -16,3 +17,7 @@ class ImpressoApiResourcesBase:
     @property
     def articles(self) -> ArticlesResource:
         return ArticlesResource(self._api_client)
+
+    @property
+    def facets(self) -> SearchFacetsResource:
+        return SearchFacetsResource(self._api_client)

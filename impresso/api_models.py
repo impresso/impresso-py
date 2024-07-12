@@ -6,8 +6,45 @@ from __future__ import annotations
 from datetime import date
 from typing import Any, Mapping, Optional, Sequence, Union
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, RootModel
+from pydantic import AnyUrl, AwareDatetime, BaseModel, ConfigDict, Field, RootModel
 from typing_extensions import Annotated, Literal
+
+
+class PersonItem(RootModel[Sequence[Any]]):
+    root: Annotated[Sequence[Any], Field(max_length=2, min_length=2)]
+
+
+class LocationItem(RootModel[Sequence[Any]]):
+    root: Annotated[Sequence[Any], Field(max_length=2, min_length=2)]
+
+
+class Mention(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    person: Optional[Sequence[PersonItem]] = None
+    location: Optional[Sequence[LocationItem]] = None
+
+
+class ArticleMatch(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    fragment: Annotated[str, Field(description='TODO')]
+    coords: Annotated[Optional[Sequence[float]], Field(None, description='TODO')]
+    pageUid: Annotated[Optional[str], Field(None, description='TODO')]
+    iiif: Annotated[Optional[str], Field(None, description='TODO')]
+
+
+class ArticleRegion(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    pageUid: str
+    coords: Sequence[float]
+    isEmpty: Annotated[bool, Field(description='TODO')]
+    iiifFragment: Annotated[Optional[str], Field(None, description='IIIF fragment URL')]
+    g: Annotated[Optional[Sequence[str]], Field(None, description='TODO')]
 
 
 class AuthenticationCreateRequest(BaseModel):
@@ -31,8 +68,11 @@ class BaseFind(BaseModel):
     limit: Annotated[
         int, Field(description='The number of items returned in this response')
     ]
-    skip: Annotated[
-        int, Field(description='The number of items skipped in this response')
+    offset: Annotated[
+        int,
+        Field(
+            description='Starting index of the items subset returned in this response'
+        ),
     ]
     total: Annotated[
         int, Field(description='The total number of items matching the query')
@@ -79,8 +119,8 @@ class Collection(BaseModel):
             title='Status of the collection',
         ),
     ]
-    creationDate: str
-    lastModifiedDate: str
+    creationDate: AwareDatetime
+    lastModifiedDate: AwareDatetime
     countItems: Annotated[
         Union[int, str], Field(title='Number of items in the collection')
     ]
@@ -127,8 +167,24 @@ class Entity(BaseModel):
 
 
 class Error(BaseModel):
-    message: str
-    data: Optional[Mapping[str, Any]] = None
+    type: Annotated[
+        AnyUrl,
+        Field(
+            description='A URI reference [RFC3986] that identifies the problem type.'
+        ),
+    ]
+    title: Annotated[
+        str, Field(description='A short, human-readable summary of the problem type.')
+    ]
+    status: Annotated[
+        int, Field(description='The HTTP status code ([RFC7231], Section 6)')
+    ]
+    detail: Annotated[
+        str,
+        Field(
+            description='A human-readable explanation specific to this occurrence of the problem.'
+        ),
+    ]
 
 
 class Q(RootModel[str]):
@@ -191,8 +247,10 @@ class NewspaperIssue(BaseModel):
     labels: Annotated[Sequence[str], Field(description='The labels of the issue')]
     fresh: Annotated[bool, Field(description='TODO')]
     accessRights: Annotated[str, Field(description='TODO: list available options')]
-    date: Annotated[AwareDatetime, Field(description='The date of the issue')]
-    year: Annotated[str, Field(description='The year of the issue')]
+    date: Annotated[
+        Optional[AwareDatetime], Field(None, description='The date of the issue')
+    ]
+    year: Annotated[Optional[str], Field(None, description='The year of the issue')]
 
 
 class NewspaperProperty(BaseModel):
@@ -237,6 +295,28 @@ class Page(BaseModel):
         Optional[str],
         Field(None, description='The IIIF fragment of the page, image file name'),
     ]
+
+
+class SearchFacet(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    type: Annotated[str, Field(description='The type of facet')]
+    numBuckets: Annotated[int, Field(description='The number of buckets in the facet')]
+    buckets: Any
+    min: Annotated[Optional[Any], Field(None, description='TODO')]
+    max: Annotated[Optional[Any], Field(None, description='TODO')]
+    gap: Annotated[Optional[Any], Field(None, description='TODO')]
+
+
+class SearchFacetRangeBucket(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    count: Annotated[int, Field(description='Number of items in the bucket')]
+    val: Annotated[int, Field(description="Value of the 'type' element")]
+    lower: Annotated[Optional[int], Field(None, description='Lower bound of the range')]
+    upper: Annotated[Optional[int], Field(None, description='Lower bound of the range')]
 
 
 class TimeCoverage(BaseModel):
@@ -315,7 +395,8 @@ class TextReuseCluster1(BaseModel):
     )
     id: Annotated[str, Field(description='ID of the cluster', title='Cluster ID')]
     clusterSize: Annotated[
-        int, Field(description='The size of the cluster', title='Cluster size')
+        Optional[int],
+        Field(None, description='The size of the cluster', title='Cluster size'),
     ]
     timeDifferenceDay: Annotated[
         Optional[int],
@@ -335,18 +416,11 @@ class TextReuseCluster1(BaseModel):
     ]
 
 
-class ConnectedClusters(BaseModel):
+class ConnectedCluster(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
     id: Annotated[str, Field(description='ID of the connected cluster')]
-
-
-class Newspaper1(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    id: Annotated[str, Field(description='ID of the newspaper')]
 
 
 class Issue(BaseModel):
@@ -383,12 +457,8 @@ class TextReusePassage(BaseModel):
             title='Cluster details',
         ),
     ]
-    offsetStart: Annotated[
-        int, Field(description='Offset of the passage in the article text', ge=0)
-    ]
-    offsetEnd: Annotated[
-        int, Field(description='Offset of the passage in the article text', ge=0)
-    ]
+    offsetStart: Any
+    offsetEnd: Any
     content: Annotated[str, Field(description='Textual content of the passage')]
     title: Annotated[
         str,
@@ -396,15 +466,10 @@ class TextReusePassage(BaseModel):
             description='Title of the content item (article) where this passage was found'
         ),
     ]
-    connectedClusters: Annotated[
-        Optional[ConnectedClusters],
-        Field(None, description='Details of the connected clusters'),
-    ]
+    connectedClusters: Optional[Sequence[ConnectedCluster]] = None
     isFront: Annotated[Optional[bool], Field(None, description='TBD')]
     size: Annotated[Optional[int], Field(None, description='Size of the passage')]
-    newspaper: Annotated[
-        Optional[Newspaper1], Field(None, description='Newspaper details')
-    ]
+    newspaper: Optional[Any] = None
     issue: Annotated[Optional[Issue], Field(None, description='Issue details')]
     date: Annotated[
         Optional[AwareDatetime],
@@ -413,7 +478,8 @@ class TextReusePassage(BaseModel):
         ),
     ]
     pageRegions: Annotated[
-        Sequence[str], Field(description='Bounding box of the passage in the page')
+        Optional[Sequence[str]],
+        Field(None, description='Bounding box of the passage in the page'),
     ]
     pageNumbers: Annotated[
         Sequence[int],
@@ -422,6 +488,23 @@ class TextReusePassage(BaseModel):
     collections: Annotated[
         Sequence[str], Field(description='Collection IDs the passage belongs to')
     ]
+
+
+class RelatedTopic(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='The unique identifier of the related topic')]
+    w: Annotated[float, Field(description='TODO')]
+
+
+class TopicWord(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    w: Annotated[str, Field(description='Word')]
+    p: Annotated[float, Field(description='TODO')]
+    h: Annotated[Optional[Sequence[str]], Field(None, description='TODO')]
 
 
 class User(BaseModel):
@@ -477,22 +560,18 @@ class VersionDetails(BaseModel):
     features: Mapping[str, Mapping[str, Any]]
 
 
-class Article(BaseModel):
+class YearWeights(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    uid: Annotated[str, Field(description='The unique identifier of the article')]
-    type: Annotated[
-        str, Field(description='The type of the article. NOTE: may be empty.')
+    c: Annotated[Optional[float], Field(None, description='Number of content items')]
+    a: Annotated[Optional[float], Field(None, description='Number of articles')]
+    p: Annotated[Optional[float], Field(None, description='Number of pages')]
+    i: Annotated[Optional[float], Field(None, description='Number of issues')]
+    m: Annotated[
+        Optional[float],
+        Field(None, description='Number of images (with or without vectors)'),
     ]
-    title: Annotated[str, Field(description='The title of the article')]
-    size: Annotated[int, Field(description='The size of the article in characters')]
-    nbPages: Annotated[int, Field(description='The number of pages in this article')]
-    pages: Sequence[Page]
-    isCC: Annotated[bool, Field(description='TODO')]
-    excerpt: Annotated[str, Field(description='The excerpt of the article')]
-    locations: Optional[Sequence[Entity]] = None
-    persons: Optional[Sequence[Entity]] = None
 
 
 class AuthenticationCreateResponse(BaseModel):
@@ -546,18 +625,10 @@ class Newspaper(BaseModel):
     ]
     included: Annotated[bool, Field(description='TODO')]
     name: Annotated[str, Field(description='Title of the newspaper')]
-    endYear: Annotated[
-        str, Field(description='Last available year of the newspaper articles')
-    ]
-    startYear: Annotated[
-        str, Field(description='First available year of the newspaper articles')
-    ]
-    firstIssue: Annotated[
-        NewspaperIssue, Field(description='First available issue of the newspaper')
-    ]
-    lastIssue: Annotated[
-        NewspaperIssue, Field(description='Last available issue of the newspaper')
-    ]
+    endYear: Any
+    startYear: Any
+    firstIssue: Optional[NewspaperIssue] = None
+    lastIssue: Optional[NewspaperIssue] = None
     countArticles: Annotated[
         int, Field(description='The number of articles in the newspaper')
     ]
@@ -577,6 +648,118 @@ class TextReuseClusterCompound(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    cluster: TextReuseCluster
+    cluster: Optional[TextReuseCluster] = None
     textSample: str
     details: Optional[TextReuseClusterDetails] = None
+
+
+class Topic(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='The unique identifier of the topic')]
+    language: Annotated[str, Field(description='The language code of the topic')]
+    community: Annotated[Optional[str], Field(None, description='TODO')]
+    pagerank: Annotated[Optional[float], Field(None, description='TODO')]
+    degree: Annotated[Optional[float], Field(None, description='TODO')]
+    x: Annotated[Optional[float], Field(None, description='TODO')]
+    y: Annotated[Optional[float], Field(None, description='TODO')]
+    relatedTopics: Optional[Sequence[RelatedTopic]] = None
+    countItems: Annotated[Optional[float], Field(None, description='TODO')]
+    excerpt: Annotated[Optional[Sequence[TopicWord]], Field(None, description='TODO')]
+    words: Annotated[Optional[Sequence[TopicWord]], Field(None, description='TODO')]
+    model: Annotated[
+        Optional[str],
+        Field(None, description='ID of the model used to generate the topic'),
+    ]
+
+
+class Year(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[
+        Optional[int], Field(None, description='Numeric representation of the year')
+    ]
+    values: Optional[YearWeights] = None
+    refs: Optional[YearWeights] = None
+
+
+class ArticleTopic(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    topic: Optional[Topic] = None
+    relevance: Annotated[float, Field(description='TODO')]
+    topicUid: Annotated[Optional[str], Field(None, description='TODO')]
+
+
+class FindTextReuseClustersResponse(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    clusters: Sequence[TextReuseClusterCompound]
+    info: Any
+
+
+class SearchFacetBucket(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    count: Annotated[int, Field(description='Number of items in the bucket')]
+    val: Annotated[str, Field(description="Value of the 'type' element")]
+    uid: Annotated[
+        Optional[str],
+        Field(None, description="UID of the 'type' element. Same as 'val'"),
+    ]
+    item: Annotated[
+        Optional[Union[Newspaper, Collection, Entity, Topic, Year]],
+        Field(
+            None,
+            description='The item in the bucket. Particular objct schema depends on the facet type',
+        ),
+    ]
+
+
+class Article(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='The unique identifier of the article')]
+    type: Annotated[
+        str, Field(description='The type of the article. NOTE: may be empty.')
+    ]
+    title: Annotated[str, Field(description='The title of the article')]
+    size: Annotated[int, Field(description='The size of the article in characters')]
+    nbPages: Annotated[int, Field(description='The number of pages in this article')]
+    pages: Sequence[Page]
+    isCC: Annotated[bool, Field(description='TODO')]
+    excerpt: Annotated[str, Field(description='The excerpt of the article')]
+    locations: Optional[Sequence[Entity]] = None
+    persons: Optional[Sequence[Entity]] = None
+    language: Annotated[
+        Optional[str], Field(None, description='The language code of the article')
+    ]
+    issue: Optional[NewspaperIssue] = None
+    matches: Optional[Sequence[ArticleMatch]] = None
+    regions: Optional[Sequence[ArticleRegion]] = None
+    regionBreaks: Optional[Sequence[int]] = None
+    contentLineBreaks: Optional[Sequence[int]] = None
+    labels: Annotated[Sequence[Literal['article']], Field(description='TODO')]
+    accessRight: Literal['na', 'OpenPrivate', 'Closed', 'OpenPublic']
+    isFront: Annotated[Optional[bool], Field(None, description='TODO')]
+    date: Optional[Any] = None
+    year: Annotated[int, Field(description='The year of the article')]
+    country: Annotated[
+        Optional[str], Field(None, description='The country code of the article')
+    ]
+    tags: Optional[Sequence[str]] = None
+    collections: Optional[Any] = None
+    newspaper: Optional[Newspaper] = None
+    dataProvider: Optional[Any] = None
+    topics: Optional[Sequence[ArticleTopic]] = None
+    content: Annotated[
+        Optional[str], Field(None, description='The content of the article')
+    ]
+    mentions: Optional[Sequence[Mention]] = None
+    v: Annotated[Optional[str], Field(None, description='TODO')]

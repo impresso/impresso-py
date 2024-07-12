@@ -10,12 +10,12 @@ T = TypeVar("T", bound="BaseUser")
 class BaseUser:
     """
     Attributes:
-        uid (str):  Default: ''. Example: local-dg.
-        username (str):  Default: ''. Example: daniele.guido.
+        uid (str):  Example: local-dg.
+        username (str):  Example: daniele.guido.
     """
 
-    uid: str = ""
-    username: str = ""
+    uid: str
+    username: str
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

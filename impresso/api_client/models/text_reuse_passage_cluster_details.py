@@ -13,13 +13,13 @@ class TextReusePassageClusterDetails:
 
     Attributes:
         id (str): ID of the cluster
-        cluster_size (int): The size of the cluster
+        cluster_size (Union[Unset, int]): The size of the cluster
         time_difference_day (Union[Unset, int]): The time difference in days between the two articles
         lexical_overlap (Union[Unset, float]): The lexical overlap between the two articles
     """
 
     id: str
-    cluster_size: int
+    cluster_size: Union[Unset, int] = UNSET
     time_difference_day: Union[Unset, int] = UNSET
     lexical_overlap: Union[Unset, float] = UNSET
 
@@ -36,9 +36,10 @@ class TextReusePassageClusterDetails:
         field_dict.update(
             {
                 "id": id,
-                "clusterSize": cluster_size,
             }
         )
+        if cluster_size is not UNSET:
+            field_dict["clusterSize"] = cluster_size
         if time_difference_day is not UNSET:
             field_dict["timeDifferenceDay"] = time_difference_day
         if lexical_overlap is not UNSET:
@@ -51,7 +52,7 @@ class TextReusePassageClusterDetails:
         d = src_dict.copy()
         id = d.pop("id")
 
-        cluster_size = d.pop("clusterSize")
+        cluster_size = d.pop("clusterSize", UNSET)
 
         time_difference_day = d.pop("timeDifferenceDay", UNSET)
 

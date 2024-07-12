@@ -11,6 +11,12 @@ from .api_version_newspapers_additional_property import APIVersionNewspapersAddi
 from .api_version_solr import APIVersionSolr
 from .api_version_solr_endpoints import APIVersionSolrEndpoints
 from .article import Article
+from .article_access_right import ArticleAccessRight
+from .article_labels_item import ArticleLabelsItem
+from .article_match import ArticleMatch
+from .article_mentions_item import ArticleMentionsItem
+from .article_region import ArticleRegion
+from .article_topic import ArticleTopic
 from .authentication_create_request import AuthenticationCreateRequest
 from .authentication_create_request_strategy import AuthenticationCreateRequestStrategy
 from .authentication_response import AuthenticationResponse
@@ -24,36 +30,59 @@ from .collectable_item_group_content_type import CollectableItemGroupContentType
 from .collection import Collection
 from .entity import Entity
 from .error import Error
-from .error_data import ErrorData
 from .filter_ import Filter
 from .filter_context import FilterContext
 from .filter_op import FilterOp
 from .filter_precision import FilterPrecision
-from .get_articles_filters import GetArticlesFilters
-from .get_articles_filters_type import GetArticlesFiltersType
-from .get_articles_order_by import GetArticlesOrderBy
-from .get_articles_resolve import GetArticlesResolve
-from .get_articles_response_200 import GetArticlesResponse200
-from .get_articles_response_200_info import GetArticlesResponse200Info
-from .get_collections_order_by import GetCollectionsOrderBy
-from .get_collections_response_200 import GetCollectionsResponse200
-from .get_collections_response_200_info import GetCollectionsResponse200Info
-from .get_newspapers_order_by import GetNewspapersOrderBy
-from .get_newspapers_response_200 import GetNewspapersResponse200
-from .get_newspapers_response_200_info import GetNewspapersResponse200Info
-from .get_search_facets import GetSearchFacets
-from .get_search_group_by import GetSearchGroupBy
-from .get_search_order_by import GetSearchOrderBy
-from .get_search_response_200 import GetSearchResponse200
-from .get_search_response_200_info import GetSearchResponse200Info
-from .get_text_reuse_clusters_order_by import GetTextReuseClustersOrderBy
-from .get_text_reuse_clusters_response_200 import GetTextReuseClustersResponse200
-from .get_text_reuse_clusters_response_200_info import GetTextReuseClustersResponse200Info
-from .get_text_reuse_passages_addons import GetTextReusePassagesAddons
-from .get_text_reuse_passages_groupby import GetTextReusePassagesGroupby
-from .get_text_reuse_passages_order_by import GetTextReusePassagesOrderBy
-from .get_text_reuse_passages_response_200 import GetTextReusePassagesResponse200
-from .get_text_reuse_passages_response_200_info import GetTextReusePassagesResponse200Info
+from .find_articles_filters_item import FindArticlesFiltersItem
+from .find_articles_filters_item_type import FindArticlesFiltersItemType
+from .find_articles_order_by import FindArticlesOrderBy
+from .find_articles_resolve import FindArticlesResolve
+from .find_articles_response_200 import FindArticlesResponse200
+from .find_articles_response_200_info import FindArticlesResponse200Info
+from .find_collections_order_by import FindCollectionsOrderBy
+from .find_collections_response_200 import FindCollectionsResponse200
+from .find_collections_response_200_info import FindCollectionsResponse200Info
+from .find_newspapers_order_by import FindNewspapersOrderBy
+from .find_newspapers_response_200 import FindNewspapersResponse200
+from .find_newspapers_response_200_info import FindNewspapersResponse200Info
+from .find_search_facets_facets_item import FindSearchFacetsFacetsItem
+from .find_search_facets_group_by import FindSearchFacetsGroupBy
+from .find_search_facets_order_by import FindSearchFacetsOrderBy
+from .find_search_facets_range_include import FindSearchFacetsRangeInclude
+from .find_search_facets_response_200 import FindSearchFacetsResponse200
+from .find_search_facets_response_200_info import FindSearchFacetsResponse200Info
+from .find_text_reuse_clusters_order_by import FindTextReuseClustersOrderBy
+from .find_text_reuse_clusters_response import FindTextReuseClustersResponse
+from .find_text_reuse_passages_addons import FindTextReusePassagesAddons
+from .find_text_reuse_passages_group_by import FindTextReusePassagesGroupBy
+from .find_text_reuse_passages_order_by import FindTextReusePassagesOrderBy
+from .find_text_reuse_passages_response_200 import FindTextReusePassagesResponse200
+from .find_text_reuse_passages_response_200_info import FindTextReusePassagesResponse200Info
+from .find_tr_clusters_facets_facets_item import FindTrClustersFacetsFacetsItem
+from .find_tr_clusters_facets_group_by import FindTrClustersFacetsGroupBy
+from .find_tr_clusters_facets_order_by import FindTrClustersFacetsOrderBy
+from .find_tr_clusters_facets_range_include import FindTrClustersFacetsRangeInclude
+from .find_tr_clusters_facets_response_200 import FindTrClustersFacetsResponse200
+from .find_tr_clusters_facets_response_200_info import FindTrClustersFacetsResponse200Info
+from .find_tr_passages_facets_facets_item import FindTrPassagesFacetsFacetsItem
+from .find_tr_passages_facets_group_by import FindTrPassagesFacetsGroupBy
+from .find_tr_passages_facets_order_by import FindTrPassagesFacetsOrderBy
+from .find_tr_passages_facets_range_include import FindTrPassagesFacetsRangeInclude
+from .find_tr_passages_facets_response_200 import FindTrPassagesFacetsResponse200
+from .find_tr_passages_facets_response_200_info import FindTrPassagesFacetsResponse200Info
+from .get_search_facet_group_by import GetSearchFacetGroupBy
+from .get_search_facet_id import GetSearchFacetId
+from .get_search_facet_order_by import GetSearchFacetOrderBy
+from .get_search_facet_range_include import GetSearchFacetRangeInclude
+from .get_tr_clusters_facet_group_by import GetTrClustersFacetGroupBy
+from .get_tr_clusters_facet_id import GetTrClustersFacetId
+from .get_tr_clusters_facet_order_by import GetTrClustersFacetOrderBy
+from .get_tr_clusters_facet_range_include import GetTrClustersFacetRangeInclude
+from .get_tr_passages_facet_group_by import GetTrPassagesFacetGroupBy
+from .get_tr_passages_facet_id import GetTrPassagesFacetId
+from .get_tr_passages_facet_order_by import GetTrPassagesFacetOrderBy
+from .get_tr_passages_facet_range_include import GetTrPassagesFacetRangeInclude
 from .new_collection import NewCollection
 from .newspaper import Newspaper
 from .newspaper_issue import NewspaperIssue
@@ -64,6 +93,14 @@ from .remove_collection_response import RemoveCollectionResponse
 from .remove_collection_response_params import RemoveCollectionResponseParams
 from .remove_collection_response_params_status import RemoveCollectionResponseParamsStatus
 from .remove_collection_response_task import RemoveCollectionResponseTask
+from .search_facet import SearchFacet
+from .search_facet_bucket import SearchFacetBucket
+from .search_facet_range_bucket import SearchFacetRangeBucket
+from .search_facets import SearchFacets
+from .search_group_by import SearchGroupBy
+from .search_order_by import SearchOrderBy
+from .search_response_200 import SearchResponse200
+from .search_response_200_info import SearchResponse200Info
 from .text_reuse_cluster import TextReuseCluster
 from .text_reuse_cluster_compound import TextReuseClusterCompound
 from .text_reuse_cluster_details import TextReuseClusterDetails
@@ -74,10 +111,14 @@ from .text_reuse_cluster_time_coverage import TextReuseClusterTimeCoverage
 from .text_reuse_passage import TextReusePassage
 from .text_reuse_passage_article_details import TextReusePassageArticleDetails
 from .text_reuse_passage_cluster_details import TextReusePassageClusterDetails
-from .text_reuse_passage_connected_clusters import TextReusePassageConnectedClusters
+from .text_reuse_passage_connected_clusters_item import TextReusePassageConnectedClustersItem
 from .text_reuse_passage_issue import TextReusePassageIssue
-from .text_reuse_passage_newspaper import TextReusePassageNewspaper
+from .topic import Topic
+from .topic_related_topics_item import TopicRelatedTopicsItem
+from .topic_word import TopicWord
 from .user import User
+from .year import Year
+from .year_weights import YearWeights
 
 __all__ = (
     "APIVersion",
@@ -91,6 +132,12 @@ __all__ = (
     "APIVersionSolr",
     "APIVersionSolrEndpoints",
     "Article",
+    "ArticleAccessRight",
+    "ArticleLabelsItem",
+    "ArticleMatch",
+    "ArticleMentionsItem",
+    "ArticleRegion",
+    "ArticleTopic",
     "AuthenticationCreateRequest",
     "AuthenticationCreateRequestStrategy",
     "AuthenticationResponse",
@@ -104,36 +151,59 @@ __all__ = (
     "Collection",
     "Entity",
     "Error",
-    "ErrorData",
     "Filter",
     "FilterContext",
     "FilterOp",
     "FilterPrecision",
-    "GetArticlesFilters",
-    "GetArticlesFiltersType",
-    "GetArticlesOrderBy",
-    "GetArticlesResolve",
-    "GetArticlesResponse200",
-    "GetArticlesResponse200Info",
-    "GetCollectionsOrderBy",
-    "GetCollectionsResponse200",
-    "GetCollectionsResponse200Info",
-    "GetNewspapersOrderBy",
-    "GetNewspapersResponse200",
-    "GetNewspapersResponse200Info",
-    "GetSearchFacets",
-    "GetSearchGroupBy",
-    "GetSearchOrderBy",
-    "GetSearchResponse200",
-    "GetSearchResponse200Info",
-    "GetTextReuseClustersOrderBy",
-    "GetTextReuseClustersResponse200",
-    "GetTextReuseClustersResponse200Info",
-    "GetTextReusePassagesAddons",
-    "GetTextReusePassagesGroupby",
-    "GetTextReusePassagesOrderBy",
-    "GetTextReusePassagesResponse200",
-    "GetTextReusePassagesResponse200Info",
+    "FindArticlesFiltersItem",
+    "FindArticlesFiltersItemType",
+    "FindArticlesOrderBy",
+    "FindArticlesResolve",
+    "FindArticlesResponse200",
+    "FindArticlesResponse200Info",
+    "FindCollectionsOrderBy",
+    "FindCollectionsResponse200",
+    "FindCollectionsResponse200Info",
+    "FindNewspapersOrderBy",
+    "FindNewspapersResponse200",
+    "FindNewspapersResponse200Info",
+    "FindSearchFacetsFacetsItem",
+    "FindSearchFacetsGroupBy",
+    "FindSearchFacetsOrderBy",
+    "FindSearchFacetsRangeInclude",
+    "FindSearchFacetsResponse200",
+    "FindSearchFacetsResponse200Info",
+    "FindTextReuseClustersOrderBy",
+    "FindTextReuseClustersResponse",
+    "FindTextReusePassagesAddons",
+    "FindTextReusePassagesGroupBy",
+    "FindTextReusePassagesOrderBy",
+    "FindTextReusePassagesResponse200",
+    "FindTextReusePassagesResponse200Info",
+    "FindTrClustersFacetsFacetsItem",
+    "FindTrClustersFacetsGroupBy",
+    "FindTrClustersFacetsOrderBy",
+    "FindTrClustersFacetsRangeInclude",
+    "FindTrClustersFacetsResponse200",
+    "FindTrClustersFacetsResponse200Info",
+    "FindTrPassagesFacetsFacetsItem",
+    "FindTrPassagesFacetsGroupBy",
+    "FindTrPassagesFacetsOrderBy",
+    "FindTrPassagesFacetsRangeInclude",
+    "FindTrPassagesFacetsResponse200",
+    "FindTrPassagesFacetsResponse200Info",
+    "GetSearchFacetGroupBy",
+    "GetSearchFacetId",
+    "GetSearchFacetOrderBy",
+    "GetSearchFacetRangeInclude",
+    "GetTrClustersFacetGroupBy",
+    "GetTrClustersFacetId",
+    "GetTrClustersFacetOrderBy",
+    "GetTrClustersFacetRangeInclude",
+    "GetTrPassagesFacetGroupBy",
+    "GetTrPassagesFacetId",
+    "GetTrPassagesFacetOrderBy",
+    "GetTrPassagesFacetRangeInclude",
     "NewCollection",
     "Newspaper",
     "NewspaperIssue",
@@ -144,6 +214,14 @@ __all__ = (
     "RemoveCollectionResponseParams",
     "RemoveCollectionResponseParamsStatus",
     "RemoveCollectionResponseTask",
+    "SearchFacet",
+    "SearchFacetBucket",
+    "SearchFacetRangeBucket",
+    "SearchFacets",
+    "SearchGroupBy",
+    "SearchOrderBy",
+    "SearchResponse200",
+    "SearchResponse200Info",
     "TextReuseCluster",
     "TextReuseClusterCompound",
     "TextReuseClusterDetails",
@@ -154,8 +232,12 @@ __all__ = (
     "TextReusePassage",
     "TextReusePassageArticleDetails",
     "TextReusePassageClusterDetails",
-    "TextReusePassageConnectedClusters",
+    "TextReusePassageConnectedClustersItem",
     "TextReusePassageIssue",
-    "TextReusePassageNewspaper",
+    "Topic",
+    "TopicRelatedTopicsItem",
+    "TopicWord",
     "User",
+    "Year",
+    "YearWeights",
 )

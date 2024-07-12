@@ -1,11 +1,19 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 
+from ..models.article_access_right import ArticleAccessRight
+from ..models.article_labels_item import ArticleLabelsItem
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
+    from ..models.article_match import ArticleMatch
+    from ..models.article_mentions_item import ArticleMentionsItem
+    from ..models.article_region import ArticleRegion
+    from ..models.article_topic import ArticleTopic
     from ..models.entity import Entity
+    from ..models.newspaper import Newspaper
+    from ..models.newspaper_issue import NewspaperIssue
     from ..models.page import Page
 
 
@@ -25,8 +33,28 @@ class Article:
         pages (List['Page']):
         is_cc (bool): TODO
         excerpt (str): The excerpt of the article
+        labels (List[ArticleLabelsItem]): TODO
+        access_right (ArticleAccessRight):
+        year (int): The year of the article
         locations (Union[Unset, List['Entity']]):
         persons (Union[Unset, List['Entity']]):
+        language (Union[Unset, str]): The language code of the article
+        issue (Union[Unset, NewspaperIssue]):
+        matches (Union[Unset, List['ArticleMatch']]):
+        regions (Union[Unset, List['ArticleRegion']]):
+        region_breaks (Union[Unset, List[int]]):
+        content_line_breaks (Union[Unset, List[int]]):
+        is_front (Union[Unset, bool]): TODO
+        date (Union[Unset, Any]):
+        country (Union[Unset, str]): The country code of the article
+        tags (Union[Unset, List[str]]):
+        collections (Union[Unset, Any]):
+        newspaper (Union[Unset, Newspaper]): A newspaper
+        data_provider (Union[Unset, Any]):
+        topics (Union[Unset, List['ArticleTopic']]):
+        content (Union[Unset, str]): The content of the article
+        mentions (Union[Unset, List['ArticleMentionsItem']]):
+        v (Union[Unset, str]): TODO
     """
 
     uid: str
@@ -37,8 +65,28 @@ class Article:
     pages: List["Page"]
     is_cc: bool
     excerpt: str
+    labels: List[ArticleLabelsItem]
+    access_right: ArticleAccessRight
+    year: int
     locations: Union[Unset, List["Entity"]] = UNSET
     persons: Union[Unset, List["Entity"]] = UNSET
+    language: Union[Unset, str] = UNSET
+    issue: Union[Unset, "NewspaperIssue"] = UNSET
+    matches: Union[Unset, List["ArticleMatch"]] = UNSET
+    regions: Union[Unset, List["ArticleRegion"]] = UNSET
+    region_breaks: Union[Unset, List[int]] = UNSET
+    content_line_breaks: Union[Unset, List[int]] = UNSET
+    is_front: Union[Unset, bool] = UNSET
+    date: Union[Unset, Any] = UNSET
+    country: Union[Unset, str] = UNSET
+    tags: Union[Unset, List[str]] = UNSET
+    collections: Union[Unset, Any] = UNSET
+    newspaper: Union[Unset, "Newspaper"] = UNSET
+    data_provider: Union[Unset, Any] = UNSET
+    topics: Union[Unset, List["ArticleTopic"]] = UNSET
+    content: Union[Unset, str] = UNSET
+    mentions: Union[Unset, List["ArticleMentionsItem"]] = UNSET
+    v: Union[Unset, str] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
         uid = self.uid
@@ -60,6 +108,15 @@ class Article:
 
         excerpt = self.excerpt
 
+        labels = []
+        for labels_item_data in self.labels:
+            labels_item = labels_item_data.value
+            labels.append(labels_item)
+
+        access_right = self.access_right.value
+
+        year = self.year
+
         locations: Union[Unset, List[Dict[str, Any]]] = UNSET
         if not isinstance(self.locations, Unset):
             locations = []
@@ -74,6 +131,70 @@ class Article:
                 persons_item = persons_item_data.to_dict()
                 persons.append(persons_item)
 
+        language = self.language
+
+        issue: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.issue, Unset):
+            issue = self.issue.to_dict()
+
+        matches: Union[Unset, List[Dict[str, Any]]] = UNSET
+        if not isinstance(self.matches, Unset):
+            matches = []
+            for matches_item_data in self.matches:
+                matches_item = matches_item_data.to_dict()
+                matches.append(matches_item)
+
+        regions: Union[Unset, List[Dict[str, Any]]] = UNSET
+        if not isinstance(self.regions, Unset):
+            regions = []
+            for regions_item_data in self.regions:
+                regions_item = regions_item_data.to_dict()
+                regions.append(regions_item)
+
+        region_breaks: Union[Unset, List[int]] = UNSET
+        if not isinstance(self.region_breaks, Unset):
+            region_breaks = self.region_breaks
+
+        content_line_breaks: Union[Unset, List[int]] = UNSET
+        if not isinstance(self.content_line_breaks, Unset):
+            content_line_breaks = self.content_line_breaks
+
+        is_front = self.is_front
+
+        date = self.date
+
+        country = self.country
+
+        tags: Union[Unset, List[str]] = UNSET
+        if not isinstance(self.tags, Unset):
+            tags = self.tags
+
+        collections = self.collections
+
+        newspaper: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.newspaper, Unset):
+            newspaper = self.newspaper.to_dict()
+
+        data_provider = self.data_provider
+
+        topics: Union[Unset, List[Dict[str, Any]]] = UNSET
+        if not isinstance(self.topics, Unset):
+            topics = []
+            for topics_item_data in self.topics:
+                topics_item = topics_item_data.to_dict()
+                topics.append(topics_item)
+
+        content = self.content
+
+        mentions: Union[Unset, List[Dict[str, Any]]] = UNSET
+        if not isinstance(self.mentions, Unset):
+            mentions = []
+            for mentions_item_data in self.mentions:
+                mentions_item = mentions_item_data.to_dict()
+                mentions.append(mentions_item)
+
+        v = self.v
+
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
@@ -85,18 +206,61 @@ class Article:
                 "pages": pages,
                 "isCC": is_cc,
                 "excerpt": excerpt,
+                "labels": labels,
+                "accessRight": access_right,
+                "year": year,
             }
         )
         if locations is not UNSET:
             field_dict["locations"] = locations
         if persons is not UNSET:
             field_dict["persons"] = persons
+        if language is not UNSET:
+            field_dict["language"] = language
+        if issue is not UNSET:
+            field_dict["issue"] = issue
+        if matches is not UNSET:
+            field_dict["matches"] = matches
+        if regions is not UNSET:
+            field_dict["regions"] = regions
+        if region_breaks is not UNSET:
+            field_dict["regionBreaks"] = region_breaks
+        if content_line_breaks is not UNSET:
+            field_dict["contentLineBreaks"] = content_line_breaks
+        if is_front is not UNSET:
+            field_dict["isFront"] = is_front
+        if date is not UNSET:
+            field_dict["date"] = date
+        if country is not UNSET:
+            field_dict["country"] = country
+        if tags is not UNSET:
+            field_dict["tags"] = tags
+        if collections is not UNSET:
+            field_dict["collections"] = collections
+        if newspaper is not UNSET:
+            field_dict["newspaper"] = newspaper
+        if data_provider is not UNSET:
+            field_dict["dataProvider"] = data_provider
+        if topics is not UNSET:
+            field_dict["topics"] = topics
+        if content is not UNSET:
+            field_dict["content"] = content
+        if mentions is not UNSET:
+            field_dict["mentions"] = mentions
+        if v is not UNSET:
+            field_dict["v"] = v
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
+        from ..models.article_match import ArticleMatch
+        from ..models.article_mentions_item import ArticleMentionsItem
+        from ..models.article_region import ArticleRegion
+        from ..models.article_topic import ArticleTopic
         from ..models.entity import Entity
+        from ..models.newspaper import Newspaper
+        from ..models.newspaper_issue import NewspaperIssue
         from ..models.page import Page
 
         d = src_dict.copy()
@@ -121,6 +285,17 @@ class Article:
 
         excerpt = d.pop("excerpt")
 
+        labels = []
+        _labels = d.pop("labels")
+        for labels_item_data in _labels:
+            labels_item = ArticleLabelsItem(labels_item_data)
+
+            labels.append(labels_item)
+
+        access_right = ArticleAccessRight(d.pop("accessRight"))
+
+        year = d.pop("year")
+
         locations = []
         _locations = d.pop("locations", UNSET)
         for locations_item_data in _locations or []:
@@ -135,6 +310,70 @@ class Article:
 
             persons.append(persons_item)
 
+        language = d.pop("language", UNSET)
+
+        _issue = d.pop("issue", UNSET)
+        issue: Union[Unset, NewspaperIssue]
+        if isinstance(_issue, Unset):
+            issue = UNSET
+        else:
+            issue = NewspaperIssue.from_dict(_issue)
+
+        matches = []
+        _matches = d.pop("matches", UNSET)
+        for matches_item_data in _matches or []:
+            matches_item = ArticleMatch.from_dict(matches_item_data)
+
+            matches.append(matches_item)
+
+        regions = []
+        _regions = d.pop("regions", UNSET)
+        for regions_item_data in _regions or []:
+            regions_item = ArticleRegion.from_dict(regions_item_data)
+
+            regions.append(regions_item)
+
+        region_breaks = cast(List[int], d.pop("regionBreaks", UNSET))
+
+        content_line_breaks = cast(List[int], d.pop("contentLineBreaks", UNSET))
+
+        is_front = d.pop("isFront", UNSET)
+
+        date = d.pop("date", UNSET)
+
+        country = d.pop("country", UNSET)
+
+        tags = cast(List[str], d.pop("tags", UNSET))
+
+        collections = d.pop("collections", UNSET)
+
+        _newspaper = d.pop("newspaper", UNSET)
+        newspaper: Union[Unset, Newspaper]
+        if isinstance(_newspaper, Unset):
+            newspaper = UNSET
+        else:
+            newspaper = Newspaper.from_dict(_newspaper)
+
+        data_provider = d.pop("dataProvider", UNSET)
+
+        topics = []
+        _topics = d.pop("topics", UNSET)
+        for topics_item_data in _topics or []:
+            topics_item = ArticleTopic.from_dict(topics_item_data)
+
+            topics.append(topics_item)
+
+        content = d.pop("content", UNSET)
+
+        mentions = []
+        _mentions = d.pop("mentions", UNSET)
+        for mentions_item_data in _mentions or []:
+            mentions_item = ArticleMentionsItem.from_dict(mentions_item_data)
+
+            mentions.append(mentions_item)
+
+        v = d.pop("v", UNSET)
+
         article = cls(
             uid=uid,
             type=type,
@@ -144,8 +383,28 @@ class Article:
             pages=pages,
             is_cc=is_cc,
             excerpt=excerpt,
+            labels=labels,
+            access_right=access_right,
+            year=year,
             locations=locations,
             persons=persons,
+            language=language,
+            issue=issue,
+            matches=matches,
+            regions=regions,
+            region_breaks=region_breaks,
+            content_line_breaks=content_line_breaks,
+            is_front=is_front,
+            date=date,
+            country=country,
+            tags=tags,
+            collections=collections,
+            newspaper=newspaper,
+            data_provider=data_provider,
+            topics=topics,
+            content=content,
+            mentions=mentions,
+            v=v,
         )
 
         return article

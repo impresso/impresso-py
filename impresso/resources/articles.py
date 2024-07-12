@@ -1,21 +1,25 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from pandas import DataFrame, json_normalize
-from impresso.api_client.models.get_articles_filters import GetArticlesFilters
-from impresso.api_client.models.get_articles_order_by import (
-    GetArticlesOrderBy,
-    GetArticlesOrderByLiteral,
+
+from impresso.api_client.api.articles import find_articles, get_article
+from impresso.api_client.models.find_articles_filters_item import (
+    FindArticlesFiltersItem,
 )
-from impresso.api_client.models.get_articles_resolve import (
-    GetArticlesResolve,
-    GetArticlesResolveLiteral,
+from impresso.api_client.models.find_articles_order_by import (
+    FindArticlesOrderBy,
+    FindArticlesOrderByLiteral,
+)
+from impresso.api_client.models.find_articles_resolve import (
+    FindArticlesResolve,
+    FindArticlesResolveLiteral,
 )
 from impresso.api_client.types import UNSET, Unset
+from impresso.api_models import Article, BaseFind
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
-from impresso.api_client.api.articles import get_articles, get_articles_id
+from impresso.util.error import raise_for_error
 from impresso.util.py import get_enum_from_literal
-from impresso.api_models import Article, BaseFind
 
 
 class ArticlesResponseSchema(BaseFind):
@@ -59,23 +63,24 @@ class ArticlesResource(Resource):
 
     def find(
         self,
-        resolve: Union[Unset, GetArticlesResolveLiteral] = UNSET,
-        order_by: Union[Unset, GetArticlesOrderByLiteral] = UNSET,
-        filters: Union[Unset, GetArticlesFilters] = UNSET,
+        resolve: Union[Unset, FindArticlesResolveLiteral] = UNSET,
+        order_by: Union[Unset, FindArticlesOrderByLiteral] = UNSET,
+        filters: Union[Unset, List[FindArticlesFiltersItem]] = UNSET,
         limit: Union[Unset, int] = UNSET,
-        skip: Union[Unset, int] = UNSET,
+        offset: Union[Unset, int] = UNSET,
     ):
-        result = get_articles.sync(
+        result = find_articles.sync(
             client=self._api_client,
-            resolve=get_enum_from_literal(resolve, GetArticlesResolve),
-            order_by=get_enum_from_literal(order_by, GetArticlesOrderBy),
+            resolve=get_enum_from_literal(resolve, FindArticlesResolve),
+            order_by=get_enum_from_literal(order_by, FindArticlesOrderBy),
             filters=filters,
             limit=limit,
-            skip=skip,
+            offset=offset,
         )
-
+        raise_for_error(result)
         return ArticlesDataContainer(result, ArticlesResponseSchema)
 
     def get(self, id: str):
-        result = get_articles_id.sync(client=self._api_client, id=id)
+        result = get_article.sync(client=self._api_client, id=id)
+        raise_for_error(result)
         return ArticleDataContainer(result, Article)

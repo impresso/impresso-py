@@ -11,7 +11,10 @@ def get_jwt_status(
     Validate a JWT token.
     """
     try:
-        decoded_token = jwt.decode(token, options={"verify_signature": False})
+        decoded_token = jwt.decode(
+            token,
+            options={"verify_signature": False, "verify_exp": True, "verify_iat": True},
+        )
         return "valid", decoded_token
     except jwt.ExpiredSignatureError:
         # Signature has expired

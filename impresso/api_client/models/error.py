@@ -1,66 +1,66 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import Any, Dict, List, Type, TypeVar
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
-
-from ..types import UNSET, Unset
-
-if TYPE_CHECKING:
-    from ..models.error_data import ErrorData
-
 
 T = TypeVar("T", bound="Error")
 
 
 @_attrs_define
 class Error:
-    """Default error response. TODO: replace with https://datatracker.ietf.org/doc/html/rfc9457
+    """Error response that follows https://datatracker.ietf.org/doc/html/rfc7807#section-3.1
 
     Attributes:
-        message (str):
-        data (Union[Unset, ErrorData]):
+        type (str): A URI reference [RFC3986] that identifies the problem type.
+        title (str): A short, human-readable summary of the problem type.
+        status (int): The HTTP status code ([RFC7231], Section 6)
+        detail (str): A human-readable explanation specific to this occurrence of the problem.
     """
 
-    message: str
-    data: Union[Unset, "ErrorData"] = UNSET
+    type: str
+    title: str
+    status: int
+    detail: str
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        message = self.message
+        type = self.type
 
-        data: Union[Unset, Dict[str, Any]] = UNSET
-        if not isinstance(self.data, Unset):
-            data = self.data.to_dict()
+        title = self.title
+
+        status = self.status
+
+        detail = self.detail
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
-                "message": message,
+                "type": type,
+                "title": title,
+                "status": status,
+                "detail": detail,
             }
         )
-        if data is not UNSET:
-            field_dict["data"] = data
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.error_data import ErrorData
-
         d = src_dict.copy()
-        message = d.pop("message")
+        type = d.pop("type")
 
-        _data = d.pop("data", UNSET)
-        data: Union[Unset, ErrorData]
-        if isinstance(_data, Unset):
-            data = UNSET
-        else:
-            data = ErrorData.from_dict(_data)
+        title = d.pop("title")
+
+        status = d.pop("status")
+
+        detail = d.pop("detail")
 
         error = cls(
-            message=message,
-            data=data,
+            type=type,
+            title=title,
+            status=status,
+            detail=detail,
         )
 
         error.additional_properties = d

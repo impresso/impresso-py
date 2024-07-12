@@ -2,23 +2,21 @@ from typing import List, Union
 
 from pandas import DataFrame, json_normalize
 
-from impresso.api_client.api.search import get_search
-from impresso.api_client.models.get_search_facets import (
-    GetSearchFacets,
-    GetSearchFacetsLiteral,
+from impresso.api_client.api.search import search
+from impresso.api_client.models.search_facets import SearchFacets, SearchFacetsLiteral
+from impresso.api_client.models.search_group_by import (
+    SearchGroupBy,
+    SearchGroupByLiteral,
 )
-from impresso.api_client.models.get_search_group_by import (
-    GetSearchGroupBy,
-    GetSearchGroupByLiteral,
-)
-from impresso.api_client.models.get_search_order_by import (
-    GetSearchOrderBy,
-    GetSearchOrderByLiteral,
+from impresso.api_client.models.search_order_by import (
+    SearchOrderBy,
+    SearchOrderByLiteral,
 )
 from impresso.api_client.types import UNSET, Unset
-from impresso.api_models import BaseFind, Article, Filter
+from impresso.api_models import Article, BaseFind, Filter
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
+from impresso.util.error import raise_for_error
 from impresso.util.py import get_enum_from_literal
 
 
@@ -45,21 +43,22 @@ class SearchResource(Resource):
     def find(
         self,
         q: Union[Unset, str] = UNSET,
-        group_by: GetSearchGroupByLiteral = "articles",
-        order_by: Union[Unset, GetSearchOrderByLiteral] = UNSET,
-        facets: Union[Unset, GetSearchFacetsLiteral] = UNSET,
+        group_by: SearchGroupByLiteral = "articles",
+        order_by: Union[Unset, SearchOrderByLiteral] = UNSET,
+        facets: Union[Unset, SearchFacetsLiteral] = UNSET,
         filters: Union[Unset, List[Filter]] = UNSET,
         limit: Union[Unset, int] = UNSET,
-        skip: Union[Unset, int] = UNSET,
+        offset: Union[Unset, int] = UNSET,
     ):
-        result = get_search.sync(
+        result = search.sync(
             client=self._api_client,
             q=q,
-            group_by=get_enum_from_literal(group_by, GetSearchGroupBy),
-            order_by=get_enum_from_literal(order_by, GetSearchOrderBy),
-            facets=get_enum_from_literal(facets, GetSearchFacets),
+            group_by=get_enum_from_literal(group_by, SearchGroupBy),
+            order_by=get_enum_from_literal(order_by, SearchOrderBy),
+            facets=get_enum_from_literal(facets, SearchFacets),
             filters=filters,
             limit=limit,
-            skip=skip,
+            offset=offset,
         )
+        raise_for_error(result)
         return SearchDataContainer(result, SearchResponseSchema)

@@ -1,6 +1,8 @@
+import datetime
 from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
+from dateutil.parser import isoparse
 
 from ..types import UNSET, Unset
 
@@ -20,8 +22,8 @@ class Collection:
         name (str):
         description (str):
         status (str):  Example: PRI.
-        creation_date (str):
-        last_modified_date (str):
+        creation_date (datetime.datetime):
+        last_modified_date (datetime.datetime):
         count_items (Union[int, str]):
         creator (BaseUser):
         labels (Union[Unset, List[str]]):
@@ -31,8 +33,8 @@ class Collection:
     name: str
     description: str
     status: str
-    creation_date: str
-    last_modified_date: str
+    creation_date: datetime.datetime
+    last_modified_date: datetime.datetime
     count_items: Union[int, str]
     creator: "BaseUser"
     labels: Union[Unset, List[str]] = UNSET
@@ -46,9 +48,9 @@ class Collection:
 
         status = self.status
 
-        creation_date = self.creation_date
+        creation_date = self.creation_date.isoformat()
 
-        last_modified_date = self.last_modified_date
+        last_modified_date = self.last_modified_date.isoformat()
 
         count_items: Union[int, str]
         count_items = self.count_items
@@ -90,9 +92,9 @@ class Collection:
 
         status = d.pop("status")
 
-        creation_date = d.pop("creationDate")
+        creation_date = isoparse(d.pop("creationDate"))
 
-        last_modified_date = d.pop("lastModifiedDate")
+        last_modified_date = isoparse(d.pop("lastModifiedDate"))
 
         def _parse_count_items(data: object) -> Union[int, str]:
             return cast(Union[int, str], data)

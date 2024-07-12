@@ -14,14 +14,14 @@ class BaseFind:
     """
     Attributes:
         limit (int): The number of items returned in this response
-        skip (int): The number of items skipped in this response
+        offset (int): Starting index of the items subset returned in this response
         total (int): The total number of items matching the query
         info (BaseFindInfo): Additional information about the response.
         data (List[Any]):
     """
 
     limit: int
-    skip: int
+    offset: int
     total: int
     info: "BaseFindInfo"
     data: List[Any]
@@ -29,7 +29,7 @@ class BaseFind:
     def to_dict(self) -> Dict[str, Any]:
         limit = self.limit
 
-        skip = self.skip
+        offset = self.offset
 
         total = self.total
 
@@ -41,7 +41,7 @@ class BaseFind:
         field_dict.update(
             {
                 "limit": limit,
-                "skip": skip,
+                "offset": offset,
                 "total": total,
                 "info": info,
                 "data": data,
@@ -57,7 +57,7 @@ class BaseFind:
         d = src_dict.copy()
         limit = d.pop("limit")
 
-        skip = d.pop("skip")
+        offset = d.pop("offset")
 
         total = d.pop("total")
 
@@ -67,7 +67,7 @@ class BaseFind:
 
         base_find = cls(
             limit=limit,
-            skip=skip,
+            offset=offset,
             total=total,
             info=info,
             data=data,

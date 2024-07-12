@@ -17,19 +17,21 @@ class TextReuseClusterCompound:
     """Text reuse cluster with details and a sample
 
     Attributes:
-        cluster (TextReuseCluster): Represents a cluster of text reuse passages
         text_sample (str):
+        cluster (Union[Unset, TextReuseCluster]): Represents a cluster of text reuse passages
         details (Union[Unset, TextReuseClusterDetails]): Extra details of the cluster
     """
 
-    cluster: "TextReuseCluster"
     text_sample: str
+    cluster: Union[Unset, "TextReuseCluster"] = UNSET
     details: Union[Unset, "TextReuseClusterDetails"] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
-        cluster = self.cluster.to_dict()
-
         text_sample = self.text_sample
+
+        cluster: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.cluster, Unset):
+            cluster = self.cluster.to_dict()
 
         details: Union[Unset, Dict[str, Any]] = UNSET
         if not isinstance(self.details, Unset):
@@ -38,10 +40,11 @@ class TextReuseClusterCompound:
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
-                "cluster": cluster,
                 "textSample": text_sample,
             }
         )
+        if cluster is not UNSET:
+            field_dict["cluster"] = cluster
         if details is not UNSET:
             field_dict["details"] = details
 
@@ -53,9 +56,14 @@ class TextReuseClusterCompound:
         from ..models.text_reuse_cluster_details import TextReuseClusterDetails
 
         d = src_dict.copy()
-        cluster = TextReuseCluster.from_dict(d.pop("cluster"))
-
         text_sample = d.pop("textSample")
+
+        _cluster = d.pop("cluster", UNSET)
+        cluster: Union[Unset, TextReuseCluster]
+        if isinstance(_cluster, Unset):
+            cluster = UNSET
+        else:
+            cluster = TextReuseCluster.from_dict(_cluster)
 
         _details = d.pop("details", UNSET)
         details: Union[Unset, TextReuseClusterDetails]
@@ -65,8 +73,8 @@ class TextReuseClusterCompound:
             details = TextReuseClusterDetails.from_dict(_details)
 
         text_reuse_cluster_compound = cls(
-            cluster=cluster,
             text_sample=text_sample,
+            cluster=cluster,
             details=details,
         )
 
