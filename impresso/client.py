@@ -19,6 +19,7 @@ class ImpressoClient(ImpressoApiResourcesBase):
             AuthenticatedClient(
                 base_url=self._api_url,
                 token=self._api_bearer_token,
+                headers={"Content-Type": "application/json"},
             )
         )
 

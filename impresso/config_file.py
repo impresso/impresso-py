@@ -33,6 +33,8 @@ class ImpressoPyConfig:
     def get_token(self) -> str | None:
         """Return the token for the given username."""
         token = self._config.token
+        if token is None:
+            return None
         token_status, _ = get_jwt_status(token)
         if token_status == "valid":
             return token

@@ -24,4 +24,4 @@ def raise_for_error(result: ApiError | IT) -> IT:
         error = Error.model_validate(result.to_dict())
         raise ImpressoError(error)
     else:
-        return input
+        return result

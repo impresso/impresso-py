@@ -1,12 +1,11 @@
 from http import HTTPStatus
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
-from ...models.find_articles_filters_item import FindArticlesFiltersItem
 from ...models.find_articles_order_by import FindArticlesOrderBy
 from ...models.find_articles_resolve import FindArticlesResolve
 from ...models.find_articles_response_200 import FindArticlesResponse200
@@ -17,7 +16,6 @@ def _get_kwargs(
     *,
     resolve: Union[Unset, FindArticlesResolve] = UNSET,
     order_by: Union[Unset, FindArticlesOrderBy] = UNSET,
-    filters: Union[Unset, List["FindArticlesFiltersItem"]] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Dict[str, Any]:
@@ -34,15 +32,6 @@ def _get_kwargs(
         json_order_by = order_by.value
 
     params["order_by"] = json_order_by
-
-    json_filters: Union[Unset, List[Dict[str, Any]]] = UNSET
-    if not isinstance(filters, Unset):
-        json_filters = []
-        for filters_item_data in filters:
-            filters_item = filters_item_data.to_dict()
-            json_filters.append(filters_item)
-
-    params["filters"] = json_filters
 
     params["limit"] = limit
 
@@ -112,7 +101,6 @@ def sync_detailed(
     client: AuthenticatedClient,
     resolve: Union[Unset, FindArticlesResolve] = UNSET,
     order_by: Union[Unset, FindArticlesOrderBy] = UNSET,
-    filters: Union[Unset, List["FindArticlesFiltersItem"]] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, FindArticlesResponse200]]:
@@ -121,7 +109,6 @@ def sync_detailed(
     Args:
         resolve (Union[Unset, FindArticlesResolve]):
         order_by (Union[Unset, FindArticlesOrderBy]):
-        filters (Union[Unset, List['FindArticlesFiltersItem']]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -136,7 +123,6 @@ def sync_detailed(
     kwargs = _get_kwargs(
         resolve=resolve,
         order_by=order_by,
-        filters=filters,
         limit=limit,
         offset=offset,
     )
@@ -153,7 +139,6 @@ def sync(
     client: AuthenticatedClient,
     resolve: Union[Unset, FindArticlesResolve] = UNSET,
     order_by: Union[Unset, FindArticlesOrderBy] = UNSET,
-    filters: Union[Unset, List["FindArticlesFiltersItem"]] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, FindArticlesResponse200]]:
@@ -162,7 +147,6 @@ def sync(
     Args:
         resolve (Union[Unset, FindArticlesResolve]):
         order_by (Union[Unset, FindArticlesOrderBy]):
-        filters (Union[Unset, List['FindArticlesFiltersItem']]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -178,7 +162,6 @@ def sync(
         client=client,
         resolve=resolve,
         order_by=order_by,
-        filters=filters,
         limit=limit,
         offset=offset,
     ).parsed
@@ -189,7 +172,6 @@ async def asyncio_detailed(
     client: AuthenticatedClient,
     resolve: Union[Unset, FindArticlesResolve] = UNSET,
     order_by: Union[Unset, FindArticlesOrderBy] = UNSET,
-    filters: Union[Unset, List["FindArticlesFiltersItem"]] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, FindArticlesResponse200]]:
@@ -198,7 +180,6 @@ async def asyncio_detailed(
     Args:
         resolve (Union[Unset, FindArticlesResolve]):
         order_by (Union[Unset, FindArticlesOrderBy]):
-        filters (Union[Unset, List['FindArticlesFiltersItem']]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -213,7 +194,6 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         resolve=resolve,
         order_by=order_by,
-        filters=filters,
         limit=limit,
         offset=offset,
     )
@@ -228,7 +208,6 @@ async def asyncio(
     client: AuthenticatedClient,
     resolve: Union[Unset, FindArticlesResolve] = UNSET,
     order_by: Union[Unset, FindArticlesOrderBy] = UNSET,
-    filters: Union[Unset, List["FindArticlesFiltersItem"]] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, FindArticlesResponse200]]:
@@ -237,7 +216,6 @@ async def asyncio(
     Args:
         resolve (Union[Unset, FindArticlesResolve]):
         order_by (Union[Unset, FindArticlesOrderBy]):
-        filters (Union[Unset, List['FindArticlesFiltersItem']]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -254,7 +232,6 @@ async def asyncio(
             client=client,
             resolve=resolve,
             order_by=order_by,
-            filters=filters,
             limit=limit,
             offset=offset,
         )

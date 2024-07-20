@@ -28,4 +28,4 @@ class DataContainer(Generic[IT, T]):
     @property
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
-        return DataFrame.from_dict(self._data)
+        return DataFrame.from_dict(self._data)  # type: ignore

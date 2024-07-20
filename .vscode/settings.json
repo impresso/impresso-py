@@ -9,5 +9,6 @@
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "python.testing.pytestArgs": ["-vv"],
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "pylint.args": ["--generate-members"]
 }

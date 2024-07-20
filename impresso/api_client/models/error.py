@@ -1,7 +1,9 @@
-from typing import Any, Dict, List, Type, TypeVar
+from typing import Any, Dict, List, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
+
+from ..types import UNSET, Unset
 
 T = TypeVar("T", bound="Error")
 
@@ -14,13 +16,13 @@ class Error:
         type (str): A URI reference [RFC3986] that identifies the problem type.
         title (str): A short, human-readable summary of the problem type.
         status (int): The HTTP status code ([RFC7231], Section 6)
-        detail (str): A human-readable explanation specific to this occurrence of the problem.
+        detail (Union[Unset, str]): A human-readable explanation specific to this occurrence of the problem.
     """
 
     type: str
     title: str
     status: int
-    detail: str
+    detail: Union[Unset, str] = UNSET
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -39,9 +41,10 @@ class Error:
                 "type": type,
                 "title": title,
                 "status": status,
-                "detail": detail,
             }
         )
+        if detail is not UNSET:
+            field_dict["detail"] = detail
 
         return field_dict
 
@@ -54,7 +57,7 @@ class Error:
 
         status = d.pop("status")
 
-        detail = d.pop("detail")
+        detail = d.pop("detail", UNSET)
 
         error = cls(
             type=type,

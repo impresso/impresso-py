@@ -20,7 +20,7 @@ def _get_kwargs(
     *,
     order_by: Union[Unset, GetTrClustersFacetOrderBy] = UNSET,
     group_by: Union[Unset, GetTrClustersFacetGroupBy] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     range_start: Union[Unset, float] = UNSET,
     range_end: Union[Unset, float] = UNSET,
     range_gap: Union[Unset, float] = UNSET,
@@ -42,13 +42,17 @@ def _get_kwargs(
 
     params["group_by"] = json_group_by
 
-    json_filters: Union[Unset, List[Dict[str, Any]]] = UNSET
-    if not isinstance(filters, Unset):
+    json_filters: Union[List[Dict[str, Any]], Unset, str]
+    if isinstance(filters, Unset):
+        json_filters = UNSET
+    elif isinstance(filters, list):
         json_filters = []
-        for filters_item_data in filters:
-            filters_item = filters_item_data.to_dict()
-            json_filters.append(filters_item)
+        for filters_type_1_item_data in filters:
+            filters_type_1_item = filters_type_1_item_data.to_dict()
+            json_filters.append(filters_type_1_item)
 
+    else:
+        json_filters = filters
     params["filters"] = json_filters
 
     params["range_start"] = range_start
@@ -132,7 +136,7 @@ def sync_detailed(
     client: AuthenticatedClient,
     order_by: Union[Unset, GetTrClustersFacetOrderBy] = UNSET,
     group_by: Union[Unset, GetTrClustersFacetGroupBy] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     range_start: Union[Unset, float] = UNSET,
     range_end: Union[Unset, float] = UNSET,
     range_gap: Union[Unset, float] = UNSET,
@@ -146,7 +150,7 @@ def sync_detailed(
         id (GetTrClustersFacetId):
         order_by (Union[Unset, GetTrClustersFacetOrderBy]):
         group_by (Union[Unset, GetTrClustersFacetGroupBy]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         range_start (Union[Unset, float]):
         range_end (Union[Unset, float]):
         range_gap (Union[Unset, float]):
@@ -188,7 +192,7 @@ def sync(
     client: AuthenticatedClient,
     order_by: Union[Unset, GetTrClustersFacetOrderBy] = UNSET,
     group_by: Union[Unset, GetTrClustersFacetGroupBy] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     range_start: Union[Unset, float] = UNSET,
     range_end: Union[Unset, float] = UNSET,
     range_gap: Union[Unset, float] = UNSET,
@@ -202,7 +206,7 @@ def sync(
         id (GetTrClustersFacetId):
         order_by (Union[Unset, GetTrClustersFacetOrderBy]):
         group_by (Union[Unset, GetTrClustersFacetGroupBy]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         range_start (Union[Unset, float]):
         range_end (Union[Unset, float]):
         range_gap (Union[Unset, float]):
@@ -239,7 +243,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient,
     order_by: Union[Unset, GetTrClustersFacetOrderBy] = UNSET,
     group_by: Union[Unset, GetTrClustersFacetGroupBy] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     range_start: Union[Unset, float] = UNSET,
     range_end: Union[Unset, float] = UNSET,
     range_gap: Union[Unset, float] = UNSET,
@@ -253,7 +257,7 @@ async def asyncio_detailed(
         id (GetTrClustersFacetId):
         order_by (Union[Unset, GetTrClustersFacetOrderBy]):
         group_by (Union[Unset, GetTrClustersFacetGroupBy]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         range_start (Union[Unset, float]):
         range_end (Union[Unset, float]):
         range_gap (Union[Unset, float]):
@@ -293,7 +297,7 @@ async def asyncio(
     client: AuthenticatedClient,
     order_by: Union[Unset, GetTrClustersFacetOrderBy] = UNSET,
     group_by: Union[Unset, GetTrClustersFacetGroupBy] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     range_start: Union[Unset, float] = UNSET,
     range_end: Union[Unset, float] = UNSET,
     range_gap: Union[Unset, float] = UNSET,
@@ -307,7 +311,7 @@ async def asyncio(
         id (GetTrClustersFacetId):
         order_by (Union[Unset, GetTrClustersFacetOrderBy]):
         group_by (Union[Unset, GetTrClustersFacetGroupBy]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         range_start (Union[Unset, float]):
         range_end (Union[Unset, float]):
         range_gap (Union[Unset, float]):

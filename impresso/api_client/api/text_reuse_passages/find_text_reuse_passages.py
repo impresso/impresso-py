@@ -18,7 +18,7 @@ def _get_kwargs(
     *,
     order_by: Union[Unset, FindTextReusePassagesOrderBy] = UNSET,
     group_by: Union[Unset, FindTextReusePassagesGroupBy] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     addons: Union[Unset, "FindTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
@@ -37,13 +37,17 @@ def _get_kwargs(
 
     params["group_by"] = json_group_by
 
-    json_filters: Union[Unset, List[Dict[str, Any]]] = UNSET
-    if not isinstance(filters, Unset):
+    json_filters: Union[List[Dict[str, Any]], Unset, str]
+    if isinstance(filters, Unset):
+        json_filters = UNSET
+    elif isinstance(filters, list):
         json_filters = []
-        for filters_item_data in filters:
-            filters_item = filters_item_data.to_dict()
-            json_filters.append(filters_item)
+        for filters_type_1_item_data in filters:
+            filters_type_1_item = filters_type_1_item_data.to_dict()
+            json_filters.append(filters_type_1_item)
 
+    else:
+        json_filters = filters
     params["filters"] = json_filters
 
     json_addons: Union[Unset, Dict[str, Any]] = UNSET
@@ -120,7 +124,7 @@ def sync_detailed(
     client: AuthenticatedClient,
     order_by: Union[Unset, FindTextReusePassagesOrderBy] = UNSET,
     group_by: Union[Unset, FindTextReusePassagesGroupBy] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     addons: Union[Unset, "FindTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
@@ -130,7 +134,7 @@ def sync_detailed(
     Args:
         order_by (Union[Unset, FindTextReusePassagesOrderBy]):
         group_by (Union[Unset, FindTextReusePassagesGroupBy]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         addons (Union[Unset, FindTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
@@ -164,7 +168,7 @@ def sync(
     client: AuthenticatedClient,
     order_by: Union[Unset, FindTextReusePassagesOrderBy] = UNSET,
     group_by: Union[Unset, FindTextReusePassagesGroupBy] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     addons: Union[Unset, "FindTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
@@ -174,7 +178,7 @@ def sync(
     Args:
         order_by (Union[Unset, FindTextReusePassagesOrderBy]):
         group_by (Union[Unset, FindTextReusePassagesGroupBy]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         addons (Union[Unset, FindTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
@@ -203,7 +207,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient,
     order_by: Union[Unset, FindTextReusePassagesOrderBy] = UNSET,
     group_by: Union[Unset, FindTextReusePassagesGroupBy] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     addons: Union[Unset, "FindTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
@@ -213,7 +217,7 @@ async def asyncio_detailed(
     Args:
         order_by (Union[Unset, FindTextReusePassagesOrderBy]):
         group_by (Union[Unset, FindTextReusePassagesGroupBy]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         addons (Union[Unset, FindTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
@@ -245,7 +249,7 @@ async def asyncio(
     client: AuthenticatedClient,
     order_by: Union[Unset, FindTextReusePassagesOrderBy] = UNSET,
     group_by: Union[Unset, FindTextReusePassagesGroupBy] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     addons: Union[Unset, "FindTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
@@ -255,7 +259,7 @@ async def asyncio(
     Args:
         order_by (Union[Unset, FindTextReusePassagesOrderBy]):
         group_by (Union[Unset, FindTextReusePassagesGroupBy]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         addons (Union[Unset, FindTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):

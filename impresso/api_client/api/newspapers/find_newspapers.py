@@ -1,12 +1,11 @@
 from http import HTTPStatus
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
-from ...models.filter_ import Filter
 from ...models.find_newspapers_order_by import FindNewspapersOrderBy
 from ...models.find_newspapers_response_200 import FindNewspapersResponse200
 from ...types import UNSET, Response, Unset
@@ -14,7 +13,7 @@ from ...types import UNSET, Response, Unset
 
 def _get_kwargs(
     *,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    included_only: Union[Unset, bool] = UNSET,
     order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
     faster: Union[Unset, bool] = UNSET,
     q: Union[Unset, str] = UNSET,
@@ -23,14 +22,7 @@ def _get_kwargs(
 ) -> Dict[str, Any]:
     params: Dict[str, Any] = {}
 
-    json_filters: Union[Unset, List[Dict[str, Any]]] = UNSET
-    if not isinstance(filters, Unset):
-        json_filters = []
-        for filters_item_data in filters:
-            filters_item = filters_item_data.to_dict()
-            json_filters.append(filters_item)
-
-    params["filters"] = json_filters
+    params["includedOnly"] = included_only
 
     json_order_by: Union[Unset, str] = UNSET
     if not isinstance(order_by, Unset):
@@ -108,7 +100,7 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    included_only: Union[Unset, bool] = UNSET,
     order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
     faster: Union[Unset, bool] = UNSET,
     q: Union[Unset, str] = UNSET,
@@ -118,7 +110,7 @@ def sync_detailed(
     """Find newspapers that match the given query
 
     Args:
-        filters (Union[Unset, List['Filter']]):
+        included_only (Union[Unset, bool]):
         order_by (Union[Unset, FindNewspapersOrderBy]):
         faster (Union[Unset, bool]):
         q (Union[Unset, str]):
@@ -134,7 +126,7 @@ def sync_detailed(
     """
 
     kwargs = _get_kwargs(
-        filters=filters,
+        included_only=included_only,
         order_by=order_by,
         faster=faster,
         q=q,
@@ -152,7 +144,7 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    included_only: Union[Unset, bool] = UNSET,
     order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
     faster: Union[Unset, bool] = UNSET,
     q: Union[Unset, str] = UNSET,
@@ -162,7 +154,7 @@ def sync(
     """Find newspapers that match the given query
 
     Args:
-        filters (Union[Unset, List['Filter']]):
+        included_only (Union[Unset, bool]):
         order_by (Union[Unset, FindNewspapersOrderBy]):
         faster (Union[Unset, bool]):
         q (Union[Unset, str]):
@@ -179,7 +171,7 @@ def sync(
 
     return sync_detailed(
         client=client,
-        filters=filters,
+        included_only=included_only,
         order_by=order_by,
         faster=faster,
         q=q,
@@ -191,7 +183,7 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    included_only: Union[Unset, bool] = UNSET,
     order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
     faster: Union[Unset, bool] = UNSET,
     q: Union[Unset, str] = UNSET,
@@ -201,7 +193,7 @@ async def asyncio_detailed(
     """Find newspapers that match the given query
 
     Args:
-        filters (Union[Unset, List['Filter']]):
+        included_only (Union[Unset, bool]):
         order_by (Union[Unset, FindNewspapersOrderBy]):
         faster (Union[Unset, bool]):
         q (Union[Unset, str]):
@@ -217,7 +209,7 @@ async def asyncio_detailed(
     """
 
     kwargs = _get_kwargs(
-        filters=filters,
+        included_only=included_only,
         order_by=order_by,
         faster=faster,
         q=q,
@@ -233,7 +225,7 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    included_only: Union[Unset, bool] = UNSET,
     order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
     faster: Union[Unset, bool] = UNSET,
     q: Union[Unset, str] = UNSET,
@@ -243,7 +235,7 @@ async def asyncio(
     """Find newspapers that match the given query
 
     Args:
-        filters (Union[Unset, List['Filter']]):
+        included_only (Union[Unset, bool]):
         order_by (Union[Unset, FindNewspapersOrderBy]):
         faster (Union[Unset, bool]):
         q (Union[Unset, str]):
@@ -261,7 +253,7 @@ async def asyncio(
     return (
         await asyncio_detailed(
             client=client,
-            filters=filters,
+            included_only=included_only,
             order_by=order_by,
             faster=faster,
             q=q,

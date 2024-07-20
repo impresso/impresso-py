@@ -1,11 +1,8 @@
-from typing import Any, List, Union
+from typing import Any, Union
 
 from pandas import DataFrame, json_normalize
 
 from impresso.api_client.api.articles import find_articles, get_article
-from impresso.api_client.models.find_articles_filters_item import (
-    FindArticlesFiltersItem,
-)
 from impresso.api_client.models.find_articles_order_by import (
     FindArticlesOrderBy,
     FindArticlesOrderByLiteral,
@@ -65,7 +62,6 @@ class ArticlesResource(Resource):
         self,
         resolve: Union[Unset, FindArticlesResolveLiteral] = UNSET,
         order_by: Union[Unset, FindArticlesOrderByLiteral] = UNSET,
-        filters: Union[Unset, List[FindArticlesFiltersItem]] = UNSET,
         limit: Union[Unset, int] = UNSET,
         offset: Union[Unset, int] = UNSET,
     ):
@@ -73,7 +69,6 @@ class ArticlesResource(Resource):
             client=self._api_client,
             resolve=get_enum_from_literal(resolve, FindArticlesResolve),
             order_by=get_enum_from_literal(order_by, FindArticlesOrderBy),
-            filters=filters,
             limit=limit,
             offset=offset,
         )

@@ -17,7 +17,8 @@ from impresso.api_models import Article, BaseFind, Filter
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
 from impresso.util.error import raise_for_error
-from impresso.util.py import get_enum_from_literal
+from impresso.util.filters import filters_as_protobuf
+from impresso.util.py import get_enum_from_literal, get_enum_from_literal_required
 
 
 class SearchResponseSchema(BaseFind):
@@ -53,10 +54,10 @@ class SearchResource(Resource):
         result = search.sync(
             client=self._api_client,
             q=q,
-            group_by=get_enum_from_literal(group_by, SearchGroupBy),
+            group_by=get_enum_from_literal_required(group_by, SearchGroupBy),
             order_by=get_enum_from_literal(order_by, SearchOrderBy),
             facets=get_enum_from_literal(facets, SearchFacets),
-            filters=filters,
+            filters=filters_as_protobuf(filters or []) or Unset(),
             limit=limit,
             offset=offset,
         )

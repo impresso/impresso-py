@@ -20,7 +20,7 @@ def _get_kwargs(
     group_by: SearchGroupBy = SearchGroupBy.ARTICLES,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
     facets: Union[Unset, SearchFacets] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Dict[str, Any]:
@@ -43,13 +43,17 @@ def _get_kwargs(
 
     params["facets"] = json_facets
 
-    json_filters: Union[Unset, List[Dict[str, Any]]] = UNSET
-    if not isinstance(filters, Unset):
+    json_filters: Union[List[Dict[str, Any]], Unset, str]
+    if isinstance(filters, Unset):
+        json_filters = UNSET
+    elif isinstance(filters, list):
         json_filters = []
-        for filters_item_data in filters:
-            filters_item = filters_item_data.to_dict()
-            json_filters.append(filters_item)
+        for filters_type_1_item_data in filters:
+            filters_type_1_item = filters_type_1_item_data.to_dict()
+            json_filters.append(filters_type_1_item)
 
+    else:
+        json_filters = filters
     params["filters"] = json_filters
 
     params["limit"] = limit
@@ -122,7 +126,7 @@ def sync_detailed(
     group_by: SearchGroupBy = SearchGroupBy.ARTICLES,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
     facets: Union[Unset, SearchFacets] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, SearchResponse200]]:
@@ -133,7 +137,7 @@ def sync_detailed(
         group_by (SearchGroupBy):  Default: SearchGroupBy.ARTICLES.
         order_by (Union[Unset, SearchOrderBy]):
         facets (Union[Unset, SearchFacets]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -169,7 +173,7 @@ def sync(
     group_by: SearchGroupBy = SearchGroupBy.ARTICLES,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
     facets: Union[Unset, SearchFacets] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, SearchResponse200]]:
@@ -180,7 +184,7 @@ def sync(
         group_by (SearchGroupBy):  Default: SearchGroupBy.ARTICLES.
         order_by (Union[Unset, SearchOrderBy]):
         facets (Union[Unset, SearchFacets]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -211,7 +215,7 @@ async def asyncio_detailed(
     group_by: SearchGroupBy = SearchGroupBy.ARTICLES,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
     facets: Union[Unset, SearchFacets] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, SearchResponse200]]:
@@ -222,7 +226,7 @@ async def asyncio_detailed(
         group_by (SearchGroupBy):  Default: SearchGroupBy.ARTICLES.
         order_by (Union[Unset, SearchOrderBy]):
         facets (Union[Unset, SearchFacets]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -256,7 +260,7 @@ async def asyncio(
     group_by: SearchGroupBy = SearchGroupBy.ARTICLES,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
     facets: Union[Unset, SearchFacets] = UNSET,
-    filters: Union[Unset, List["Filter"]] = UNSET,
+    filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, SearchResponse200]]:
@@ -267,7 +271,7 @@ async def asyncio(
         group_by (SearchGroupBy):  Default: SearchGroupBy.ARTICLES.
         order_by (Union[Unset, SearchOrderBy]):
         facets (Union[Unset, SearchFacets]):
-        filters (Union[Unset, List['Filter']]):
+        filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 

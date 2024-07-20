@@ -180,9 +180,10 @@ class Error(BaseModel):
         int, Field(description='The HTTP status code ([RFC7231], Section 6)')
     ]
     detail: Annotated[
-        str,
+        Optional[str],
         Field(
-            description='A human-readable explanation specific to this occurrence of the problem.'
+            None,
+            description='A human-readable explanation specific to this occurrence of the problem.',
         ),
     ]
 

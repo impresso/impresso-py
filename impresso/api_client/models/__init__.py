@@ -34,8 +34,6 @@ from .filter_ import Filter
 from .filter_context import FilterContext
 from .filter_op import FilterOp
 from .filter_precision import FilterPrecision
-from .find_articles_filters_item import FindArticlesFiltersItem
-from .find_articles_filters_item_type import FindArticlesFiltersItemType
 from .find_articles_order_by import FindArticlesOrderBy
 from .find_articles_resolve import FindArticlesResolve
 from .find_articles_response_200 import FindArticlesResponse200
@@ -155,8 +153,6 @@ __all__ = (
     "FilterContext",
     "FilterOp",
     "FilterPrecision",
-    "FindArticlesFiltersItem",
-    "FindArticlesFiltersItemType",
     "FindArticlesOrderBy",
     "FindArticlesResolve",
     "FindArticlesResponse200",

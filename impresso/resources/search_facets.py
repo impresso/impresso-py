@@ -78,9 +78,12 @@ class SearchFacetsResource(Resource):
         facet: GetSearchFacetIdLiteral,
         q: Union[Unset, str] = UNSET,
     ):
+        id = get_enum_from_literal(facet, GetSearchFacetId)
+        if isinstance(id, Unset):
+            raise ValueError(f"{facet} is not a valid value")
         result = get_search_facet.sync(
             client=self._api_client,
-            id=get_enum_from_literal(facet, GetSearchFacetId),
+            id=id,
             # q=q,
         )
         raise_for_error(result)
