@@ -29,3 +29,18 @@ class DataContainer(Generic[IT, T]):
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
         return DataFrame.from_dict(self._data)  # type: ignore
+
+    @property
+    def total(self) -> int:
+        """Total number of results."""
+        return self.raw.get("total", 0)
+
+    @property
+    def limit(self) -> int:
+        """Page size."""
+        return self.raw.get("limit", 0)
+
+    @property
+    def offset(self) -> int:
+        """Page offset."""
+        return self.raw.get("offset", 0)

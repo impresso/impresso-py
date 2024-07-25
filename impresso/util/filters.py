@@ -1,9 +1,10 @@
+import base64
 import datetime
 from typing import List
 
 from impresso.api_models import Filter
 from impresso.protobuf import query_pb2 as pb
-import base64
+from impresso.structures import AND, OR
 
 
 def filters_as_protobuf(filters: List[Filter]) -> str | None:
@@ -90,3 +91,12 @@ def _to_pb_filter_precision(p: str) -> pb.FilterPrecision:
 
 def _to_pb_filter_daterange(from_: int, to: int) -> pb.DateRange:
     return pb.DateRange(to=to, **{"from": from_})
+
+
+def and_or_filter(item: str | AND[str] | OR[str], type: str) -> Filter:
+    if isinstance(item, str):
+        return Filter(type=type, q=item)
+    elif isinstance(item, AND):
+        return Filter(type=type, q=list(item), op="AND")
+    elif isinstance(item, OR):
+        return Filter(type=type, q=list(item), op="OR")
