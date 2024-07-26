@@ -1,17 +1,25 @@
+from typing import Any
+
 from pandas import DataFrame, json_normalize
 
 from impresso.api_client.api.search import search
+from impresso.api_client.api.search_facets import get_search_facet
 from impresso.api_client.models.article_access_right import ArticleAccessRightLiteral
+from impresso.api_client.models.get_search_facet_id import (
+    GetSearchFacetId,
+    GetSearchFacetIdLiteral,
+)
+from impresso.api_client.models.get_search_facet_order_by import GetSearchFacetOrderBy
 from impresso.api_client.models.search_group_by import SearchGroupBy
 from impresso.api_client.models.search_order_by import (
     SearchOrderBy,
     SearchOrderByLiteral,
 )
-from impresso.api_client.types import UNSET
-from impresso.api_models import Q, Article, BaseFind, Filter
-from impresso.data_container import DataContainer
+from impresso.api_client.types import UNSET, Unset
+from impresso.api_models import Article, BaseFind, Filter, Q, SearchFacet
+from impresso.data_container import IT, DataContainer, T
 from impresso.resources.base import Resource
-from impresso.structures import AND, OR, DateRange, NumericRange
+from impresso.structures import AND, OR, DateRange
 from impresso.util.error import raise_for_error
 from impresso.util.filters import and_or_filter, filters_as_protobuf
 from impresso.util.py import get_enum_from_literal, get_enum_from_literal_required
@@ -33,6 +41,56 @@ class SearchDataContainer(DataContainer):
         if len(data):
             return json_normalize(self._data.to_dict()["data"]).set_index("uid")
         return DataFrame()
+
+
+class FacetDataContainer(DataContainer):
+    """Response of a get facet call."""
+
+    def __init__(
+        self,
+        data: IT,
+        pydantic_model: type[T],
+        limit: int | None = None,
+        offset: int | None = None,
+    ):
+        if data is None or getattr(data, "to_dict") is None:
+            raise ValueError(f"Unexpected data object: {data}")
+        self._data = data
+        self._pydantic_model = pydantic_model
+        self._limit = limit
+        self._offset = offset
+
+    @property
+    def raw(self) -> dict[str, Any]:
+        """Return the data as a python dictionary."""
+        return self._data.to_dict()
+
+    @property
+    def pydantic(self) -> SearchFacet:
+        """Return the data as a pydantic model."""
+        return self._pydantic_model.model_validate(self.raw)
+
+    @property
+    def df(self) -> DataFrame:
+        """Return the data as a pandas dataframe."""
+        if len(self.raw["buckets"]) == 0:
+            return DataFrame()
+        return json_normalize(self.raw["buckets"]).set_index("val")
+
+    @property
+    def total(self) -> int:
+        """Total number of results."""
+        return self.raw.get("numBuckets", 0)
+
+    @property
+    def limit(self) -> int:
+        """Page size."""
+        return self._limit or len(self.raw["buckets"])
+
+    @property
+    def offset(self) -> int:
+        """Page offset."""
+        return self._offset or 0
 
 
 class SearchResource(Resource):
@@ -89,6 +147,126 @@ class SearchResource(Resource):
         Returns:
             _type_: _description_
         """
+
+        filters = self._build_filters(
+            with_text_contents=with_text_contents,
+            title=title,
+            front_page=front_page,
+            entity_id=entity_id,
+            newspaper_id=newspaper_id,
+            date_range=date_range,
+            language=language,
+            mention=mention,
+            topic_id=topic_id,
+            collection_id=collection_id,
+            country=country,
+            access_rights=access_rights,
+            partner_id=partner_id,
+            text_reuse_cluster_id=text_reuse_cluster_id,
+        )
+
+        filters_pb = filters_as_protobuf(filters or [])
+
+        result = search.sync(
+            client=self._api_client,
+            q=q if q is not None else UNSET,
+            order_by=(
+                get_enum_from_literal(order_by, SearchOrderBy)
+                if order_by is not None
+                else UNSET
+            ),
+            group_by=get_enum_from_literal_required("articles", SearchGroupBy),
+            filters=filters_pb if filters_pb else UNSET,
+            limit=limit if limit is not None else UNSET,
+            offset=offset if offset is not None else UNSET,
+        )
+        raise_for_error(result)
+        return SearchDataContainer(result, SearchResponseSchema)
+
+    def facet(
+        self,
+        facet: GetSearchFacetIdLiteral,
+        q: str | AND[str] | OR[str] | None = None,
+        order_by: SearchOrderByLiteral | None = None,
+        limit: int | None = None,
+        offset: int | None = None,
+        with_text_contents: bool | None = False,
+        title: str | AND[str] | OR[str] | None = None,
+        front_page: bool | None = None,
+        entity_id: str | AND[str] | OR[str] | None = None,
+        newspaper_id: str | OR[str] | None = None,
+        date_range: DateRange | None = None,
+        language: str | OR[str] | None = None,
+        mention: str | AND[str] | OR[str] | None = None,
+        topic_id: str | AND[str] | OR[str] | None = None,
+        collection_id: str | OR[str] | None = None,
+        country: str | OR[str] | None = None,
+        access_rights: (
+            ArticleAccessRightLiteral | OR[ArticleAccessRightLiteral] | None
+        ) = None,
+        partner_id: str | OR[str] | None = None,
+        text_reuse_cluster_id: str | OR[str] | None = None,
+    ) -> FacetDataContainer:
+
+        facet_id = get_enum_from_literal(facet, GetSearchFacetId)
+        if isinstance(facet_id, Unset):
+            raise ValueError(f"{facet} is not a valid value")
+
+        filters = self._build_filters(
+            with_text_contents=with_text_contents,
+            title=title,
+            front_page=front_page,
+            entity_id=entity_id,
+            newspaper_id=newspaper_id,
+            date_range=date_range,
+            language=language,
+            mention=mention,
+            topic_id=topic_id,
+            collection_id=collection_id,
+            country=country,
+            access_rights=access_rights,
+            partner_id=partner_id,
+            text_reuse_cluster_id=text_reuse_cluster_id,
+        )
+        if q is not None:
+            filters.extend(and_or_filter(q, "string"))
+
+        filters_pb = filters_as_protobuf(filters or [])
+
+        result = get_search_facet.sync(
+            client=self._api_client,
+            id=facet_id,
+            filters=filters_pb if filters_pb else UNSET,
+            offset=offset if offset is not None else UNSET,
+            limit=limit if limit is not None else UNSET,
+            order_by=(
+                get_enum_from_literal(order_by, GetSearchFacetOrderBy)
+                if order_by is not None
+                else UNSET
+            ),
+        )
+        raise_for_error(result)
+        return FacetDataContainer(result, SearchFacet, limit=limit, offset=offset)
+
+    def _build_filters(
+        self,
+        with_text_contents: bool | None = False,
+        title: str | AND[str] | OR[str] | None = None,
+        front_page: bool | None = None,
+        entity_id: str | AND[str] | OR[str] | None = None,
+        newspaper_id: str | OR[str] | None = None,
+        date_range: DateRange | None = None,
+        language: str | OR[str] | None = None,
+        mention: str | AND[str] | OR[str] | None = None,
+        topic_id: str | AND[str] | OR[str] | None = None,
+        collection_id: str | OR[str] | None = None,
+        country: str | OR[str] | None = None,
+        access_rights: (
+            ArticleAccessRightLiteral | OR[ArticleAccessRightLiteral] | None
+        ) = None,
+        partner_id: str | OR[str] | None = None,
+        text_reuse_cluster_id: str | OR[str] | None = None,
+    ) -> list[Filter]:
         filters: list[Filter] = []
         if with_text_contents:
             filters.append(Filter(type="has_text_contents", daterange=None))
@@ -126,20 +304,4 @@ class SearchResource(Resource):
         if text_reuse_cluster_id is not None:
             filters.extend(and_or_filter(text_reuse_cluster_id, "text_reuse_cluster"))
 
-        filters_pb = filters_as_protobuf(filters or [])
-
-        result = search.sync(
-            client=self._api_client,
-            q=q if q is not None else UNSET,
-            order_by=(
-                get_enum_from_literal(order_by, SearchOrderBy)
-                if order_by is not None
-                else UNSET
-            ),
-            group_by=get_enum_from_literal_required("articles", SearchGroupBy),
-            filters=filters_pb if filters_pb else UNSET,
-            limit=limit if limit is not None else UNSET,
-            offset=offset if offset is not None else UNSET,
-        )
-        raise_for_error(result)
-        return SearchDataContainer(result, SearchResponseSchema)
+        return filters
