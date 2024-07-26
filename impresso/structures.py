@@ -1,9 +1,64 @@
 import datetime
-from typing import Sequence, Union
-from collections.abc import Sequence as _Sequence
+from collections.abc import Sequence as ABCSequence
+from typing import (
+    Any,
+    Generic,
+    Iterable,
+    Literal,
+    Sequence,
+    TypeGuard,
+    TypeVar,
+    Union,
+    cast,
+)
+
+T = TypeVar("T", bound=str)
 
 
-class AND(set[str]):
+def _is_string_like_sequence(obj: Any) -> TypeGuard[Sequence[str]]:
+    return (
+        isinstance(obj, ABCSequence)
+        and not isinstance(obj, str)
+        and all(isinstance(item, str) for item in obj)
+    )
+
+
+class TermSet(set[T], Generic[T]):
+
+    def __init__(self, items: Union[Sequence[T], T], *args: T):
+        if _is_string_like_sequence(items):
+            _items = items
+        elif isinstance(items, str):
+            _items = [items] + list(args)
+        else:
+            raise ValueError(f"{items.__class__} is not supported")
+
+        super().__init__(cast(Iterable[T], _items))
+        self.inverted = False
+        self.chain: list[TermSet] = []
+
+    def __invert__(self):
+        new_instance = AND(list(self))
+        new_instance.inverted = not self.inverted
+        new_instance.chain = self.chain
+        return new_instance
+
+    def __and__(self, other: Any) -> "TermSet[T]":
+        if not isinstance(other, TermSet):
+            raise ValueError(f"{other.__class__} is not supported")
+        klass = other.__class__
+        new_instance = klass(list(other))
+        new_instance.chain = other.chain + [self]
+        new_instance.chain.extend(self.chain)
+        new_instance.inverted = other.inverted
+        return new_instance
+
+    @property
+    def op(self) -> Literal["AND", "OR"]:
+        return getattr(self, "_op")
+
+
+class AND(TermSet[T], Generic[T]):
     """
     Used in filters to specify that all the terms must be present in the result.
 
@@ -13,20 +68,18 @@ class AND(set[str]):
     AND(["apple", "banana"])
     AND("apple")
     AND("apple", "banana")
+    # Negate:
+    ~AND("apple", "banana")
     ```
 
     """
 
-    def __init__(self, items: Union[Sequence[str], str], *args: str):
-        if not isinstance(items, str):
-            _items = items
-        else:
-            _items = [items] + list(args)
-
-        super().__init__(_items)
+    def __init__(self, items: Union[Sequence[T], T], *args: T):
+        super().__init__(items, *args)
+        self._op = "AND"
 
 
-class OR(set[str]):
+class OR(TermSet[T], Generic[T]):
     """
     Used in filters to specify that any of the terms must be present in the result.
 
@@ -37,20 +90,18 @@ class OR(set[str]):
     OR(["apple", "banana"])
     OR("apple")
     OR("apple", "banana")
+    # Negate:
+    ~OR("apple", "banana")
     ```
 
     """
 
-    def __init__(self, items: Union[Sequence[str], str], *args: str):
-        if not isinstance(items, str):
-            _items = items
-        else:
-            _items = [items] + list(args)
-
-        super().__init__(_items)
+    def __init__(self, items: Union[Sequence[T], T], *args: T):
+        super().__init__(items, *args)
+        self._op = "OR"
 
 
-class DateRange(tuple[datetime.date, datetime.date]):
+class DateRange:
     """
     Date range.
 
@@ -69,19 +120,51 @@ class DateRange(tuple[datetime.date, datetime.date]):
 
     """
 
-    def __new__(
-        cls, start: datetime.date | str | None, end: datetime.date | str | None
+    def __init__(
+        self, start: datetime.date | str | None, end: datetime.date | str | None
     ):
-        _start = datetime.date.min if start is None else DateRange._as_date(start)
-        _end = datetime.date.max if end is None else DateRange._as_date(end)
-        return (_start, _end)
+        self.start = datetime.date.min if start is None else DateRange._as_date(start)
+        self.end = datetime.date.max if end is None else DateRange._as_date(end)
+        self.inverted = False
+
+    def __invert__(self):
+        new_instance = DateRange(self.start, self.end)
+        new_instance.inverted = not self.inverted
+        return new_instance
 
     @staticmethod
-    def _as_filter_value(v: tuple[datetime.date, datetime.date]) -> str:
-        return f"{v[0].isoformat()}T00:00:00Z TO {v[1].isoformat()}T00:00:00Z"
+    def _as_filter_value(v: "DateRange") -> str:
+        return f"{v.start.isoformat()}T00:00:00Z TO {v.end.isoformat()}T00:00:00Z"
 
     @staticmethod
     def _as_date(value: datetime.date | str) -> datetime.date:
         if isinstance(value, str):
             return datetime.date.fromisoformat(value)
         return value
+
+
+class NumericRange:
+    """
+    Date range.
+
+    Example:
+
+    ```
+    NumericRange(1, 10)
+    ```
+
+    """
+
+    def __init__(self, start: int, end: int):
+        self.start = start
+        self.end = end
+        self.inverted = False
+
+    def __invert__(self):
+        new_instance = NumericRange(self.start, self.end)
+        new_instance.inverted = not self.inverted
+        return new_instance
+
+    @staticmethod
+    def _as_filter_value(v: "NumericRange") -> str:
+        return f"{v.start} TO {v.end}"
