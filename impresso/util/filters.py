@@ -1,6 +1,6 @@
 import base64
 import datetime
-from typing import List
+from typing import Callable, List, TypeVar
 
 from impresso.api_models import Q, Filter, QItem
 from impresso.protobuf import query_pb2 as pb
@@ -93,13 +93,18 @@ def _to_pb_filter_daterange(from_: int, to: int) -> pb.DateRange:
     return pb.DateRange(to=to, **{"from": from_})
 
 
-def and_or_filter(item: str | AND | OR, type: str) -> list[Filter]:
-    if isinstance(item, str):
-        return [Filter(type=type, q=Q(item), daterange=None)]
-    elif isinstance(item, TermSet):
+T = TypeVar("T")
+
+
+def and_or_filter(
+    item: T | AND[T] | OR[T],
+    type: str,
+    converter: Callable[[T], str] = lambda x: str(x),
+) -> list[Filter]:
+    if isinstance(item, TermSet):
         filter = Filter(
             type=type,
-            q=list([QItem(i) for i in item]),
+            q=list([QItem(converter(i)) for i in item]),
             op=item.op,
             context="exclude" if item.inverted else "include",
             daterange=None,
@@ -107,7 +112,7 @@ def and_or_filter(item: str | AND | OR, type: str) -> list[Filter]:
         chain_filters = [
             Filter(
                 type=type,
-                q=list([QItem(i) for i in chain_item]),
+                q=list([QItem(converter(i)) for i in chain_item]),
                 op=chain_item.op,
                 context="exclude" if chain_item.inverted else "include",
                 daterange=None,
@@ -115,3 +120,5 @@ def and_or_filter(item: str | AND | OR, type: str) -> list[Filter]:
             for chain_item in item.chain
         ]
         return [filter] + chain_filters
+    else:
+        return [Filter(type=type, q=Q(converter(item)), daterange=None)]
