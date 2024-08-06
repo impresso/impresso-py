@@ -1,14 +1,30 @@
 from pandas import DataFrame, json_normalize
 
+from impresso.api_client.api.search_facets import get_tr_clusters_facet
 from impresso.api_client.api.text_reuse_clusters import find_text_reuse_clusters
 from impresso.api_client.models.find_text_reuse_clusters_order_by import (
     FindTextReuseClustersOrderBy,
     FindTextReuseClustersOrderByLiteral,
 )
-from impresso.api_client.types import UNSET
-from impresso.api_models import Q, BaseFind, Filter, TextReuseClusterCompound
-from impresso.data_container import T, DataContainer
+from impresso.api_client.models.get_tr_clusters_facet_id import (
+    GetTrClustersFacetId,
+    GetTrClustersFacetIdLiteral,
+)
+from impresso.api_client.models.get_tr_clusters_facet_order_by import (
+    GetTrClustersFacetOrderBy,
+    GetTrClustersFacetOrderByLiteral,
+)
+from impresso.api_client.types import UNSET, Unset
+from impresso.api_models import (
+    BaseFind,
+    Filter,
+    Q,
+    SearchFacet,
+    TextReuseClusterCompound,
+)
+from impresso.data_container import DataContainer, T
 from impresso.resources.base import Resource
+from impresso.resources.search import FacetDataContainer
 from impresso.structures import AND, OR, DateRange
 from impresso.util.error import raise_for_error
 from impresso.util.filters import and_or_filter, filters_as_protobuf
@@ -87,7 +103,7 @@ class TextReuseClustersResource(Resource):
         entity_id: str | AND[str] | OR[str] | None = None,
     ) -> FindTextReuseClustersContainer:
 
-        filters = self._build_filters(
+        filters = _build_filters(
             cluster_size=cluster_size,
             title=title,
             lexical_overlap=lexical_overlap,
@@ -121,73 +137,165 @@ class TextReuseClustersResource(Resource):
             result, FindTextReuseClusterResponseSchema
         )
 
-    def _build_filters(
+    def facet(
         self,
+        facet: GetTrClustersFacetIdLiteral,
+        order_by: GetTrClustersFacetOrderByLiteral | None = None,
+        limit: int | None = None,
+        offset: int | None = None,
         cluster_size: Range | AND[Range] | OR[Range] | None = None,
-        title: str | AND[str] | OR[str] | None = None,
-        lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
-        day_delta: Range | AND[Range] | OR[Range] | None = None,
         date_range: DateRange | None = None,
         newspaper_id: str | OR[str] | None = None,
-        collection_id: str | OR[str] | None = None,
-        front_page: bool | None = None,
-        topic_id: str | AND[str] | OR[str] | None = None,
-        language: str | OR[str] | None = None,
-        country: str | OR[str] | None = None,
-        mention: str | AND[str] | OR[str] | None = None,
-        entity_id: str | AND[str] | OR[str] | None = None,
-    ) -> list[Filter]:
-        filters: list[Filter] = []
-        if cluster_size is not None:
-            filters.extend(
-                and_or_filter(
-                    cluster_size,
-                    "text_reuse_cluster_size",
-                    lambda r: f"{r[0]} TO {r[1]}",
-                )
-            )
-        if title is not None:
-            filters.extend(and_or_filter(title, "title"))
-        if lexical_overlap is not None:
-            filters.extend(
-                and_or_filter(
-                    lexical_overlap,
-                    "text_reuse_cluster_lexical_overlap",
-                    lambda r: f"{r[0]} TO {r[1]}",
-                )
-            )
-        if day_delta is not None:
-            filters.extend(
-                and_or_filter(
-                    day_delta,
-                    "text_reuse_cluster_day_delta",
-                    lambda r: f"{r[0]} TO {r[1]}",
-                )
-            )
-        if date_range is not None:
-            filters.append(
-                Filter(
-                    type="daterange",
-                    q=Q(DateRange._as_filter_value(date_range)),
-                    context="exclude" if date_range.inverted else "include",
-                    daterange=None,
-                )
-            )
-        if newspaper_id is not None:
-            filters.extend(and_or_filter(newspaper_id, "newspaper"))
-        if collection_id is not None:
-            filters.extend(and_or_filter(collection_id, "collection"))
-        if front_page:
-            filters.append(Filter(type="is_front", daterange=None))
-        if topic_id is not None:
-            filters.extend(and_or_filter(topic_id, "topic"))
-        if language is not None:
-            filters.extend(and_or_filter(language, "language"))
-        if country is not None:
-            filters.extend(and_or_filter(country, "country"))
-        if mention is not None:
-            filters.extend(and_or_filter(mention, "mention"))
-        if entity_id is not None:
-            filters.extend(and_or_filter(entity_id, "entity"))
+        lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
+        day_delta: Range | AND[Range] | OR[Range] | None = None,
+    ) -> FacetDataContainer:
+        facet_id = get_enum_from_literal(facet, GetTrClustersFacetId)
+        if isinstance(facet_id, Unset):
+            raise ValueError(f"{facet} is not a valid value")
 
-        return filters
+        filters = _build_cluster_facet_filters(
+            cluster_size=cluster_size,
+            lexical_overlap=lexical_overlap,
+            day_delta=day_delta,
+            date_range=date_range,
+            newspaper_id=newspaper_id,
+        )
+
+        filters_pb = filters_as_protobuf(filters or [])
+
+        result = get_tr_clusters_facet.sync(
+            client=self._api_client,
+            id=facet_id,
+            filters=filters_pb if filters_pb else UNSET,
+            offset=offset if offset is not None else UNSET,
+            limit=limit if limit is not None else UNSET,
+            order_by=(
+                get_enum_from_literal(order_by, GetTrClustersFacetOrderBy)
+                if order_by is not None
+                else UNSET
+            ),
+        )
+        print("**", result)
+        raise_for_error(result)
+        return FacetDataContainer(result, SearchFacet, limit=limit, offset=offset)
+
+
+def _build_cluster_facet_filters(
+    cluster_size: Range | AND[Range] | OR[Range] | None = None,
+    date_range: DateRange | None = None,
+    newspaper_id: str | OR[str] | None = None,
+    lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
+    day_delta: Range | AND[Range] | OR[Range] | None = None,
+) -> list[Filter]:
+    """Build text reuse clusters facet filters."""
+
+    filters: list[Filter] = []
+    if cluster_size is not None:
+        filters.extend(
+            and_or_filter(
+                cluster_size,
+                "text_reuse_cluster_size",
+                lambda r: f"{r[0]} TO {r[1]}",
+            )
+        )
+    if date_range is not None:
+        filters.append(
+            Filter(
+                type="daterange",
+                q=Q(DateRange._as_filter_value(date_range)),
+                context="exclude" if date_range.inverted else "include",
+                daterange=None,
+            )
+        )
+    if newspaper_id is not None:
+        filters.extend(and_or_filter(newspaper_id, "newspaper"))
+    if lexical_overlap is not None:
+        filters.extend(
+            and_or_filter(
+                lexical_overlap,
+                "text_reuse_cluster_lexical_overlap",
+                lambda r: f"{r[0]} TO {r[1]}",
+            )
+        )
+    if day_delta is not None:
+        filters.extend(
+            and_or_filter(
+                day_delta,
+                "text_reuse_cluster_day_delta",
+                lambda r: f"{r[0]} TO {r[1]}",
+            )
+        )
+    return filters
+
+
+def _build_filters(
+    cluster_size: Range | AND[Range] | OR[Range] | None = None,
+    title: str | AND[str] | OR[str] | None = None,
+    lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
+    day_delta: Range | AND[Range] | OR[Range] | None = None,
+    date_range: DateRange | None = None,
+    newspaper_id: str | OR[str] | None = None,
+    collection_id: str | OR[str] | None = None,
+    front_page: bool | None = None,
+    topic_id: str | AND[str] | OR[str] | None = None,
+    language: str | OR[str] | None = None,
+    country: str | OR[str] | None = None,
+    mention: str | AND[str] | OR[str] | None = None,
+    entity_id: str | AND[str] | OR[str] | None = None,
+) -> list[Filter]:
+    """Build text reuse clusters filters."""
+
+    filters: list[Filter] = []
+    if cluster_size is not None:
+        filters.extend(
+            and_or_filter(
+                cluster_size,
+                "text_reuse_cluster_size",
+                lambda r: f"{r[0]} TO {r[1]}",
+            )
+        )
+    if title is not None:
+        filters.extend(and_or_filter(title, "title"))
+    if lexical_overlap is not None:
+        filters.extend(
+            and_or_filter(
+                lexical_overlap,
+                "text_reuse_cluster_lexical_overlap",
+                lambda r: f"{r[0]} TO {r[1]}",
+            )
+        )
+    if day_delta is not None:
+        filters.extend(
+            and_or_filter(
+                day_delta,
+                "text_reuse_cluster_day_delta",
+                lambda r: f"{r[0]} TO {r[1]}",
+            )
+        )
+    if date_range is not None:
+        filters.append(
+            Filter(
+                type="daterange",
+                q=Q(DateRange._as_filter_value(date_range)),
+                context="exclude" if date_range.inverted else "include",
+                daterange=None,
+            )
+        )
+    if newspaper_id is not None:
+        filters.extend(and_or_filter(newspaper_id, "newspaper"))
+    if collection_id is not None:
+        filters.extend(and_or_filter(collection_id, "collection"))
+    if front_page:
+        filters.append(Filter(type="is_front", daterange=None))
+    if topic_id is not None:
+        filters.extend(and_or_filter(topic_id, "topic"))
+    if language is not None:
+        filters.extend(and_or_filter(language, "language"))
+    if country is not None:
+        filters.extend(and_or_filter(country, "country"))
+    if mention is not None:
+        filters.extend(and_or_filter(mention, "mention"))
+    if entity_id is not None:
+        filters.extend(and_or_filter(entity_id, "entity"))
+
+    return filters

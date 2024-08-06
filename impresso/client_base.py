@@ -1,5 +1,6 @@
 from impresso.api_client.client import AuthenticatedClient
 from impresso.resources.articles import ArticlesResource
+from impresso.resources.newspapers import NewspapersResource
 from impresso.resources.search import SearchResource
 from impresso.resources.search_facets import SearchFacetsResource
 from impresso.resources.text_reuse import TextReuseDomain
@@ -26,3 +27,7 @@ class ImpressoApiResourcesBase:
     @property
     def text_reuse(self) -> TextReuseDomain:
         return TextReuseDomain(self._api_client)
+
+    @property
+    def newspapers(self) -> NewspapersResource:
+        return NewspapersResource(self._api_client)
