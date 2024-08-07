@@ -29,6 +29,8 @@ from .collectable_item_group import CollectableItemGroup
 from .collectable_item_group_content_type import CollectableItemGroupContentType
 from .collection import Collection
 from .entity import Entity
+from .entity_details import EntityDetails
+from .entity_details_type import EntityDetailsType
 from .error import Error
 from .filter_ import Filter
 from .filter_context import FilterContext
@@ -41,6 +43,9 @@ from .find_articles_response_200_info import FindArticlesResponse200Info
 from .find_collections_order_by import FindCollectionsOrderBy
 from .find_collections_response_200 import FindCollectionsResponse200
 from .find_collections_response_200_info import FindCollectionsResponse200Info
+from .find_entities_order_by import FindEntitiesOrderBy
+from .find_entities_response_200 import FindEntitiesResponse200
+from .find_entities_response_200_info import FindEntitiesResponse200Info
 from .find_newspapers_order_by import FindNewspapersOrderBy
 from .find_newspapers_response_200 import FindNewspapersResponse200
 from .find_newspapers_response_200_info import FindNewspapersResponse200Info
@@ -81,6 +86,10 @@ from .get_tr_passages_facet_group_by import GetTrPassagesFacetGroupBy
 from .get_tr_passages_facet_id import GetTrPassagesFacetId
 from .get_tr_passages_facet_order_by import GetTrPassagesFacetOrderBy
 from .get_tr_passages_facet_range_include import GetTrPassagesFacetRangeInclude
+from .location_specific_fields import LocationSpecificFields
+from .location_specific_fields_descriptions import LocationSpecificFieldsDescriptions
+from .location_specific_fields_images_item import LocationSpecificFieldsImagesItem
+from .location_specific_fields_labels import LocationSpecificFieldsLabels
 from .new_collection import NewCollection
 from .newspaper import Newspaper
 from .newspaper_issue import NewspaperIssue
@@ -148,6 +157,8 @@ __all__ = (
     "CollectableItemGroupContentType",
     "Collection",
     "Entity",
+    "EntityDetails",
+    "EntityDetailsType",
     "Error",
     "Filter",
     "FilterContext",
@@ -160,6 +171,9 @@ __all__ = (
     "FindCollectionsOrderBy",
     "FindCollectionsResponse200",
     "FindCollectionsResponse200Info",
+    "FindEntitiesOrderBy",
+    "FindEntitiesResponse200",
+    "FindEntitiesResponse200Info",
     "FindNewspapersOrderBy",
     "FindNewspapersResponse200",
     "FindNewspapersResponse200Info",
@@ -200,6 +214,10 @@ __all__ = (
     "GetTrPassagesFacetId",
     "GetTrPassagesFacetOrderBy",
     "GetTrPassagesFacetRangeInclude",
+    "LocationSpecificFields",
+    "LocationSpecificFieldsDescriptions",
+    "LocationSpecificFieldsImagesItem",
+    "LocationSpecificFieldsLabels",
     "NewCollection",
     "Newspaper",
     "NewspaperIssue",

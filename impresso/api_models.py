@@ -561,6 +561,29 @@ class VersionDetails(BaseModel):
     features: Mapping[str, Mapping[str, Any]]
 
 
+class Image(BaseModel):
+    value: str
+    rank: str
+    datatype: str
+
+
+class WikidataEntityDetails(BaseModel):
+    model_config = ConfigDict(
+        extra='allow',
+    )
+    id: str
+    type: str
+    labels: Annotated[
+        Mapping[str, str],
+        Field(description='Labels of the entity. Key is the language code.'),
+    ]
+    descriptions: Annotated[
+        Mapping[str, str],
+        Field(description='Labels of the entity. Key is the language code.'),
+    ]
+    images: Sequence[Image]
+
+
 class YearWeights(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -608,6 +631,23 @@ class CollectableItemGroup(BaseModel):
         Optional[AwareDatetime],
         Field(None, description='The latest date added to the collectable item group'),
     ]
+
+
+class EntityDetails(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='Unique identifier of the entity')]
+    name: Annotated[str, Field(description='Entity name')]
+    type: Literal['person', 'location']
+    countItems: Annotated[int, Field(description='TODO')]
+    countMentions: Annotated[
+        int, Field(description='Number of mentions of this entity in articles')
+    ]
+    wikidataId: Annotated[
+        Optional[str], Field(None, description='ID of the entity in wikidata')
+    ]
+    wikidata: Optional[WikidataEntityDetails] = None
 
 
 class Newspaper(BaseModel):
