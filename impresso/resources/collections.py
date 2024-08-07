@@ -30,6 +30,18 @@ class FindCollectionsContainer(DataContainer):
         return DataFrame()
 
 
+class GetCollectionContainer(DataContainer):
+    """Response of a get call."""
+
+    @property
+    def df(self) -> DataFrame:
+        """Return the data as a pandas dataframe."""
+        data = self._data.to_dict()
+        if len(data):
+            return json_normalize([self._data.to_dict()]).set_index("uid")
+        return DataFrame()
+
+
 class CollectionsResource(Resource):
     """Work with collections"""
 
@@ -50,7 +62,7 @@ class CollectionsResource(Resource):
             order_by=(
                 get_enum_from_literal(order_by, FindCollectionsOrderBy)
                 if order_by is not None
-                else UNSET
+                else FindCollectionsOrderBy.VALUE_0
             ),
             limit=limit if limit is not None else UNSET,
             offset=offset if offset is not None else UNSET,
@@ -66,4 +78,4 @@ class CollectionsResource(Resource):
             id=id,
         )
         raise_for_error(result)
-        return FindCollectionsContainer(result, FindCollectionsSchema)
+        return GetCollectionContainer(result, FindCollectionsSchema)
