@@ -27,6 +27,7 @@ from .base_find_info import BaseFindInfo
 from .base_user import BaseUser
 from .collectable_item_group import CollectableItemGroup
 from .collectable_item_group_content_type import CollectableItemGroupContentType
+from .collectable_items_updated_response import CollectableItemsUpdatedResponse
 from .collection import Collection
 from .entity import Entity
 from .entity_details import EntityDetails
@@ -123,6 +124,7 @@ from .text_reuse_passage_issue import TextReusePassageIssue
 from .topic import Topic
 from .topic_related_topics_item import TopicRelatedTopicsItem
 from .topic_word import TopicWord
+from .update_collectable_items import UpdateCollectableItems
 from .user import User
 from .year import Year
 from .year_weights import YearWeights
@@ -155,6 +157,7 @@ __all__ = (
     "BaseUser",
     "CollectableItemGroup",
     "CollectableItemGroupContentType",
+    "CollectableItemsUpdatedResponse",
     "Collection",
     "Entity",
     "EntityDetails",
@@ -251,6 +254,7 @@ __all__ = (
     "Topic",
     "TopicRelatedTopicsItem",
     "TopicWord",
+    "UpdateCollectableItems",
     "User",
     "Year",
     "YearWeights",

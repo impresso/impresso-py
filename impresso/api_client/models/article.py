@@ -1,6 +1,8 @@
+import datetime
 from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
+from dateutil.parser import isoparse
 
 from ..models.article_access_right import ArticleAccessRight
 from ..models.article_labels_item import ArticleLabelsItem
@@ -11,6 +13,7 @@ if TYPE_CHECKING:
     from ..models.article_mentions_item import ArticleMentionsItem
     from ..models.article_region import ArticleRegion
     from ..models.article_topic import ArticleTopic
+    from ..models.collection import Collection
     from ..models.entity import Entity
     from ..models.newspaper import Newspaper
     from ..models.newspaper_issue import NewspaperIssue
@@ -45,12 +48,12 @@ class Article:
         region_breaks (Union[Unset, List[int]]):
         content_line_breaks (Union[Unset, List[int]]):
         is_front (Union[Unset, bool]): TODO
-        date (Union[Unset, Any]):
+        date (Union[None, Unset, datetime.datetime]):
         country (Union[Unset, str]): The country code of the article
         tags (Union[Unset, List[str]]):
-        collections (Union[Unset, Any]):
+        collections (Union[List['Collection'], List[str], Unset]):
         newspaper (Union[Unset, Newspaper]): A newspaper
-        data_provider (Union[Unset, Any]):
+        data_provider (Union[None, Unset, str]):
         topics (Union[Unset, List['ArticleTopic']]):
         content (Union[Unset, str]): The content of the article
         mentions (Union[Unset, List['ArticleMentionsItem']]):
@@ -77,12 +80,12 @@ class Article:
     region_breaks: Union[Unset, List[int]] = UNSET
     content_line_breaks: Union[Unset, List[int]] = UNSET
     is_front: Union[Unset, bool] = UNSET
-    date: Union[Unset, Any] = UNSET
+    date: Union[None, Unset, datetime.datetime] = UNSET
     country: Union[Unset, str] = UNSET
     tags: Union[Unset, List[str]] = UNSET
-    collections: Union[Unset, Any] = UNSET
+    collections: Union[List["Collection"], List[str], Unset] = UNSET
     newspaper: Union[Unset, "Newspaper"] = UNSET
-    data_provider: Union[Unset, Any] = UNSET
+    data_provider: Union[None, Unset, str] = UNSET
     topics: Union[Unset, List["ArticleTopic"]] = UNSET
     content: Union[Unset, str] = UNSET
     mentions: Union[Unset, List["ArticleMentionsItem"]] = UNSET
@@ -161,7 +164,13 @@ class Article:
 
         is_front = self.is_front
 
-        date = self.date
+        date: Union[None, Unset, str]
+        if isinstance(self.date, Unset):
+            date = UNSET
+        elif isinstance(self.date, datetime.datetime):
+            date = self.date.isoformat()
+        else:
+            date = self.date
 
         country = self.country
 
@@ -169,13 +178,27 @@ class Article:
         if not isinstance(self.tags, Unset):
             tags = self.tags
 
-        collections = self.collections
+        collections: Union[List[Dict[str, Any]], List[str], Unset]
+        if isinstance(self.collections, Unset):
+            collections = UNSET
+        elif isinstance(self.collections, list):
+            collections = self.collections
+
+        else:
+            collections = []
+            for collections_type_1_item_data in self.collections:
+                collections_type_1_item = collections_type_1_item_data.to_dict()
+                collections.append(collections_type_1_item)
 
         newspaper: Union[Unset, Dict[str, Any]] = UNSET
         if not isinstance(self.newspaper, Unset):
             newspaper = self.newspaper.to_dict()
 
-        data_provider = self.data_provider
+        data_provider: Union[None, Unset, str]
+        if isinstance(self.data_provider, Unset):
+            data_provider = UNSET
+        else:
+            data_provider = self.data_provider
 
         topics: Union[Unset, List[Dict[str, Any]]] = UNSET
         if not isinstance(self.topics, Unset):
@@ -258,6 +281,7 @@ class Article:
         from ..models.article_mentions_item import ArticleMentionsItem
         from ..models.article_region import ArticleRegion
         from ..models.article_topic import ArticleTopic
+        from ..models.collection import Collection
         from ..models.entity import Entity
         from ..models.newspaper import Newspaper
         from ..models.newspaper_issue import NewspaperIssue
@@ -339,13 +363,50 @@ class Article:
 
         is_front = d.pop("isFront", UNSET)
 
-        date = d.pop("date", UNSET)
+        def _parse_date(data: object) -> Union[None, Unset, datetime.datetime]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                date_type_0_type_0 = isoparse(data)
+
+                return date_type_0_type_0
+            except:  # noqa: E722
+                pass
+            return cast(Union[None, Unset, datetime.datetime], data)
+
+        date = _parse_date(d.pop("date", UNSET))
 
         country = d.pop("country", UNSET)
 
         tags = cast(List[str], d.pop("tags", UNSET))
 
-        collections = d.pop("collections", UNSET)
+        def _parse_collections(data: object) -> Union[List["Collection"], List[str], Unset]:
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, list):
+                    raise TypeError()
+                collections_type_0 = cast(List[str], data)
+
+                return collections_type_0
+            except:  # noqa: E722
+                pass
+            if not isinstance(data, list):
+                raise TypeError()
+            collections_type_1 = []
+            _collections_type_1 = data
+            for collections_type_1_item_data in _collections_type_1:
+                collections_type_1_item = Collection.from_dict(collections_type_1_item_data)
+
+                collections_type_1.append(collections_type_1_item)
+
+            return collections_type_1
+
+        collections = _parse_collections(d.pop("collections", UNSET))
 
         _newspaper = d.pop("newspaper", UNSET)
         newspaper: Union[Unset, Newspaper]
@@ -354,7 +415,14 @@ class Article:
         else:
             newspaper = Newspaper.from_dict(_newspaper)
 
-        data_provider = d.pop("dataProvider", UNSET)
+        def _parse_data_provider(data: object) -> Union[None, Unset, str]:
+            if data is None:
+                return data
+            if isinstance(data, Unset):
+                return data
+            return cast(Union[None, Unset, str], data)
+
+        data_provider = _parse_data_provider(d.pop("dataProvider", UNSET))
 
         topics = []
         _topics = d.pop("topics", UNSET)

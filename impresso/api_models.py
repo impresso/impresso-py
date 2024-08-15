@@ -49,11 +49,12 @@ class ArticleRegion(BaseModel):
 
 class AuthenticationCreateRequest(BaseModel):
     model_config = ConfigDict(
-        extra='forbid',
+        extra='allow',
     )
-    strategy: Literal['local']
-    email: str
-    password: str
+    strategy: Literal['local', 'jwt-app']
+    email: Optional[str] = None
+    password: Optional[str] = None
+    accessToken: Optional[str] = None
 
 
 class Authentication(BaseModel):
@@ -100,6 +101,15 @@ class BaseUser(BaseModel):
             pattern='^([a-z.]+)$',
             title='unique username for the user for other humans',
         ),
+    ]
+
+
+class CollectableItemsUpdatedResponse(BaseModel):
+    totalAdded: Annotated[
+        int, Field(description='Total number of items added to the collection')
+    ]
+    totalRemoved: Annotated[
+        int, Field(description='Total number of items removed from the collection')
     ]
 
 
@@ -298,18 +308,6 @@ class Page(BaseModel):
     ]
 
 
-class SearchFacet(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    type: Annotated[str, Field(description='The type of facet')]
-    numBuckets: Annotated[int, Field(description='The number of buckets in the facet')]
-    buckets: Any
-    min: Annotated[Optional[Any], Field(None, description='TODO')]
-    max: Annotated[Optional[Any], Field(None, description='TODO')]
-    gap: Annotated[Optional[Any], Field(None, description='TODO')]
-
-
 class SearchFacetRangeBucket(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -417,6 +415,20 @@ class TextReuseCluster1(BaseModel):
     ]
 
 
+class OffsetStart(RootModel[Optional[int]]):
+    root: Annotated[
+        Optional[int],
+        Field(None, description='Offset of the passage in the article text', ge=0),
+    ] = None
+
+
+class OffsetEnd(RootModel[Optional[int]]):
+    root: Annotated[
+        Optional[int],
+        Field(None, description='Offset of the passage in the article text', ge=0),
+    ] = None
+
+
 class ConnectedCluster(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -458,8 +470,8 @@ class TextReusePassage(BaseModel):
             title='Cluster details',
         ),
     ]
-    offsetStart: Any
-    offsetEnd: Any
+    offsetStart: OffsetStart
+    offsetEnd: OffsetEnd
     content: Annotated[str, Field(description='Textual content of the passage')]
     title: Annotated[
         str,
@@ -506,6 +518,17 @@ class TopicWord(BaseModel):
     w: Annotated[str, Field(description='Word')]
     p: Annotated[float, Field(description='TODO')]
     h: Annotated[Optional[Sequence[str]], Field(None, description='TODO')]
+
+
+class UpdateCollectableItems(BaseModel):
+    add: Annotated[
+        Optional[Sequence[str]],
+        Field(None, description='IDs of the items to add to the collection'),
+    ]
+    remove: Annotated[
+        Optional[Sequence[str]],
+        Field(None, description='IDs of the items to remove from the collection'),
+    ]
 
 
 class User(BaseModel):
@@ -666,8 +689,8 @@ class Newspaper(BaseModel):
     ]
     included: Annotated[bool, Field(description='TODO')]
     name: Annotated[str, Field(description='Title of the newspaper')]
-    endYear: Any
-    startYear: Any
+    endYear: int
+    startYear: int
     firstIssue: Optional[NewspaperIssue] = None
     lastIssue: Optional[NewspaperIssue] = None
     countArticles: Annotated[
@@ -789,18 +812,30 @@ class Article(BaseModel):
     labels: Annotated[Sequence[Literal['article']], Field(description='TODO')]
     accessRight: Literal['na', 'OpenPrivate', 'Closed', 'OpenPublic']
     isFront: Annotated[Optional[bool], Field(None, description='TODO')]
-    date: Optional[Any] = None
+    date: Optional[AwareDatetime] = None
     year: Annotated[int, Field(description='The year of the article')]
     country: Annotated[
         Optional[str], Field(None, description='The country code of the article')
     ]
     tags: Optional[Sequence[str]] = None
-    collections: Optional[Any] = None
+    collections: Optional[Union[Sequence[str], Sequence[Collection]]] = None
     newspaper: Optional[Newspaper] = None
-    dataProvider: Optional[Any] = None
+    dataProvider: Optional[str] = None
     topics: Optional[Sequence[ArticleTopic]] = None
     content: Annotated[
         Optional[str], Field(None, description='The content of the article')
     ]
     mentions: Optional[Sequence[Mention]] = None
     v: Annotated[Optional[str], Field(None, description='TODO')]
+
+
+class SearchFacet(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    type: Annotated[str, Field(description='The type of facet')]
+    numBuckets: Annotated[int, Field(description='The number of buckets in the facet')]
+    buckets: Union[Sequence[SearchFacetBucket], Sequence[SearchFacetRangeBucket]]
+    min: Annotated[Optional[Any], Field(None, description='TODO')]
+    max: Annotated[Optional[Any], Field(None, description='TODO')]
+    gap: Annotated[Optional[Any], Field(None, description='TODO')]

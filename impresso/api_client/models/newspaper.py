@@ -23,8 +23,8 @@ class Newspaper:
         languages (List[str]): Language codes of the languages used in the newspaper
         included (bool): TODO
         name (str): Title of the newspaper
-        end_year (Any):
-        start_year (Any):
+        end_year (Union[None, int]):
+        start_year (Union[None, int]):
         count_articles (int): The number of articles in the newspaper
         count_issues (int): The number of issues in the newspaper
         count_pages (int): The number of pages in the newspaper
@@ -41,8 +41,8 @@ class Newspaper:
     languages: List[str]
     included: bool
     name: str
-    end_year: Any
-    start_year: Any
+    end_year: Union[None, int]
+    start_year: Union[None, int]
     count_articles: int
     count_issues: int
     count_pages: int
@@ -65,8 +65,10 @@ class Newspaper:
 
         name = self.name
 
+        end_year: Union[None, int]
         end_year = self.end_year
 
+        start_year: Union[None, int]
         start_year = self.start_year
 
         count_articles = self.count_articles
@@ -140,9 +142,19 @@ class Newspaper:
 
         name = d.pop("name")
 
-        end_year = d.pop("endYear")
+        def _parse_end_year(data: object) -> Union[None, int]:
+            if data is None:
+                return data
+            return cast(Union[None, int], data)
 
-        start_year = d.pop("startYear")
+        end_year = _parse_end_year(d.pop("endYear"))
+
+        def _parse_start_year(data: object) -> Union[None, int]:
+            if data is None:
+                return data
+            return cast(Union[None, int], data)
+
+        start_year = _parse_start_year(d.pop("startYear"))
 
         count_articles = d.pop("countArticles")
 

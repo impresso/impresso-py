@@ -24,8 +24,8 @@ class TextReusePassage:
         id (str): ID of the text reuse passage Example: abc123.
         article (TextReusePassageArticleDetails): Details of the article the passage belongs to
         text_reuse_cluster (TextReusePassageClusterDetails): Details of the cluster the passage belongs to
-        offset_start (Any):
-        offset_end (Any):
+        offset_start (Union[None, int]):
+        offset_end (Union[None, int]):
         content (str): Textual content of the passage
         title (str): Title of the content item (article) where this passage was found
         page_numbers (List[int]): Numbers of the pages where the passage was found
@@ -42,8 +42,8 @@ class TextReusePassage:
     id: str
     article: "TextReusePassageArticleDetails"
     text_reuse_cluster: "TextReusePassageClusterDetails"
-    offset_start: Any
-    offset_end: Any
+    offset_start: Union[None, int]
+    offset_end: Union[None, int]
     content: str
     title: str
     page_numbers: List[int]
@@ -63,8 +63,10 @@ class TextReusePassage:
 
         text_reuse_cluster = self.text_reuse_cluster.to_dict()
 
+        offset_start: Union[None, int]
         offset_start = self.offset_start
 
+        offset_end: Union[None, int]
         offset_end = self.offset_end
 
         content = self.content
@@ -145,9 +147,19 @@ class TextReusePassage:
 
         text_reuse_cluster = TextReusePassageClusterDetails.from_dict(d.pop("textReuseCluster"))
 
-        offset_start = d.pop("offsetStart")
+        def _parse_offset_start(data: object) -> Union[None, int]:
+            if data is None:
+                return data
+            return cast(Union[None, int], data)
 
-        offset_end = d.pop("offsetEnd")
+        offset_start = _parse_offset_start(d.pop("offsetStart"))
+
+        def _parse_offset_end(data: object) -> Union[None, int]:
+            if data is None:
+                return data
+            return cast(Union[None, int], data)
+
+        offset_end = _parse_offset_end(d.pop("offsetEnd"))
 
         content = d.pop("content")
 
