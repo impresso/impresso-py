@@ -52,6 +52,7 @@ class FilterType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     TYPE_TEXT_REUSE_CLUSTER: _ClassVar[FilterType]
     TYPE_MENTION_FUNCTION: _ClassVar[FilterType]
     TYPE_NAG: _ClassVar[FilterType]
+    TYPE_WIKIDATA_ID: _ClassVar[FilterType]
 
 class FilterPrecision(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -103,6 +104,7 @@ TYPE_TEXT_REUSE_CLUSTER_DAY_DELTA: FilterType
 TYPE_TEXT_REUSE_CLUSTER: FilterType
 TYPE_MENTION_FUNCTION: FilterType
 TYPE_NAG: FilterType
+TYPE_WIKIDATA_ID: FilterType
 PRECISION_UNSPECIFIED: FilterPrecision
 PRECISION_EXACT: FilterPrecision
 PRECISION_PARTIAL: FilterPrecision

@@ -58,6 +58,7 @@ class EntitiesResource(Resource):
     def find(
         self,
         q: str | None = None,
+        wikidata_id: str | AND[str] | OR[str] | None = None,
         entity_type: EntityType | AND[EntityType] | OR[EntityType] | None = None,
         order_by: FindEntitiesOrderByLiteral | None = None,
         limit: int | None = None,
@@ -68,6 +69,8 @@ class EntitiesResource(Resource):
         filters: list[Filter] = []
         if entity_type is not None:
             filters.extend(and_or_filter(entity_type, "type"))
+        if wikidata_id is not None:
+            filters.extend(and_or_filter(wikidata_id, "wikidata_id"))
 
         filters_pb = filters_as_protobuf(filters or [])
 
