@@ -1,15 +1,26 @@
 import os
 
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, Field, ValidationError
 import yaml
 
 from impresso.util.token import get_jwt_status
+
+DEFAULT_API_URL = "https://api.impresso-project.ch"
+
+
+class ImpressoApiToken(BaseModel):
+    url: str
+    token: str
 
 
 class ImpressoPyConfigContent(BaseModel):
     """Content of the configuration file."""
 
-    token: str | None = None
+    tokens: list[ImpressoApiToken] = []
+    default_api_url: str = Field(
+        serialization_alias="defaultApiUrl",
+        default=DEFAULT_API_URL,
+    )
 
 
 class ImpressoPyConfig:
@@ -30,9 +41,18 @@ class ImpressoPyConfig:
                 except ValidationError as exc:
                     print("Error validating config file:", exc)
 
-    def get_token(self) -> str | None:
-        """Return the token for the given username."""
-        token = self._config.token
+    @property
+    def default_api_url(self) -> str:
+        return self._config.default_api_url
+
+    def get_token(self, url: str | None) -> str | None:
+        """
+        Return the token for the given API URL.
+        Use the default API URL if no URL is provided.
+        """
+        the_url = url or self._config.default_api_url
+        token = next((t.token for t in self._config.tokens if t.url == the_url), None)
+
         if token is None:
             return None
         token_status, _ = get_jwt_status(token)
@@ -41,9 +61,21 @@ class ImpressoPyConfig:
 
         return None
 
-    def set_token(self, token: str) -> None:
-        """Set the token for the given username."""
-        self._config.token = token
+    def set_token(self, token: str, url: str | None) -> None:
+        """
+        Return the token for the given API URL.
+        Use the default API URL if no URL is provided.
+        """
+        the_url = url or self._config.default_api_url
+        token_container = next(
+            (t for t in self._config.tokens if t.url == the_url), None
+        )
+
+        if token_container is None:
+            self._config.tokens.append(ImpressoApiToken(url=the_url, token=token))
+        else:
+            token_container.token = token
+
         self._write_config()
 
     def _write_config(self) -> None:
