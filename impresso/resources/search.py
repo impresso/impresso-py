@@ -100,7 +100,7 @@ class SearchResource(Resource):
 
     def find(
         self,
-        q: str | None = None,
+        q: str | AND[str] | OR[str] | None = None,
         order_by: SearchOrderByLiteral | None = None,
         limit: int | None = None,
         offset: int | None = None,
@@ -149,6 +149,7 @@ class SearchResource(Resource):
         """
 
         filters = self._build_filters(
+            string=q,
             with_text_contents=with_text_contents,
             title=title,
             front_page=front_page,
@@ -169,7 +170,7 @@ class SearchResource(Resource):
 
         result = search.sync(
             client=self._api_client,
-            q=q if q is not None else UNSET,
+            q=UNSET,
             order_by=(
                 get_enum_from_literal(order_by, SearchOrderBy)
                 if order_by is not None
@@ -213,6 +214,7 @@ class SearchResource(Resource):
             raise ValueError(f"{facet} is not a valid value")
 
         filters = self._build_filters(
+            string=q,
             with_text_contents=with_text_contents,
             title=title,
             front_page=front_page,
@@ -228,8 +230,6 @@ class SearchResource(Resource):
             partner_id=partner_id,
             text_reuse_cluster_id=text_reuse_cluster_id,
         )
-        if q is not None:
-            filters.extend(and_or_filter(q, "string"))
 
         filters_pb = filters_as_protobuf(filters or [])
 
@@ -250,6 +250,7 @@ class SearchResource(Resource):
 
     def _build_filters(
         self,
+        string: str | AND[str] | OR[str] | None,
         with_text_contents: bool | None = False,
         title: str | AND[str] | OR[str] | None = None,
         front_page: bool | None = None,
@@ -268,6 +269,8 @@ class SearchResource(Resource):
         text_reuse_cluster_id: str | OR[str] | None = None,
     ) -> list[Filter]:
         filters: list[Filter] = []
+        if string:
+            filters.extend(and_or_filter(string, "string"))
         if with_text_contents:
             filters.append(Filter(type="has_text_contents", daterange=None))
         if title is not None:
