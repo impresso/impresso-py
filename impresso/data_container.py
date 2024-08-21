@@ -9,11 +9,14 @@ T = TypeVar("T", bound=BaseModel)
 class DataContainer(Generic[IT, T]):
     """Response of a resource call"""
 
-    def __init__(self, data: IT, pydantic_model: type[T]):
+    def __init__(
+        self, data: IT, pydantic_model: type[T], web_app_search_result_url: str
+    ):
         if data is None or getattr(data, "to_dict") is None:
             raise ValueError(f"Unexpected data object: {data}")
         self._data = data
         self._pydantic_model = pydantic_model
+        self._web_app_search_result_url = web_app_search_result_url
 
     @property
     def raw(self) -> dict[str, Any]:
@@ -44,3 +47,8 @@ class DataContainer(Generic[IT, T]):
     def offset(self) -> int:
         """Page offset."""
         return self.raw.get("offset", 0)
+
+    @property
+    def url(self) -> str:
+        """A URL of the result set in the Impresso web app."""
+        return self._web_app_search_result_url

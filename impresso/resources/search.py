@@ -50,13 +50,11 @@ class FacetDataContainer(DataContainer):
         self,
         data: IT,
         pydantic_model: type[T],
-        limit: int | None = None,
-        offset: int | None = None,
+        limit: int | None,
+        offset: int | None,
+        web_app_search_result_url: str,
     ):
-        if data is None or getattr(data, "to_dict") is None:
-            raise ValueError(f"Unexpected data object: {data}")
-        self._data = data
-        self._pydantic_model = pydantic_model
+        super().__init__(data, pydantic_model, web_app_search_result_url)
         self._limit = limit
         self._offset = offset
 
@@ -182,7 +180,17 @@ class SearchResource(Resource):
             offset=offset if offset is not None else UNSET,
         )
         raise_for_error(result)
-        return SearchDataContainer(result, SearchResponseSchema)
+        return SearchDataContainer(
+            result,
+            SearchResponseSchema,
+            _build_web_app_search_url(
+                f"{self._get_web_app_base_url()}/search",
+                order_by=order_by,
+                filters=filters_pb,
+                limit=limit,
+                offset=offset,
+            ),
+        )
 
     def facet(
         self,
@@ -246,7 +254,19 @@ class SearchResource(Resource):
             ),
         )
         raise_for_error(result)
-        return FacetDataContainer(result, SearchFacet, limit=limit, offset=offset)
+        return FacetDataContainer(
+            result,
+            SearchFacet,
+            limit=limit,
+            offset=offset,
+            web_app_search_result_url=_build_web_app_facet_url(
+                f"{self._get_web_app_base_url()}/powervis",
+                facet=facet,
+                filters=filters_pb,
+                limit=limit,
+                offset=offset,
+            ),
+        )
 
     def _build_filters(
         self,
@@ -308,3 +328,43 @@ class SearchResource(Resource):
             filters.extend(and_or_filter(text_reuse_cluster_id, "text_reuse_cluster"))
 
         return filters
+
+
+def _build_web_app_search_url(
+    base_url: str,
+    order_by: SearchOrderByLiteral | None = None,
+    filters: str | None = None,
+    limit: int | None = None,
+    offset: int | None = None,
+) -> str:
+    page = offset // limit if limit is not None and offset is not None else 0
+    query_params = {
+        "orderBy": order_by,
+        "sq": filters,
+        "p": page + 1,
+    }
+    query_string = "&".join(
+        f"{key}={value}" for key, value in query_params.items() if value is not None
+    )
+    return f"{base_url}?{query_string}" if query_string else base_url
+
+
+def _build_web_app_facet_url(
+    base_url: str,
+    facet: str,
+    filters: str | None = None,
+    limit: int | None = None,
+    offset: int | None = None,
+) -> str:
+    page = offset // limit if limit is not None and offset is not None else 0
+    query_params = {
+        "index": "search",
+        "facet": "type",
+        "domain": facet,
+        "sq": filters,
+        "p": page + 1,
+    }
+    query_string = "&".join(
+        f"{key}={value}" for key, value in query_params.items() if value is not None
+    )
+    return f"{base_url}?{query_string}" if query_string else base_url
