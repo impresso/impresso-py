@@ -10,13 +10,34 @@ class DataContainer(Generic[IT, T]):
     """Response of a resource call"""
 
     def __init__(
-        self, data: IT, pydantic_model: type[T], web_app_search_result_url: str
+        self,
+        data: IT,
+        pydantic_model: type[T],
+        web_app_search_result_url: str | None = None,
     ):
         if data is None or getattr(data, "to_dict") is None:
             raise ValueError(f"Unexpected data object: {data}")
         self._data = data
         self._pydantic_model = pydantic_model
         self._web_app_search_result_url = web_app_search_result_url
+
+    def _repr_html_(self):
+        df_repr = self.df.head(3).to_html(notebook=True)
+
+        items = [
+            f"<h2>{self.__class__.__name__.replace('DataContainer', '')} result</h2>",
+            f"<div>Contains <b>{self.limit}</b> items starting from item number <b>{self.offset}</b> of <b>{self.total}</b> total items.</div>",
+            "<br/>",
+            (
+                f'See this result in the <a href="{self.url}">Impresso App</a>.'
+                if self.url
+                else None
+            ),
+            "<h3>Data preview:</h3>",
+            df_repr,
+        ]
+
+        return "\n".join([item for item in items if item])
 
     @property
     def raw(self) -> dict[str, Any]:
@@ -49,6 +70,6 @@ class DataContainer(Generic[IT, T]):
         return self.raw.get("offset", 0)
 
     @property
-    def url(self) -> str:
+    def url(self) -> str | None:
         """A URL of the result set in the Impresso web app."""
         return self._web_app_search_result_url

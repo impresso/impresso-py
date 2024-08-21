@@ -78,4 +78,13 @@ class ArticlesResource(Resource):
     def get(self, id: str):
         result = get_article.sync(client=self._api_client, id=id)
         raise_for_error(result)
-        return ArticleDataContainer(result, Article)
+
+        id_parts = id.split("-")
+        issue_id = "-".join(id_parts[:-1])
+        article_id = id_parts[-1]
+
+        return ArticleDataContainer(
+            result,
+            Article,
+            f"{self._get_web_app_base_url()}/issue/{issue_id}/view?articleId={article_id}",
+        )
