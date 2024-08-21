@@ -1,11 +1,24 @@
 """Impresso Python client library."""
 
+import logging
 import os
+
+import httpx
 
 from impresso.api_client import AuthenticatedClient
 from impresso.client_base import ImpressoApiResourcesBase
 from impresso.config_file import DEFAULT_API_URL, ImpressoPyConfig
 from impresso.util.token import get_jwt_status
+
+logger = logging.getLogger(__name__)
+
+
+def _log_non_2xx(response: httpx.Response) -> None:
+    if response.status_code >= 400:
+        response.read()
+        logging.error(
+            f"Received error response ({response.status_code}): {response.text}"
+        )
 
 
 class ImpressoClient(ImpressoApiResourcesBase):
@@ -24,6 +37,11 @@ class ImpressoClient(ImpressoApiResourcesBase):
                 headers={
                     "Accept": "application/json",
                     "User-Agent": "impresso-py/0.1.0",
+                },
+                httpx_args={
+                    "event_hooks": {
+                        "response": [_log_non_2xx],
+                    }
                 },
             )
         )
