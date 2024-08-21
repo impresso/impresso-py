@@ -38,6 +38,7 @@ class ImpressoClient(ImpressoApiResourcesBase):
                     "Accept": "application/json",
                     "User-Agent": "impresso-py/0.1.0",
                 },
+                raise_on_unexpected_status=True,
                 httpx_args={
                     "event_hooks": {
                         "response": [_log_non_2xx],
