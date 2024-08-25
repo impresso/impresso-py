@@ -104,6 +104,7 @@ class TextReuseClustersResource(Resource):
     ) -> FindTextReuseClustersContainer:
 
         filters = _build_filters(
+            text=text,
             cluster_size=cluster_size,
             title=title,
             lexical_overlap=lexical_overlap,
@@ -122,7 +123,6 @@ class TextReuseClustersResource(Resource):
 
         result = find_text_reuse_clusters.sync(
             client=self._api_client,
-            text=text if text is not None else UNSET,
             limit=limit if limit is not None else UNSET,
             offset=offset if offset is not None else UNSET,
             order_by=(
@@ -134,7 +134,15 @@ class TextReuseClustersResource(Resource):
         )
         raise_for_error(result)
         return FindTextReuseClustersContainer(
-            result, FindTextReuseClusterResponseSchema
+            result,
+            FindTextReuseClusterResponseSchema,
+            web_app_search_result_url=_build_web_app_find_clusters_url(
+                base_url=self._get_web_app_base_url(),
+                filters=filters_pb,
+                limit=limit,
+                offset=offset,
+                order_by=order_by,
+            ),
         )
 
     def facet(
@@ -175,9 +183,14 @@ class TextReuseClustersResource(Resource):
                 else UNSET
             ),
         )
-        print("**", result)
         raise_for_error(result)
-        return FacetDataContainer(result, SearchFacet, limit=limit, offset=offset)
+        return FacetDataContainer(
+            result,
+            SearchFacet,
+            limit=limit,
+            offset=offset,
+            web_app_search_result_url=None,
+        )
 
 
 def _build_cluster_facet_filters(
@@ -229,6 +242,7 @@ def _build_cluster_facet_filters(
 
 
 def _build_filters(
+    text: str | None = None,
     cluster_size: Range | AND[Range] | OR[Range] | None = None,
     title: str | AND[str] | OR[str] | None = None,
     lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
@@ -246,6 +260,8 @@ def _build_filters(
     """Build text reuse clusters filters."""
 
     filters: list[Filter] = []
+    if text is not None:
+        filters.extend(and_or_filter(text, "string"))
     if cluster_size is not None:
         filters.extend(
             and_or_filter(
@@ -299,3 +315,23 @@ def _build_filters(
         filters.extend(and_or_filter(entity_id, "entity"))
 
     return filters
+
+
+def _build_web_app_find_clusters_url(
+    base_url: str,
+    filters=str | None,
+    limit=int | None,
+    offset=int | None,
+    order_by=GetTrClustersFacetOrderByLiteral | None,
+) -> str:
+    page = offset // limit if limit is not None and offset is not None else 0
+    query_params = {
+        "orderBy": order_by,
+        "sq": filters,
+        "p": page + 1,
+    }
+    query_string = "&".join(
+        f"{key}={value}" for key, value in query_params.items() if value is not None
+    )
+    url = f"{base_url}/text-reuse/clusters"
+    return f"{url}?{query_string}" if query_string else url

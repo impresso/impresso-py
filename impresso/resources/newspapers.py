@@ -56,4 +56,28 @@ class NewspapersResource(Resource):
             offset=offset if offset is not None else UNSET,
         )
         raise_for_error(result)
-        return FindNewspapersContainer(result, FindNewspapersSchema)
+        return FindNewspapersContainer(
+            result,
+            FindNewspapersSchema,
+            web_app_search_result_url=_build_web_app_newspapers_url(
+                base_url=self._get_web_app_base_url(),
+                q=q,
+                order_by=order_by,
+            ),
+        )
+
+
+def _build_web_app_newspapers_url(
+    base_url: str,
+    q: str | None = None,
+    order_by: FindNewspapersOrderByLiteral | None = None,
+) -> str:
+    query_params = {
+        "orderBy": order_by,
+        "q": q,
+    }
+    query_string = "&".join(
+        f"{key}={value}" for key, value in query_params.items() if value is not None
+    )
+    url = f"{base_url}/newspaper"
+    return f"{url}?{query_string}" if query_string else url

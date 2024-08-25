@@ -74,7 +74,15 @@ class CollectionsResource(Resource):
             offset=offset if offset is not None else UNSET,
         )
         raise_for_error(result)
-        return FindCollectionsContainer(result, FindCollectionsSchema)
+        return FindCollectionsContainer(
+            result,
+            FindCollectionsSchema,
+            web_app_search_result_url=_build_web_app_find_collections_url(
+                base_url=self._get_web_app_base_url(),
+                q=q,
+                order_by=order_by,
+            ),
+        )
 
     def get(self, id: str) -> FindCollectionsContainer:
         """Get collection by ID."""
@@ -84,7 +92,14 @@ class CollectionsResource(Resource):
             id=id,
         )
         raise_for_error(result)
-        return GetCollectionContainer(result, FindCollectionsSchema)
+        return GetCollectionContainer(
+            result,
+            FindCollectionsSchema,
+            web_app_search_result_url=_build_web_app_get_collection_url(
+                base_url=self._get_web_app_base_url(),
+                collection_id=id,
+            ),
+        )
 
     def items(
         self,
@@ -133,3 +148,26 @@ class CollectionsResource(Resource):
             ),
         )
         raise_for_error(result)
+
+
+def _build_web_app_find_collections_url(
+    base_url: str,
+    q: str | None = None,
+    order_by: FindCollectionsOrderByLiteral | None = None,
+) -> str:
+    query_params = {
+        "orderBy": order_by,
+        "q": q,
+    }
+    query_string = "&".join(
+        f"{key}={value}" for key, value in query_params.items() if value is not None
+    )
+    url = f"{base_url}/collections?{query_string}"
+    return f"{url}?{query_string}" if query_string else url
+
+
+def _build_web_app_get_collection_url(
+    base_url: str,
+    collection_id: str,
+) -> str:
+    return f"{base_url}/collections/{collection_id}"

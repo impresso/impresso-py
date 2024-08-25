@@ -87,7 +87,18 @@ class EntitiesResource(Resource):
             filters=filters_pb if filters_pb else UNSET,
         )
         raise_for_error(result)
-        return FindEntitiesContainer(result, FindEntitiesSchema)
+        return FindEntitiesContainer(
+            result,
+            FindEntitiesSchema,
+            web_app_search_result_url=(
+                _build_web_app_find_entities_url(
+                    base_url=self._get_web_app_base_url(),
+                    q=q,
+                )
+                if wikidata_id is None and entity_type is None
+                else None
+            ),
+        )
 
     def get(self, id: str) -> GetEntityContainer:
         """Get entity by ID."""
@@ -97,4 +108,32 @@ class EntitiesResource(Resource):
             id=id,
         )
         raise_for_error(result)
-        return GetEntityContainer(result, FindEntitiesSchema)
+        return GetEntityContainer(
+            result,
+            FindEntitiesSchema,
+            web_app_search_result_url=_build_web_app_get_entity_url(
+                base_url=self._get_web_app_base_url(),
+                id=id,
+            ),
+        )
+
+
+def _build_web_app_find_entities_url(
+    base_url: str,
+    q: str | None = None,
+) -> str:
+    query_params = {
+        "q": q,
+    }
+    query_string = "&".join(
+        f"{key}={value}" for key, value in query_params.items() if value is not None
+    )
+    url = f"{base_url}/entities"
+    return f"{url}?{query_string}" if query_string else url
+
+
+def _build_web_app_get_entity_url(
+    base_url: str,
+    id: str,
+) -> str:
+    return f"{base_url}/entities/{id}"

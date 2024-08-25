@@ -101,7 +101,15 @@ class TextReusePassagesResource(Resource):
         )
         raise_for_error(result)
         return FindTextReusePassagesContainer(
-            result, FindTextReusePassageResponseSchema
+            result,
+            FindTextReusePassageResponseSchema,
+            web_app_search_result_url=_build_web_app_find_passages_url(
+                base_url=self._get_web_app_base_url(),
+                filters=filters_pb,
+                limit=limit,
+                offset=offset,
+                order_by=order_by,
+            ),
         )
 
     def facet(
@@ -163,4 +171,30 @@ class TextReusePassagesResource(Resource):
             ),
         )
         raise_for_error(result)
-        return FacetDataContainer(result, SearchFacet, limit=limit, offset=offset)
+        return FacetDataContainer(
+            result,
+            SearchFacet,
+            limit=limit,
+            offset=offset,
+            web_app_search_result_url=None,
+        )
+
+
+def _build_web_app_find_passages_url(
+    base_url: str,
+    filters=str | None,
+    limit=int | None,
+    offset=int | None,
+    order_by=FindTextReusePassagesOrderBy | None,
+) -> str:
+    page = offset // limit if limit is not None and offset is not None else 0
+    query_params = {
+        "sort": order_by,
+        "sq": filters,
+        "p": page + 1,
+    }
+    query_string = "&".join(
+        f"{key}={value}" for key, value in query_params.items() if value is not None
+    )
+    url = f"{base_url}/text-reuse/passages"
+    return f"{url}?{query_string}" if query_string else url

@@ -23,9 +23,12 @@ class DataContainer(Generic[IT, T]):
 
     def _repr_html_(self):
         df_repr = self.df.head(3).to_html(notebook=True)
+        response_type = self.__class__.__name__.replace("DataContainer", "").replace(
+            "Container", ""
+        )
 
         items = [
-            f"<h2>{self.__class__.__name__.replace('DataContainer', '')} result</h2>",
+            f"<h2>{response_type} result</h2>",
             f"<div>Contains <b>{self.limit}</b> items starting from item number <b>{self.offset}</b> of <b>{self.total}</b> total items.</div>",
             "<br/>",
             (
