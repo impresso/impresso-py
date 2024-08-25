@@ -1,4 +1,7 @@
 from typing import Any
+import matplotlib.pyplot as plt
+import io
+import base64
 
 from pandas import DataFrame, json_normalize
 
@@ -89,6 +92,11 @@ class FacetDataContainer(DataContainer):
     def offset(self) -> int:
         """Page offset."""
         return self._offset or 0
+
+    def _get_preview_image_(self) -> str | None:
+        return render_dataframe_chart_base64(
+            self.df.index[:].values, self.df["count"].values
+        )
 
 
 class SearchResource(Resource):
@@ -368,3 +376,31 @@ def _build_web_app_facet_url(
         f"{key}={value}" for key, value in query_params.items() if value is not None
     )
     return f"{base_url}?{query_string}" if query_string else base_url
+
+
+def render_dataframe_chart_base64(x, y) -> str:
+    plt.figure(figsize=(12, 1))
+
+    if len(x) < 50:
+        plt.bar(x, y)
+    else:
+        plt.plot(x, y)
+
+    # Remove axes, labels, and legend
+    plt.axis("off")
+    # plt.legend().remove()
+
+    # Save the plot to a bytes buffer with a transparent background
+    buffer = io.BytesIO()
+    plt.savefig(
+        buffer, format="png", bbox_inches="tight", pad_inches=0.1, transparent=True
+    )
+    buffer.seek(0)
+
+    # Encode the bytes as base64
+    image_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
+
+    # Close the plot to free up memory
+    plt.close()
+
+    return image_base64

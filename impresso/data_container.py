@@ -26,6 +26,7 @@ class DataContainer(Generic[IT, T]):
         response_type = self.__class__.__name__.replace("DataContainer", "").replace(
             "Container", ""
         )
+        preview_img = self._get_preview_image_()
 
         items = [
             f"<h2>{response_type} result</h2>",
@@ -38,9 +39,17 @@ class DataContainer(Generic[IT, T]):
             ),
             "<h3>Data preview:</h3>",
             df_repr,
+            (
+                f'<img src="data:image/png;base64,{preview_img}" style="width:100% !important;">'
+                if preview_img
+                else None
+            ),
         ]
 
         return "\n".join([item for item in items if item])
+
+    def _get_preview_image_(self) -> str | None:
+        return None
 
     @property
     def raw(self) -> dict[str, Any]:
