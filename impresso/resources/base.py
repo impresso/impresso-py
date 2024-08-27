@@ -11,3 +11,6 @@ class Resource:
 
     def _get_web_app_base_url(self) -> str:
         return "https://dev.impresso-project.ch/app"
+
+
+DEFAULT_PAGE_SIZE = 100

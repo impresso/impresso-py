@@ -59,6 +59,11 @@ class FindTextReuseClustersContainer(DataContainer):
         return self._pydantic_model.model_validate(remapped_raw)
 
     @property
+    def size(self) -> int:
+        """Current page size."""
+        return len(self.raw.get("clusters", []))
+
+    @property
     def total(self) -> int:
         """Total number of results."""
         return self.raw.get("info", {}).get("total", 0)

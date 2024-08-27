@@ -12,7 +12,10 @@ from impresso.api_client.models.get_search_facet_id import (
     GetSearchFacetId,
     GetSearchFacetIdLiteral,
 )
-from impresso.api_client.models.get_search_facet_order_by import GetSearchFacetOrderBy
+from impresso.api_client.models.get_search_facet_order_by import (
+    GetSearchFacetOrderBy,
+    GetSearchFacetOrderByLiteral,
+)
 from impresso.api_client.models.search_group_by import SearchGroupBy
 from impresso.api_client.models.search_order_by import (
     SearchOrderBy,
@@ -21,7 +24,7 @@ from impresso.api_client.models.search_order_by import (
 from impresso.api_client.types import UNSET, Unset
 from impresso.api_models import Article, BaseFind, Filter, Q, SearchFacet
 from impresso.data_container import IT, DataContainer, T
-from impresso.resources.base import Resource
+from impresso.resources.base import DEFAULT_PAGE_SIZE, Resource
 from impresso.structures import AND, OR, DateRange
 from impresso.util.error import raise_for_error
 from impresso.util.filters import and_or_filter, filters_as_protobuf
@@ -79,6 +82,11 @@ class FacetDataContainer(DataContainer):
         return json_normalize(self.raw["buckets"]).set_index("val")
 
     @property
+    def size(self) -> int:
+        """Current page size."""
+        return len(self.raw.get("buckets", []))
+
+    @property
     def total(self) -> int:
         """Total number of results."""
         return self.raw.get("numBuckets", 0)
@@ -94,6 +102,8 @@ class FacetDataContainer(DataContainer):
         return self._offset or 0
 
     def _get_preview_image_(self) -> str | None:
+        if self.size == 0:
+            return None
         return render_dataframe_chart_base64(
             self.df.index[:].values, self.df["count"].values
         )
@@ -184,7 +194,7 @@ class SearchResource(Resource):
             ),
             group_by=get_enum_from_literal_required("articles", SearchGroupBy),
             filters=filters_pb if filters_pb else UNSET,
-            limit=limit if limit is not None else UNSET,
+            limit=limit if limit is not None else DEFAULT_PAGE_SIZE,
             offset=offset if offset is not None else UNSET,
         )
         raise_for_error(result)
@@ -204,7 +214,7 @@ class SearchResource(Resource):
         self,
         facet: GetSearchFacetIdLiteral,
         q: str | AND[str] | OR[str] | None = None,
-        order_by: SearchOrderByLiteral | None = None,
+        order_by: GetSearchFacetOrderByLiteral | None = None,
         limit: int | None = None,
         offset: int | None = None,
         with_text_contents: bool | None = False,

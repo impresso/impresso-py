@@ -30,7 +30,13 @@ class DataContainer(Generic[IT, T]):
 
         items = [
             f"<h2>{response_type} result</h2>",
-            f"<div>Contains <b>{self.limit}</b> items starting from item number <b>{self.offset}</b> of <b>{self.total}</b> total items.</div>",
+            f"<div>Contains <b>{self.size}</b> items "
+            + (
+                f"(<b>{self.offset}</b> - <b>{self.offset + self.size}</b>) "
+                if self.size > 0 and self.size < self.total
+                else ""
+            )
+            + f"of <b>{self.total}</b> total items.</div>",
             "<br/>",
             (
                 f'See this result in the <a href="{self.url}">Impresso App</a>.'
@@ -80,6 +86,11 @@ class DataContainer(Generic[IT, T]):
     def offset(self) -> int:
         """Page offset."""
         return self.raw.get("offset", 0)
+
+    @property
+    def size(self) -> int:
+        """Current page size."""
+        return len(self.raw.get("data", []))
 
     @property
     def url(self) -> str | None:

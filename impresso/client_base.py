@@ -4,7 +4,6 @@ from impresso.resources.collections import CollectionsResource
 from impresso.resources.entities import EntitiesResource
 from impresso.resources.newspapers import NewspapersResource
 from impresso.resources.search import SearchResource
-from impresso.resources.search_facets import SearchFacetsResource
 from impresso.resources.text_reuse import TextReuseDomain
 
 
@@ -21,10 +20,6 @@ class ImpressoApiResourcesBase:
     @property
     def articles(self) -> ArticlesResource:
         return ArticlesResource(self._api_client)
-
-    @property
-    def facets(self) -> SearchFacetsResource:
-        return SearchFacetsResource(self._api_client)
 
     @property
     def text_reuse(self) -> TextReuseDomain:

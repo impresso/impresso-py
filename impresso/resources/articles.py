@@ -52,6 +52,19 @@ class ArticleDataContainer(DataContainer):
         """Return the data as a pandas dataframe."""
         return json_normalize([self.raw])
 
+    @property
+    def size(self) -> int:
+        """Current page size."""
+        data = self._data.to_dict()
+        if len(data):
+            return 1
+        return 0
+
+    @property
+    def total(self) -> int:
+        """Total number of results."""
+        return self.size
+
 
 class ArticlesResource(Resource):
     """Get articles from the impresso database."""
