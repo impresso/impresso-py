@@ -153,7 +153,7 @@ class TextReuseClustersResource(Resource):
     def facet(
         self,
         facet: GetTrClustersFacetIdLiteral,
-        order_by: GetTrClustersFacetOrderByLiteral | None = None,
+        order_by: GetTrClustersFacetOrderByLiteral | None = "value",
         limit: int | None = None,
         offset: int | None = None,
         cluster_size: Range | AND[Range] | OR[Range] | None = None,

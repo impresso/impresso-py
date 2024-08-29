@@ -214,7 +214,7 @@ class SearchResource(Resource):
         self,
         facet: GetSearchFacetIdLiteral,
         q: str | AND[str] | OR[str] | None = None,
-        order_by: GetSearchFacetOrderByLiteral | None = None,
+        order_by: GetSearchFacetOrderByLiteral | None = "value",
         limit: int | None = None,
         offset: int | None = None,
         with_text_contents: bool | None = False,

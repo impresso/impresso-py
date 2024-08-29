@@ -118,7 +118,7 @@ class TextReusePassagesResource(Resource):
         text: str | None = None,
         limit: int | None = None,
         offset: int | None = None,
-        order_by: FindTextReusePassagesOrderByLiteral | None = None,
+        order_by: FindTextReusePassagesOrderByLiteral | None = "value",
         cluster_size: Range | AND[Range] | OR[Range] | None = None,
         title: str | AND[str] | OR[str] | None = None,
         lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
