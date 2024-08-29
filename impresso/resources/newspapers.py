@@ -79,5 +79,5 @@ def _build_web_app_newspapers_url(
     query_string = "&".join(
         f"{key}={value}" for key, value in query_params.items() if value is not None
     )
-    url = f"{base_url}/newspaper"
+    url = f"{base_url}/newspapers"
     return f"{url}?{query_string}" if query_string else url
