@@ -231,6 +231,103 @@ class Filter(BaseModel):
     uid: Optional[str] = None
 
 
+class Offset(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    start: Annotated[int, Field(description='Start offset of the entity in the text')]
+    end: Annotated[int, Field(description='End offset of the entity in the text')]
+
+
+class Confidence(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    ner: Annotated[
+        float, Field(description='Confidence score for the named entity recognition')
+    ]
+    nel: Annotated[
+        Optional[float],
+        Field(None, description='Confidence score for the named entity linking'),
+    ]
+
+
+class ImpressoNerEntity(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='ID of the entity')]
+    type: Annotated[
+        Literal[
+            'comp.demonym',
+            'comp.function',
+            'comp.name',
+            'comp.qualifier',
+            'comp.title',
+            'loc',
+            'loc.add.elec',
+            'loc.add.phys',
+            'loc.adm.nat',
+            'loc.adm.reg',
+            'loc.adm.sup',
+            'loc.adm.town',
+            'loc.fac',
+            'loc.oro',
+            'loc.phys.astro',
+            'loc.phys.geo',
+            'loc.phys.hydro',
+            'loc.unk',
+            'org',
+            'org.adm',
+            'org.ent',
+            'org.ent.pressagency',
+            'pers',
+            'pers.coll',
+            'pers.ind',
+            'pers.ind.articleauthor',
+            'prod',
+            'prod.doctr',
+            'prod.media',
+            'time',
+            'time.date.abs',
+            'time.hour.abs',
+        ],
+        Field(description='Type of the entity'),
+    ]
+    surfaceForm: Annotated[str, Field(description='Surface form of the entity')]
+    offset: Offset
+    isTypeNested: Annotated[
+        bool, Field(description='Whether the entity type is nested')
+    ]
+    confidence: Confidence
+
+
+class ImpressoNerRequest(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    text: Annotated[
+        str, Field(description='Text to be processed for named entity recognition')
+    ]
+
+
+class ImpressoNerResponse(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    modelId: Annotated[
+        str, Field(description='ID of the model used for the named entity recognition')
+    ]
+    text: Annotated[
+        str, Field(description='Text processed for named entity recognition')
+    ]
+    timestamp: Annotated[
+        AwareDatetime,
+        Field(description='Timestamp of when named entity recognition was performed'),
+    ]
+    entities: Sequence[ImpressoNerEntity]
+
+
 class NewCollection(BaseModel):
     model_config = ConfigDict(
         extra='forbid',

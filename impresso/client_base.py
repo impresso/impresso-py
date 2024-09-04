@@ -5,6 +5,7 @@ from impresso.resources.entities import EntitiesResource
 from impresso.resources.newspapers import NewspapersResource
 from impresso.resources.search import SearchResource
 from impresso.resources.text_reuse import TextReuseDomain
+from impresso.resources.tools import ToolsResource
 
 
 class ImpressoApiResourcesBase:
@@ -36,3 +37,7 @@ class ImpressoApiResourcesBase:
     @property
     def entities(self) -> EntitiesResource:
         return EntitiesResource(self._api_client)
+
+    @property
+    def tools(self) -> ToolsResource:
+        return ToolsResource(self._api_client)

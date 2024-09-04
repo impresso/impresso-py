@@ -87,6 +87,12 @@ from .get_tr_passages_facet_group_by import GetTrPassagesFacetGroupBy
 from .get_tr_passages_facet_id import GetTrPassagesFacetId
 from .get_tr_passages_facet_order_by import GetTrPassagesFacetOrderBy
 from .get_tr_passages_facet_range_include import GetTrPassagesFacetRangeInclude
+from .impresso_named_entity_recognition_entity import ImpressoNamedEntityRecognitionEntity
+from .impresso_named_entity_recognition_entity_confidence import ImpressoNamedEntityRecognitionEntityConfidence
+from .impresso_named_entity_recognition_entity_offset import ImpressoNamedEntityRecognitionEntityOffset
+from .impresso_named_entity_recognition_entity_type import ImpressoNamedEntityRecognitionEntityType
+from .impresso_named_entity_recognition_request import ImpressoNamedEntityRecognitionRequest
+from .impresso_named_entity_recognition_response import ImpressoNamedEntityRecognitionResponse
 from .location_specific_fields import LocationSpecificFields
 from .location_specific_fields_descriptions import LocationSpecificFieldsDescriptions
 from .location_specific_fields_images_item import LocationSpecificFieldsImagesItem
@@ -217,6 +223,12 @@ __all__ = (
     "GetTrPassagesFacetId",
     "GetTrPassagesFacetOrderBy",
     "GetTrPassagesFacetRangeInclude",
+    "ImpressoNamedEntityRecognitionEntity",
+    "ImpressoNamedEntityRecognitionEntityConfidence",
+    "ImpressoNamedEntityRecognitionEntityOffset",
+    "ImpressoNamedEntityRecognitionEntityType",
+    "ImpressoNamedEntityRecognitionRequest",
+    "ImpressoNamedEntityRecognitionResponse",
     "LocationSpecificFields",
     "LocationSpecificFieldsDescriptions",
     "LocationSpecificFieldsImagesItem",
