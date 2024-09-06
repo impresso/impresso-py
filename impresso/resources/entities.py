@@ -59,8 +59,10 @@ class EntitiesResource(Resource):
         self,
         q: str | None = None,
         wikidata_id: str | AND[str] | OR[str] | None = None,
+        entity_id: str | AND[str] | OR[str] | None = None,
         entity_type: EntityType | AND[EntityType] | OR[EntityType] | None = None,
         order_by: FindEntitiesOrderByLiteral | None = None,
+        load_wikidata: bool = False,
         limit: int | None = None,
         offset: int | None = None,
     ) -> FindEntitiesContainer:
@@ -71,6 +73,8 @@ class EntitiesResource(Resource):
             filters.extend(and_or_filter(entity_type, "type"))
         if wikidata_id is not None:
             filters.extend(and_or_filter(wikidata_id, "wikidata_id"))
+        if entity_id is not None:
+            filters.extend(and_or_filter(entity_id, "uid"))
 
         filters_pb = filters_as_protobuf(filters or [])
 
@@ -85,6 +89,7 @@ class EntitiesResource(Resource):
             limit=limit if limit is not None else UNSET,
             offset=offset if offset is not None else UNSET,
             filters=filters_pb if filters_pb else UNSET,
+            resolve=load_wikidata,
         )
         raise_for_error(result)
         return FindEntitiesContainer(
