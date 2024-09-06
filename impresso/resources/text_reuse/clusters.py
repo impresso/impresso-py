@@ -194,7 +194,13 @@ class TextReuseClustersResource(Resource):
             SearchFacet,
             limit=limit,
             offset=offset,
-            web_app_search_result_url=None,
+            web_app_search_result_url=_build_web_app_find_clusters_url(
+                base_url=self._get_web_app_base_url(),
+                filters=filters_pb,
+                limit=limit,
+                offset=offset,
+                order_by=order_by,
+            ),
         )
 
 

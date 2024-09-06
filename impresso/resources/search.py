@@ -278,7 +278,7 @@ class SearchResource(Resource):
             limit=limit,
             offset=offset,
             web_app_search_result_url=_build_web_app_facet_url(
-                f"{self._get_web_app_base_url()}/powervis",
+                f"{self._get_web_app_base_url()}/search",
                 facet=facet,
                 filters=filters_pb,
                 limit=limit,
