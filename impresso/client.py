@@ -10,6 +10,8 @@ from impresso.client_base import ImpressoApiResourcesBase
 from impresso.config_file import DEFAULT_API_URL, ImpressoPyConfig
 from impresso.util.token import get_jwt_status
 
+import getpass
+
 logger = logging.getLogger(__name__)
 
 
@@ -90,7 +92,7 @@ def connect(
     if not token:
         # Show a prompt to the user with the explanations on how to get the token.
         print(_PROMPT.format(URL=f"{api_url}/login"))
-        token = input("🔑 Enter your token: ")
+        token = getpass.getpass("🔑 Enter your token: ")
         token_status, _ = get_jwt_status(token)
 
         if token_status != "valid":
