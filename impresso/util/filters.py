@@ -122,4 +122,6 @@ def and_or_filter(
         ]
         return [filter] + chain_filters
     else:
-        return [Filter(type=type, q=Q(converter(item)), daterange=None)]
+        return [
+            Filter(type=type, q=Q(converter(item)), daterange=None, precision="exact")
+        ]
