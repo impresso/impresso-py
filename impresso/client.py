@@ -1,7 +1,9 @@
 """Impresso Python client library."""
 
+import getpass
 import logging
 import os
+from urllib.parse import urlparse
 
 import httpx
 
@@ -10,9 +12,14 @@ from impresso.client_base import ImpressoApiResourcesBase
 from impresso.config_file import DEFAULT_API_URL, ImpressoPyConfig
 from impresso.util.token import get_jwt_status
 
-import getpass
-
 logger = logging.getLogger(__name__)
+
+
+def _is_localhost_netloc(netloc: str) -> bool:
+    return netloc.startswith("localhost") or netloc.startswith("127.0.0.1")
+
+
+DEFAULT_LOCALHOST_TOKEN_NETLOC = "dev.impresso-project.ch"
 
 
 def _log_non_2xx(response: httpx.Response) -> None:
@@ -85,13 +92,21 @@ def connect(
 
     api_url = public_api_url or os.getenv("IMPRESSO_API_URL") or config.default_api_url
 
+    parsed_url = urlparse(api_url)
+    token_base_url_netloc = parsed_url.netloc
+    if _is_localhost_netloc(token_base_url_netloc):
+        token_base_url_netloc = DEFAULT_LOCALHOST_TOKEN_NETLOC
+
+    token_base_url = f"https://{token_base_url_netloc}"
+    token_url = f"{token_base_url}/datalab/token"
+
     token = None
     if persisted_token:
         token = config.get_token(url=api_url)
 
     if not token:
         # Show a prompt to the user with the explanations on how to get the token.
-        print(_PROMPT.format(URL=f"{api_url}/login"))
+        print(_PROMPT.format(URL=token_url))
         token = getpass.getpass("🔑 Enter your token: ")
         token_status, _ = get_jwt_status(token)
 
