@@ -107,6 +107,7 @@ def and_or_filter(
             q=list([QItem(converter(i)) for i in item]),
             op=item.op,
             context="exclude" if item.inverted else "include",
+            precision=item.precision,
             daterange=None,
         )
         chain_filters = [

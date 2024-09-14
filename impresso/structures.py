@@ -36,6 +36,7 @@ class TermSet(set[T], Generic[T]):
         super().__init__(cast(Iterable[T], _items))
         self.inverted = False
         self.chain: list[TermSet] = []
+        self._precision = "exact"
 
     def __invert__(self):
         new_instance = AND(list(self))
@@ -56,6 +57,10 @@ class TermSet(set[T], Generic[T]):
     @property
     def op(self) -> Literal["AND", "OR"]:
         return getattr(self, "_op")
+
+    @property
+    def precision(self) -> Literal["fuzzy", "soft", "exact", "partial"]:
+        return getattr(self, "_precision", "exact")
 
 
 class AND(TermSet[T], Generic[T]):
@@ -99,6 +104,36 @@ class OR(TermSet[T], Generic[T]):
     def __init__(self, items: Union[Sequence[T], T], *args: T):
         super().__init__(items, *args)
         self._op = "OR"
+
+
+def _as_term_set(val: TermSet[T] | str) -> TermSet[T]:
+    if isinstance(val, str):
+        return AND(cast(T, val))
+    return val
+
+
+def Fuzzy(ts: TermSet[T] | str) -> TermSet[T]:
+    s = _as_term_set(ts)
+    s._precision = "fuzzy"
+    return s
+
+
+def Soft(ts: TermSet[T] | str) -> TermSet[T]:
+    s = _as_term_set(ts)
+    s._precision = "soft"
+    return s
+
+
+def Exact(ts: TermSet[T] | str) -> TermSet[T]:
+    s = _as_term_set(ts)
+    s._precision = "exact"
+    return s
+
+
+def Partial(ts: TermSet[T] | str) -> TermSet[T]:
+    s = _as_term_set(ts)
+    s._precision = "partial"
+    return s
 
 
 class DateRange:
