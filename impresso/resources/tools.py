@@ -1,11 +1,9 @@
-from typing import List
-
 from pandas import DataFrame, json_normalize
 from impresso.api_client.api.tools import perform_ner
 from impresso.api_client.models.impresso_named_entity_recognition_request import (
     ImpressoNamedEntityRecognitionRequest,
 )
-from impresso.api_models import ImpressoNerEntity, ImpressoNerResponse
+from impresso.api_models import ImpressoNerResponse
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
 from impresso.util.error import raise_for_error
