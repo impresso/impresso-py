@@ -307,7 +307,12 @@ class ImpressoNerRequest(BaseModel):
         extra='forbid',
     )
     text: Annotated[
-        str, Field(description='Text to be processed for named entity recognition')
+        str,
+        Field(
+            description='Text to be processed for named entity recognition',
+            max_length=3999,
+            min_length=1,
+        ),
     ]
 
 
