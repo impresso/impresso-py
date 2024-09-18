@@ -80,7 +80,7 @@ def connect(
     Connect to the Impresso API and return a client object.
 
     Args:
-        public_api_url (str): The URL of the Impresso API to connect to. By default using the default URL set 
+        public_api_url (str): The URL of the Impresso API to connect to. By default using the default URL set
                               in the config file (~/.impresso_py.yml) or the Impresso default URL ({DEFAULT_API_URL}).
         persisted_token (bool): Whether to read and write token to the user directory
                                 (~/.impresso_py.yml).

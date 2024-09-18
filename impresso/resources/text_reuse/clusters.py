@@ -22,7 +22,7 @@ from impresso.api_models import (
     SearchFacet,
     TextReuseClusterCompound,
 )
-from impresso.data_container import DataContainer, T
+from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
 from impresso.resources.search import FacetDataContainer
 from impresso.structures import AND, OR, DateRange
@@ -47,7 +47,7 @@ class FindTextReuseClustersContainer(DataContainer):
         return DataFrame()
 
     @property
-    def pydantic(self) -> T:
+    def pydantic(self):
         """Return the data as a pydantic model."""
         remapped_raw = {
             "data": self.raw.get("clusters", []),

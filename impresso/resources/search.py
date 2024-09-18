@@ -339,7 +339,7 @@ class SearchResource(Resource):
         if country is not None:
             filters.extend(and_or_filter(country, "country"))
         if access_rights is not None:
-            filters.extend(and_or_filter(access_rights, "access_right"))
+            filters.extend(and_or_filter(access_rights, "access_right"))  # type: ignore
         if partner_id is not None:
             filters.extend(and_or_filter(partner_id, "partner"))
         if text_reuse_cluster_id is not None:

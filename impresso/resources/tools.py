@@ -54,14 +54,14 @@ class ToolsResource(Resource):
 
     name = "tools"
 
-    def ner(self, text: str) -> List[ImpressoNerEntity]:
+    def ner(self, text: str) -> NerContainer:
         """Named Entity Recognition
 
         Args:
             text (str): Text to process
 
         Returns:
-            List[ImpressoNerEntity]: List of named entities
+            NerContainer: List of named entities
         """
         result = perform_ner.sync(
             client=self._api_client,

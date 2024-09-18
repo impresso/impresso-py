@@ -70,7 +70,7 @@ class EntitiesResource(Resource):
 
         filters: list[Filter] = []
         if entity_type is not None:
-            filters.extend(and_or_filter(entity_type, "type"))
+            filters.extend(and_or_filter(entity_type, "type"))  # type: ignore
         if wikidata_id is not None:
             filters.extend(and_or_filter(wikidata_id, "wikidata_id"))
         if entity_id is not None:

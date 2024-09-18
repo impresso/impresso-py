@@ -118,7 +118,7 @@ class TextReusePassagesResource(Resource):
         text: str | None = None,
         limit: int | None = None,
         offset: int | None = None,
-        order_by: FindTextReusePassagesOrderByLiteral | None = "value",
+        order_by: FindTextReusePassagesOrderByLiteral | None = None,
         cluster_size: Range | AND[Range] | OR[Range] | None = None,
         title: str | AND[str] | OR[str] | None = None,
         lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
@@ -167,7 +167,7 @@ class TextReusePassagesResource(Resource):
             order_by=(
                 get_enum_from_literal(order_by, GetTrPassagesFacetOrderBy)
                 if order_by is not None
-                else UNSET
+                else get_enum_from_literal("value", GetTrPassagesFacetOrderBy)
             ),
         )
         raise_for_error(result)

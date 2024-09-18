@@ -12,7 +12,7 @@ from typing import (
     cast,
 )
 
-T = TypeVar("T", bound=str)
+T = TypeVar("T")
 
 
 def _is_string_like_sequence(obj: Any) -> TypeGuard[Sequence[str]]:
@@ -29,7 +29,7 @@ class TermSet(set[T], Generic[T]):
         if _is_string_like_sequence(items):
             _items = items
         elif isinstance(items, str):
-            _items = [items] + list(args)
+            _items = [items] + list(args)  # type:ignore
         else:
             raise ValueError(f"{items.__class__} is not supported")
 

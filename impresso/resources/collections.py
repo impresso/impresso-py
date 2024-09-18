@@ -79,7 +79,7 @@ class CollectionsResource(Resource):
             client=self._api_client,
             q=q if q is not None else UNSET,
             order_by=(
-                get_enum_from_literal(order_by, FindCollectionsOrderBy)
+                get_enum_from_literal(order_by, FindCollectionsOrderBy)  # type: ignore
                 if order_by is not None
                 else FindCollectionsOrderBy.VALUE_0
             ),
@@ -97,7 +97,7 @@ class CollectionsResource(Resource):
             ),
         )
 
-    def get(self, id: str) -> FindCollectionsContainer:
+    def get(self, id: str) -> GetCollectionContainer:
         """Get collection by ID."""
 
         result = get_collection.sync(
