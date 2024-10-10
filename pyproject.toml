@@ -1,5 +1,8 @@
 [tool.poetry]
-authors = ["Daniele Guido <daniele.guido@uni.lu>"]
+authors = [
+  "Daniele Guido <daniele.guido@uni.lu>",
+  "Roman Kalyakin <roman@kalyakin.com",
+]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Intended Audience :: Developers",
@@ -7,29 +10,27 @@ classifiers = [
   "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
 ]
-description = "A Python package to explore the impresso API"
-documentation = "https://impresso-py.readthedocs.io/en/latest/"
+description = "A Library to interact with the Impresso API"
 homepage = "https://github.com/impresso/impresso-py"
+license = "AGPL-3.0-or-later"
 name = "impresso"
 packages = [
   {include = "impresso", from = "."},
 ]
 readme = "README.md"
 repository = "https://github.com/impresso/impresso-py"
-version = "0.1.0"
+version = "0.9.0"
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/python-poetry/poetry/issues"
-Endpoint = "https://dev.impresso-project.ch/api/public"
+Endpoint = "https://impresso-project.ch/public-api"
 Issues = "https://github.com/impresso/impresso-py/issues"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.0.0"]
 
 [virtualenvs]
 in-project = true

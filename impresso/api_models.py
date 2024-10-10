@@ -252,6 +252,16 @@ class Confidence(BaseModel):
     ]
 
 
+class Wikidata(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='Wikidata ID of the entity')]
+    wikipediaPageName: Annotated[
+        Optional[str], Field(None, description='Wikipedia page name of the entity')
+    ]
+
+
 class ImpressoNerEntity(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -297,9 +307,14 @@ class ImpressoNerEntity(BaseModel):
     surfaceForm: Annotated[str, Field(description='Surface form of the entity')]
     offset: Offset
     isTypeNested: Annotated[
-        bool, Field(description='Whether the entity type is nested')
+        Optional[bool], Field(None, description='Whether the entity type is nested')
     ]
     confidence: Confidence
+    wikidata: Optional[Wikidata] = None
+    function: Annotated[
+        Optional[str], Field(None, description='Function of the entity')
+    ]
+    name: Annotated[Optional[str], Field(None, description='Name of the entity')]
 
 
 class ImpressoNerRequest(BaseModel):
