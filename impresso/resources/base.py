@@ -10,7 +10,7 @@ class Resource:
         self._api_client = api_client
 
     def _get_web_app_base_url(self) -> str:
-        return "https://dev.impresso-project.ch/app"
+        return "https://impresso-project.ch/app"
 
 
 DEFAULT_PAGE_SIZE = 100
