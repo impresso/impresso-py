@@ -5,7 +5,7 @@ name: Upload Python Package
 
 on:
   release:
-    types: [published]
+    types: [released]
   workflow_dispatch:
 
 permissions:
@@ -36,7 +36,7 @@ jobs:
           poetry install
       - name: Build package
         run: poetry build
-      - name: Publish test package
+      - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
         # pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
 
