@@ -15,7 +15,7 @@ pip install impresso
 
 ## Usage
 
-See sample notebooks in the [examples/notebooks](examples/notebooks) directory or examples available in the [Impresso Datalab](https://impresso-project.ch/datalab/).
+See sample notebooks in the [examples/notebooks]([examples/notebooks](https://github.com/impresso/impresso-py/tree/main/examples/notebooks)) directory or examples available in the [Impresso Datalab](https://impresso-project.ch/datalab/).
 
 ## Extending the library
 
