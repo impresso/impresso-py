@@ -10,3 +10,5 @@ from impresso.structures import (  # noqa
     Exact,
     Partial,
 )
+
+__version__ = "0.9.0"

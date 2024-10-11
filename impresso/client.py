@@ -19,7 +19,7 @@ def _is_localhost_netloc(netloc: str) -> bool:
     return netloc.startswith("localhost") or netloc.startswith("127.0.0.1")
 
 
-DEFAULT_LOCALHOST_TOKEN_NETLOC = "dev.impresso-project.ch"
+DEFAULT_LOCALHOST_TOKEN_NETLOC = "impresso-project.ch"
 
 
 def _log_non_2xx(response: httpx.Response) -> None:
@@ -68,7 +68,7 @@ _PROMPT = """
 Click on the following link to access the login page: {URL}
  - 🔤 Enter your email/password on this page.
  - 🔑 Once logged in, a secret token will be generated for you.
- - 📋 Copy this token and paste it into the input field below 👇🏼.
+ - 📋 Copy this token and paste it into the input field below. Then press "Enter". 👇🏼.
 """
 
 
