@@ -1,4 +1,4 @@
-from impresso.client import connect  # noqa
+from impresso.client import connect, version  # noqa
 from impresso.api_models import *  # noqa
 from impresso.structures import (  # noqa
     TermSet,
@@ -11,4 +11,4 @@ from impresso.structures import (  # noqa
     Partial,
 )
 
-__version__ = "0.9.0"
+__version__ = version

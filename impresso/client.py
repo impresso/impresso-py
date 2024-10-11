@@ -1,6 +1,7 @@
 """Impresso Python client library."""
 
 import getpass
+import importlib.metadata
 import logging
 import os
 from urllib.parse import urlparse
@@ -13,6 +14,8 @@ from impresso.config_file import DEFAULT_API_URL, ImpressoPyConfig
 from impresso.util.token import get_jwt_status
 
 logger = logging.getLogger(__name__)
+
+version = importlib.metadata.version("impresso")
 
 
 def _is_localhost_netloc(netloc: str) -> bool:
@@ -45,7 +48,7 @@ class ImpressoClient(ImpressoApiResourcesBase):
                 token=self._api_bearer_token,
                 headers={
                     "Accept": "application/json",
-                    "User-Agent": "impresso-py/0.1.0",
+                    "User-Agent": f"impresso-py/${version}",
                 },
                 raise_on_unexpected_status=True,
                 httpx_args={
