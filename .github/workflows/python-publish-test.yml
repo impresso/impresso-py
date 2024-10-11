@@ -5,7 +5,7 @@ name: Upload Test Python Package
 
 on:
   release:
-    types: [published]
+    types: [prereleased]
   workflow_dispatch:
 
 permissions:
