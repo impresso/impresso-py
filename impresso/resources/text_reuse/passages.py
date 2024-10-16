@@ -54,6 +54,7 @@ class TextReusePassagesResource(Resource):
         limit: int | None = None,
         offset: int | None = None,
         order_by: FindTextReusePassagesOrderByLiteral | None = None,
+        cluster_id: str | AND[str] | OR[str] | None = None,
         cluster_size: Range | AND[Range] | OR[Range] | None = None,
         title: str | AND[str] | OR[str] | None = None,
         lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
@@ -70,6 +71,7 @@ class TextReusePassagesResource(Resource):
     ) -> FindTextReusePassagesContainer:
         # reusing build filters from clusters - they are the same
         filters = _build_filters(
+            cluster_id=cluster_id,
             cluster_size=cluster_size,
             title=title,
             lexical_overlap=lexical_overlap,
@@ -119,6 +121,7 @@ class TextReusePassagesResource(Resource):
         limit: int | None = None,
         offset: int | None = None,
         order_by: FindTextReusePassagesOrderByLiteral | None = None,
+        cluster_id: str | AND[str] | OR[str] | None = None,
         cluster_size: Range | AND[Range] | OR[Range] | None = None,
         title: str | AND[str] | OR[str] | None = None,
         lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
@@ -138,6 +141,7 @@ class TextReusePassagesResource(Resource):
             raise ValueError(f"{facet} is not a valid value")
 
         filters = _build_filters(
+            cluster_id=cluster_id,
             cluster_size=cluster_size,
             title=title,
             lexical_overlap=lexical_overlap,

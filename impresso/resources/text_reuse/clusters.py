@@ -254,6 +254,7 @@ def _build_cluster_facet_filters(
 
 def _build_filters(
     text: str | None = None,
+    cluster_id: str | AND[str] | OR[str] | None = None,
     cluster_size: Range | AND[Range] | OR[Range] | None = None,
     title: str | AND[str] | OR[str] | None = None,
     lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
@@ -273,6 +274,8 @@ def _build_filters(
     filters: list[Filter] = []
     if text is not None:
         filters.extend(and_or_filter(text, "string"))
+    if cluster_id is not None:
+        filters.extend(and_or_filter(cluster_id, "text_reuse_cluster"))
     if cluster_size is not None:
         filters.extend(
             and_or_filter(
