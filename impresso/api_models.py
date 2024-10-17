@@ -626,6 +626,7 @@ class RelatedTopic(BaseModel):
     )
     uid: Annotated[str, Field(description='The unique identifier of the related topic')]
     w: Annotated[float, Field(description='TODO')]
+    avg: Annotated[Optional[float], Field(None, description='TODO')]
 
 
 class TopicWord(BaseModel):
