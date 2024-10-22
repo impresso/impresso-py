@@ -1,5 +1,5 @@
 from impresso.api_client.client import AuthenticatedClient
-from impresso.resources.articles import ArticlesResource
+from impresso.resources.content_items import ContentItemsResource
 from impresso.resources.collections import CollectionsResource
 from impresso.resources.entities import EntitiesResource
 from impresso.resources.newspapers import NewspapersResource
@@ -19,8 +19,8 @@ class ImpressoApiResourcesBase:
         return SearchResource(self._api_client)
 
     @property
-    def articles(self) -> ArticlesResource:
-        return ArticlesResource(self._api_client)
+    def content_items(self) -> ContentItemsResource:
+        return ContentItemsResource(self._api_client)
 
     @property
     def text_reuse(self) -> TextReuseDomain:
