@@ -12,7 +12,7 @@ from impresso.api_client.models.find_content_item_resolve import (
     FindContentItemResolveLiteral,
 )
 from impresso.api_client.types import UNSET, Unset
-from impresso.api_models import Article, BaseFind
+from impresso.api_models import ContentItem, BaseFind
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
 from impresso.util.error import raise_for_error
@@ -22,7 +22,7 @@ from impresso.util.py import get_enum_from_literal
 class ContentItemsResponseSchema(BaseFind):
     """Schema for the content items response."""
 
-    data: list[Article]
+    data: list[ContentItem]
 
 
 class ContentItemsDataContainer(DataContainer):
@@ -43,7 +43,7 @@ class ContentItemDataContainer(DataContainer):
         return self._data.to_dict()
 
     @property
-    def pydantic(self) -> Article:
+    def pydantic(self) -> ContentItem:
         """Return the data as a pydantic model."""
         return self._pydantic_model.model_validate(self.raw)
 
@@ -98,6 +98,6 @@ class ContentItemsResource(Resource):
 
         return ContentItemDataContainer(
             result,
-            Article,
+            ContentItem,
             f"{self._get_web_app_base_url()}/issue/{issue_id}/view?articleId={article_id}",
         )

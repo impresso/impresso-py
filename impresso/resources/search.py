@@ -24,7 +24,7 @@ from impresso.api_client.models.search_order_by import (
     SearchOrderByLiteral,
 )
 from impresso.api_client.types import UNSET, Unset
-from impresso.api_models import Article, BaseFind, Filter, Q, SearchFacet
+from impresso.api_models import ContentItem, BaseFind, Filter, Q, SearchFacet
 from impresso.data_container import IT, DataContainer, T
 from impresso.resources.base import DEFAULT_PAGE_SIZE, Resource
 from impresso.structures import AND, OR, DateRange
@@ -34,9 +34,9 @@ from impresso.util.py import get_enum_from_literal, get_enum_from_literal_requir
 
 
 class SearchResponseSchema(BaseFind):
-    """Schema for the articles response."""
+    """Schema for the content items response."""
 
-    data: list[Article]
+    data: list[ContentItem]
 
 
 class SearchDataContainer(DataContainer):
@@ -112,7 +112,7 @@ class FacetDataContainer(DataContainer):
 
 
 class SearchResource(Resource):
-    """Search articles in the impresso database."""
+    """Search content items in the impresso database."""
 
     name = "search"
 
@@ -140,7 +140,7 @@ class SearchResource(Resource):
         text_reuse_cluster_id: str | OR[str] | None = None,
     ) -> SearchDataContainer:
         """
-        Search for articles in Impresso.
+        Search for content items in Impresso.
 
         Args:
             q: Search term.
@@ -148,19 +148,19 @@ class SearchResource(Resource):
             limit: Number of results to return.
             offset: Number of results to skip.
 
-            with_text_contents: Return only articles with text contents.
-            title: Return only articles that have this term or all/any of the terms in the title.
-            front_page: Return only articles that were on the front page.
-            entity_id: Return only articles that mention this entity or all/any of the entities.
-            date_range: Return only articles that were published in this date range.
-            language: Return only articles that are in this language or all/any of the languages.
-            mention: Return only articles that mention an entity with this term or all/any of entities with the terms.
-            topic_id: Return only articles that are about this topic or all/any of the topics.
-            collection_id: Return only articles that are in this collection or all/any of the collections.
-            country: Return only articles that are from this country or all/any of the countries.
-            access_rights: Return only articles with this access right or all/any of the access rights.
-            partner_id: Return only articles that are from this partner or all/any of the partners.
-            text_reuse_cluster_id: Return only articles that are in this text reuse cluster or all/any of the clusters.
+            with_text_contents: Return only content items with text contents.
+            title: Return only content items that have this term or all/any of the terms in the title.
+            front_page: Return only content items that were on the front page.
+            entity_id: Return only content items that mention this entity or all/any of the entities.
+            date_range: Return only content items that were published in this date range.
+            language: Return only content items that are in this language or all/any of the languages.
+            mention: Return only content items that mention an entity with this term or all/any of entities with the terms.
+            topic_id: Return only content items that are about this topic or all/any of the topics.
+            collection_id: Return only content items that are in this collection or all/any of the collections.
+            country: Return only content items that are from this country or all/any of the countries.
+            access_rights: Return only content items with this access right or all/any of the access rights.
+            partner_id: Return only content items that are from this partner or all/any of the partners.
+            text_reuse_cluster_id: Return only content items that are in this text reuse cluster or all/any of the clusters.
 
         Returns:
             _type_: _description_
@@ -398,9 +398,21 @@ def render_dataframe_chart_base64(x, y) -> str:
     else:
         plt.plot(x, y)
 
-    # Remove axes, labels, and legend
-    plt.axis("off")
+    # Remove labels, and legend
     # plt.legend().remove()
+
+    # Either
+    # Remove axes,
+    plt.axis("off")
+
+    # OR
+    # Remove Y axis and only show the first and last tick
+    # plt.gca().get_yaxis().set_visible(False)
+    # plt.xticks([x[0], x[-1]])
+
+    # Remove the box around the graph
+    for spine in plt.gca().spines.values():
+        spine.set_visible(False)
 
     # Save the plot to a bytes buffer with a transparent background
     buffer = io.BytesIO()

@@ -28,7 +28,15 @@ class DataContainer(Generic[IT, T]):
         )
         preview_img = self._get_preview_image_()
 
+        grid_template_style = (
+            "grid-template-columns: minmax(200px, 1fr) auto;"
+            if preview_img is not None
+            else ""
+        )
+
         items = [
+            f'<div style="display: grid; {grid_template_style}">',
+            "<div>",
             f"<h2>{response_type} result</h2>",
             f"<div>Contains <b>{self.size}</b> items "
             + (
@@ -43,13 +51,15 @@ class DataContainer(Generic[IT, T]):
                 if self.url
                 else None
             ),
-            "<h3>Data preview:</h3>",
-            df_repr,
+            "</div>",
             (
-                f'<img src="data:image/png;base64,{preview_img}" style="width:100% !important;">'
+                f'<div style="align-content: center;"><img src="data:image/png;base64,{preview_img}" style="max-width: 800px; width: 100%;"></div>'
                 if preview_img
                 else None
             ),
+            "</div>",
+            "<h3>Data preview:</h3>",
+            df_repr,
         ]
 
         return "\n".join([item for item in items if item])
