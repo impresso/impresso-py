@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Literal
 
 
-class FindArticlesOrderBy(str, Enum):
+class FindContentItemOrderBy(str, Enum):
     DATE = "date"
     RELEVANCE = "relevance"
     VALUE_0 = "-date"
@@ -12,7 +12,7 @@ class FindArticlesOrderBy(str, Enum):
         return str(self.value)
 
 
-FindArticlesOrderByLiteral = Literal[
+FindContentItemOrderByLiteral = Literal[
     "date",
     "relevance",
     "-date",

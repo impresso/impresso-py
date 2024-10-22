@@ -4,11 +4,11 @@ from attrs import define as _attrs_define
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="ArticleMentionsItem")
+T = TypeVar("T", bound="ContentItemMentionsItem")
 
 
 @_attrs_define
-class ArticleMentionsItem:
+class ContentItemMentionsItem:
     """
     Attributes:
         person (Union[Unset, List[List[int]]]):
@@ -61,9 +61,9 @@ class ArticleMentionsItem:
 
             location.append(location_item)
 
-        article_mentions_item = cls(
+        content_item_mentions_item = cls(
             person=person,
             location=location,
         )
 
-        return article_mentions_item
+        return content_item_mentions_item

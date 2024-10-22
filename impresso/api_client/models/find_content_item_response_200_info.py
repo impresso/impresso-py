@@ -3,11 +3,11 @@ from typing import Any, Dict, List, Type, TypeVar
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-T = TypeVar("T", bound="FindArticlesResponse200Info")
+T = TypeVar("T", bound="FindContentItemResponse200Info")
 
 
 @_attrs_define
-class FindArticlesResponse200Info:
+class FindContentItemResponse200Info:
     """Additional information about the response."""
 
     additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
@@ -21,10 +21,10 @@ class FindArticlesResponse200Info:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        find_articles_response_200_info = cls()
+        find_content_item_response_200_info = cls()
 
-        find_articles_response_200_info.additional_properties = d
-        return find_articles_response_200_info
+        find_content_item_response_200_info.additional_properties = d
+        return find_content_item_response_200_info
 
     @property
     def additional_keys(self) -> List[str]:

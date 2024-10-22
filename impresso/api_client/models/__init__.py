@@ -10,13 +10,6 @@ from .api_version_newspapers import APIVersionNewspapers
 from .api_version_newspapers_additional_property import APIVersionNewspapersAdditionalProperty
 from .api_version_solr import APIVersionSolr
 from .api_version_solr_endpoints import APIVersionSolrEndpoints
-from .article import Article
-from .article_access_right import ArticleAccessRight
-from .article_labels_item import ArticleLabelsItem
-from .article_match import ArticleMatch
-from .article_mentions_item import ArticleMentionsItem
-from .article_region import ArticleRegion
-from .article_topic import ArticleTopic
 from .authentication_create_request import AuthenticationCreateRequest
 from .authentication_create_request_strategy import AuthenticationCreateRequestStrategy
 from .authentication_response import AuthenticationResponse
@@ -29,6 +22,13 @@ from .collectable_item_group import CollectableItemGroup
 from .collectable_item_group_content_type import CollectableItemGroupContentType
 from .collectable_items_updated_response import CollectableItemsUpdatedResponse
 from .collection import Collection
+from .content_item import ContentItem
+from .content_item_access_right import ContentItemAccessRight
+from .content_item_labels_item import ContentItemLabelsItem
+from .content_item_match import ContentItemMatch
+from .content_item_mentions_item import ContentItemMentionsItem
+from .content_item_region import ContentItemRegion
+from .content_item_topic import ContentItemTopic
 from .entity import Entity
 from .entity_details import EntityDetails
 from .entity_details_type import EntityDetailsType
@@ -37,13 +37,13 @@ from .filter_ import Filter
 from .filter_context import FilterContext
 from .filter_op import FilterOp
 from .filter_precision import FilterPrecision
-from .find_articles_order_by import FindArticlesOrderBy
-from .find_articles_resolve import FindArticlesResolve
-from .find_articles_response_200 import FindArticlesResponse200
-from .find_articles_response_200_info import FindArticlesResponse200Info
 from .find_collections_order_by import FindCollectionsOrderBy
 from .find_collections_response_200 import FindCollectionsResponse200
 from .find_collections_response_200_info import FindCollectionsResponse200Info
+from .find_content_item_order_by import FindContentItemOrderBy
+from .find_content_item_resolve import FindContentItemResolve
+from .find_content_item_response_200 import FindContentItemResponse200
+from .find_content_item_response_200_info import FindContentItemResponse200Info
 from .find_entities_order_by import FindEntitiesOrderBy
 from .find_entities_response_200 import FindEntitiesResponse200
 from .find_entities_response_200_info import FindEntitiesResponse200Info
@@ -147,13 +147,6 @@ __all__ = (
     "APIVersionNewspapersAdditionalProperty",
     "APIVersionSolr",
     "APIVersionSolrEndpoints",
-    "Article",
-    "ArticleAccessRight",
-    "ArticleLabelsItem",
-    "ArticleMatch",
-    "ArticleMentionsItem",
-    "ArticleRegion",
-    "ArticleTopic",
     "AuthenticationCreateRequest",
     "AuthenticationCreateRequestStrategy",
     "AuthenticationResponse",
@@ -166,6 +159,13 @@ __all__ = (
     "CollectableItemGroupContentType",
     "CollectableItemsUpdatedResponse",
     "Collection",
+    "ContentItem",
+    "ContentItemAccessRight",
+    "ContentItemLabelsItem",
+    "ContentItemMatch",
+    "ContentItemMentionsItem",
+    "ContentItemRegion",
+    "ContentItemTopic",
     "Entity",
     "EntityDetails",
     "EntityDetailsType",
@@ -174,13 +174,13 @@ __all__ = (
     "FilterContext",
     "FilterOp",
     "FilterPrecision",
-    "FindArticlesOrderBy",
-    "FindArticlesResolve",
-    "FindArticlesResponse200",
-    "FindArticlesResponse200Info",
     "FindCollectionsOrderBy",
     "FindCollectionsResponse200",
     "FindCollectionsResponse200Info",
+    "FindContentItemOrderBy",
+    "FindContentItemResolve",
+    "FindContentItemResponse200",
+    "FindContentItemResponse200Info",
     "FindEntitiesOrderBy",
     "FindEntitiesResponse200",
     "FindEntitiesResponse200Info",

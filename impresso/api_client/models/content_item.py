@@ -4,59 +4,59 @@ from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
 from attrs import define as _attrs_define
 from dateutil.parser import isoparse
 
-from ..models.article_access_right import ArticleAccessRight
-from ..models.article_labels_item import ArticleLabelsItem
+from ..models.content_item_access_right import ContentItemAccessRight
+from ..models.content_item_labels_item import ContentItemLabelsItem
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
-    from ..models.article_match import ArticleMatch
-    from ..models.article_mentions_item import ArticleMentionsItem
-    from ..models.article_region import ArticleRegion
-    from ..models.article_topic import ArticleTopic
     from ..models.collection import Collection
+    from ..models.content_item_match import ContentItemMatch
+    from ..models.content_item_mentions_item import ContentItemMentionsItem
+    from ..models.content_item_region import ContentItemRegion
+    from ..models.content_item_topic import ContentItemTopic
     from ..models.entity import Entity
     from ..models.newspaper import Newspaper
     from ..models.newspaper_issue import NewspaperIssue
     from ..models.page import Page
 
 
-T = TypeVar("T", bound="Article")
+T = TypeVar("T", bound="ContentItem")
 
 
 @_attrs_define
-class Article:
-    """A journal/magazine article
+class ContentItem:
+    """A journal/magazine content item (article, advertisement, etc.)
 
     Attributes:
-        uid (str): The unique identifier of the article
-        type (str): The type of the article. NOTE: may be empty.
-        title (str): The title of the article
-        size (int): The size of the article in characters
-        nb_pages (int): The number of pages in this article
+        uid (str): The unique identifier of the content item
+        type (str): The type of the content item. NOTE: may be empty.
+        title (str): The title of the content item
+        size (int): The size of the content item in characters
+        nb_pages (int): The number of pages in this content item
         pages (List['Page']):
         is_cc (bool): TODO
-        excerpt (str): The excerpt of the article
-        labels (List[ArticleLabelsItem]): TODO
-        access_right (ArticleAccessRight):
-        year (int): The year of the article
+        excerpt (str): The excerpt of the content item
+        labels (List[ContentItemLabelsItem]): TODO
+        access_right (ContentItemAccessRight):
+        year (int): The year of the content item
         locations (Union[Unset, List['Entity']]):
         persons (Union[Unset, List['Entity']]):
-        language (Union[Unset, str]): The language code of the article
+        language (Union[Unset, str]): The language code of the content item
         issue (Union[Unset, NewspaperIssue]):
-        matches (Union[Unset, List['ArticleMatch']]):
-        regions (Union[Unset, List['ArticleRegion']]):
+        matches (Union[Unset, List['ContentItemMatch']]):
+        regions (Union[Unset, List['ContentItemRegion']]):
         region_breaks (Union[Unset, List[int]]):
         content_line_breaks (Union[Unset, List[int]]):
         is_front (Union[Unset, bool]): TODO
         date (Union[None, Unset, datetime.datetime]):
-        country (Union[Unset, str]): The country code of the article
+        country (Union[Unset, str]): The country code of the content item
         tags (Union[Unset, List[str]]):
         collections (Union[List['Collection'], List[str], Unset]):
         newspaper (Union[Unset, Newspaper]): A newspaper
         data_provider (Union[None, Unset, str]):
-        topics (Union[Unset, List['ArticleTopic']]):
-        content (Union[Unset, str]): The content of the article
-        mentions (Union[Unset, List['ArticleMentionsItem']]):
+        topics (Union[Unset, List['ContentItemTopic']]):
+        content (Union[Unset, str]): The content of the content item
+        mentions (Union[Unset, List['ContentItemMentionsItem']]):
         v (Union[Unset, str]): TODO
     """
 
@@ -68,15 +68,15 @@ class Article:
     pages: List["Page"]
     is_cc: bool
     excerpt: str
-    labels: List[ArticleLabelsItem]
-    access_right: ArticleAccessRight
+    labels: List[ContentItemLabelsItem]
+    access_right: ContentItemAccessRight
     year: int
     locations: Union[Unset, List["Entity"]] = UNSET
     persons: Union[Unset, List["Entity"]] = UNSET
     language: Union[Unset, str] = UNSET
     issue: Union[Unset, "NewspaperIssue"] = UNSET
-    matches: Union[Unset, List["ArticleMatch"]] = UNSET
-    regions: Union[Unset, List["ArticleRegion"]] = UNSET
+    matches: Union[Unset, List["ContentItemMatch"]] = UNSET
+    regions: Union[Unset, List["ContentItemRegion"]] = UNSET
     region_breaks: Union[Unset, List[int]] = UNSET
     content_line_breaks: Union[Unset, List[int]] = UNSET
     is_front: Union[Unset, bool] = UNSET
@@ -86,9 +86,9 @@ class Article:
     collections: Union[List["Collection"], List[str], Unset] = UNSET
     newspaper: Union[Unset, "Newspaper"] = UNSET
     data_provider: Union[None, Unset, str] = UNSET
-    topics: Union[Unset, List["ArticleTopic"]] = UNSET
+    topics: Union[Unset, List["ContentItemTopic"]] = UNSET
     content: Union[Unset, str] = UNSET
-    mentions: Union[Unset, List["ArticleMentionsItem"]] = UNSET
+    mentions: Union[Unset, List["ContentItemMentionsItem"]] = UNSET
     v: Union[Unset, str] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
@@ -277,11 +277,11 @@ class Article:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.article_match import ArticleMatch
-        from ..models.article_mentions_item import ArticleMentionsItem
-        from ..models.article_region import ArticleRegion
-        from ..models.article_topic import ArticleTopic
         from ..models.collection import Collection
+        from ..models.content_item_match import ContentItemMatch
+        from ..models.content_item_mentions_item import ContentItemMentionsItem
+        from ..models.content_item_region import ContentItemRegion
+        from ..models.content_item_topic import ContentItemTopic
         from ..models.entity import Entity
         from ..models.newspaper import Newspaper
         from ..models.newspaper_issue import NewspaperIssue
@@ -312,11 +312,11 @@ class Article:
         labels = []
         _labels = d.pop("labels")
         for labels_item_data in _labels:
-            labels_item = ArticleLabelsItem(labels_item_data)
+            labels_item = ContentItemLabelsItem(labels_item_data)
 
             labels.append(labels_item)
 
-        access_right = ArticleAccessRight(d.pop("accessRight"))
+        access_right = ContentItemAccessRight(d.pop("accessRight"))
 
         year = d.pop("year")
 
@@ -346,14 +346,14 @@ class Article:
         matches = []
         _matches = d.pop("matches", UNSET)
         for matches_item_data in _matches or []:
-            matches_item = ArticleMatch.from_dict(matches_item_data)
+            matches_item = ContentItemMatch.from_dict(matches_item_data)
 
             matches.append(matches_item)
 
         regions = []
         _regions = d.pop("regions", UNSET)
         for regions_item_data in _regions or []:
-            regions_item = ArticleRegion.from_dict(regions_item_data)
+            regions_item = ContentItemRegion.from_dict(regions_item_data)
 
             regions.append(regions_item)
 
@@ -427,7 +427,7 @@ class Article:
         topics = []
         _topics = d.pop("topics", UNSET)
         for topics_item_data in _topics or []:
-            topics_item = ArticleTopic.from_dict(topics_item_data)
+            topics_item = ContentItemTopic.from_dict(topics_item_data)
 
             topics.append(topics_item)
 
@@ -436,13 +436,13 @@ class Article:
         mentions = []
         _mentions = d.pop("mentions", UNSET)
         for mentions_item_data in _mentions or []:
-            mentions_item = ArticleMentionsItem.from_dict(mentions_item_data)
+            mentions_item = ContentItemMentionsItem.from_dict(mentions_item_data)
 
             mentions.append(mentions_item)
 
         v = d.pop("v", UNSET)
 
-        article = cls(
+        content_item = cls(
             uid=uid,
             type=type,
             title=title,
@@ -475,4 +475,4 @@ class Article:
             v=v,
         )
 
-        return article
+        return content_item

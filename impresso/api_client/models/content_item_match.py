@@ -4,11 +4,11 @@ from attrs import define as _attrs_define
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="ArticleMatch")
+T = TypeVar("T", bound="ContentItemMatch")
 
 
 @_attrs_define
-class ArticleMatch:
+class ContentItemMatch:
     """TODO
 
     Attributes:
@@ -60,11 +60,11 @@ class ArticleMatch:
 
         iiif = d.pop("iiif", UNSET)
 
-        article_match = cls(
+        content_item_match = cls(
             fragment=fragment,
             coords=coords,
             page_uid=page_uid,
             iiif=iiif,
         )
 
-        return article_match
+        return content_item_match

@@ -5,7 +5,7 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.article import Article
+from ...models.content_item import ContentItem
 from ...models.error import Error
 from ...types import Response
 
@@ -15,7 +15,7 @@ def _get_kwargs(
 ) -> Dict[str, Any]:
     _kwargs: Dict[str, Any] = {
         "method": "get",
-        "url": f"/articles/{id}",
+        "url": f"/content-items/{id}",
     }
 
     return _kwargs
@@ -23,9 +23,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Article, Error]]:
+) -> Optional[Union[ContentItem, Error]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = Article.from_dict(response.json())
+        response_200 = ContentItem.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -60,7 +60,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Article, Error]]:
+) -> Response[Union[ContentItem, Error]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -73,8 +73,8 @@ def sync_detailed(
     id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[Union[Article, Error]]:
-    """Get an article by its UID
+) -> Response[Union[ContentItem, Error]]:
+    """Get a content item by its UID
 
     Args:
         id (str):
@@ -84,7 +84,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Article, Error]]
+        Response[Union[ContentItem, Error]]
     """
 
     kwargs = _get_kwargs(
@@ -102,8 +102,8 @@ def sync(
     id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[Union[Article, Error]]:
-    """Get an article by its UID
+) -> Optional[Union[ContentItem, Error]]:
+    """Get a content item by its UID
 
     Args:
         id (str):
@@ -113,7 +113,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Article, Error]
+        Union[ContentItem, Error]
     """
 
     return sync_detailed(
@@ -126,8 +126,8 @@ async def asyncio_detailed(
     id: str,
     *,
     client: AuthenticatedClient,
-) -> Response[Union[Article, Error]]:
-    """Get an article by its UID
+) -> Response[Union[ContentItem, Error]]:
+    """Get a content item by its UID
 
     Args:
         id (str):
@@ -137,7 +137,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Article, Error]]
+        Response[Union[ContentItem, Error]]
     """
 
     kwargs = _get_kwargs(
@@ -153,8 +153,8 @@ async def asyncio(
     id: str,
     *,
     client: AuthenticatedClient,
-) -> Optional[Union[Article, Error]]:
-    """Get an article by its UID
+) -> Optional[Union[ContentItem, Error]]:
+    """Get a content item by its UID
 
     Args:
         id (str):
@@ -164,7 +164,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Article, Error]
+        Union[ContentItem, Error]
     """
 
     return (

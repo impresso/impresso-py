@@ -2,14 +2,14 @@ from typing import Any, Union
 
 from pandas import DataFrame, json_normalize
 
-from impresso.api_client.api.articles import find_articles, get_article
-from impresso.api_client.models.find_articles_order_by import (
-    FindArticlesOrderBy,
-    FindArticlesOrderByLiteral,
+from impresso.api_client.api.content_items import find_content_item, get_content_item
+from impresso.api_client.models.find_content_item_order_by import (
+    FindContentItemOrderBy,
+    FindContentItemOrderByLiteral,
 )
-from impresso.api_client.models.find_articles_resolve import (
-    FindArticlesResolve,
-    FindArticlesResolveLiteral,
+from impresso.api_client.models.find_content_item_resolve import (
+    FindContentItemResolve,
+    FindContentItemResolveLiteral,
 )
 from impresso.api_client.types import UNSET, Unset
 from impresso.api_models import Article, BaseFind
@@ -19,14 +19,14 @@ from impresso.util.error import raise_for_error
 from impresso.util.py import get_enum_from_literal
 
 
-class ArticlesResponseSchema(BaseFind):
-    """Schema for the articles response."""
+class ContentItemsResponseSchema(BaseFind):
+    """Schema for the content items response."""
 
     data: list[Article]
 
 
-class ArticlesDataContainer(DataContainer):
-    """Response of an articles call."""
+class ContentItemsDataContainer(DataContainer):
+    """Response of a content item call."""
 
     @property
     def df(self) -> DataFrame:
@@ -34,8 +34,8 @@ class ArticlesDataContainer(DataContainer):
         return json_normalize(self._data.to_dict()["data"]).set_index("uid")
 
 
-class ArticleDataContainer(DataContainer):
-    """Response of a get article call."""
+class ContentItemDataContainer(DataContainer):
+    """Response of a get content item call."""
 
     @property
     def raw(self) -> dict[str, Any]:
@@ -66,37 +66,37 @@ class ArticleDataContainer(DataContainer):
         return self.size
 
 
-class ArticlesResource(Resource):
-    """Get articles from the impresso database."""
+class ContentItemsResource(Resource):
+    """Get content items from the impresso database."""
 
-    name = "articles"
+    name = "content_items"
 
     def find(
         self,
-        resolve: Union[Unset, FindArticlesResolveLiteral] = UNSET,
-        order_by: Union[Unset, FindArticlesOrderByLiteral] = UNSET,
+        resolve: Union[Unset, FindContentItemResolveLiteral] = UNSET,
+        order_by: Union[Unset, FindContentItemOrderByLiteral] = UNSET,
         limit: Union[Unset, int] = UNSET,
         offset: Union[Unset, int] = UNSET,
     ):
-        result = find_articles.sync(
+        result = find_content_item.sync(
             client=self._api_client,
-            resolve=get_enum_from_literal(resolve, FindArticlesResolve),
-            order_by=get_enum_from_literal(order_by, FindArticlesOrderBy),
+            resolve=get_enum_from_literal(resolve, FindContentItemResolve),
+            order_by=get_enum_from_literal(order_by, FindContentItemOrderBy),
             limit=limit,
             offset=offset,
         )
         raise_for_error(result)
-        return ArticlesDataContainer(result, ArticlesResponseSchema)
+        return ContentItemsDataContainer(result, ContentItemsResponseSchema)
 
     def get(self, id: str):
-        result = get_article.sync(client=self._api_client, id=id)
+        result = get_content_item.sync(client=self._api_client, id=id)
         raise_for_error(result)
 
         id_parts = id.split("-")
         issue_id = "-".join(id_parts[:-1])
         article_id = id_parts[-1]
 
-        return ArticleDataContainer(
+        return ContentItemDataContainer(
             result,
             Article,
             f"{self._get_web_app_base_url()}/issue/{issue_id}/view?articleId={article_id}",

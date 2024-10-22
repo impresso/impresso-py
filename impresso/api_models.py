@@ -10,43 +10,6 @@ from pydantic import AnyUrl, AwareDatetime, BaseModel, ConfigDict, Field, RootMo
 from typing_extensions import Annotated, Literal
 
 
-class PersonItem(RootModel[Sequence[Any]]):
-    root: Annotated[Sequence[Any], Field(max_length=2, min_length=2)]
-
-
-class LocationItem(RootModel[Sequence[Any]]):
-    root: Annotated[Sequence[Any], Field(max_length=2, min_length=2)]
-
-
-class Mention(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    person: Optional[Sequence[PersonItem]] = None
-    location: Optional[Sequence[LocationItem]] = None
-
-
-class ArticleMatch(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    fragment: Annotated[str, Field(description='TODO')]
-    coords: Annotated[Optional[Sequence[float]], Field(None, description='TODO')]
-    pageUid: Annotated[Optional[str], Field(None, description='TODO')]
-    iiif: Annotated[Optional[str], Field(None, description='TODO')]
-
-
-class ArticleRegion(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    pageUid: str
-    coords: Sequence[float]
-    isEmpty: Annotated[bool, Field(description='TODO')]
-    iiifFragment: Annotated[Optional[str], Field(None, description='IIIF fragment URL')]
-    g: Annotated[Optional[Sequence[str]], Field(None, description='TODO')]
-
-
 class AuthenticationCreateRequest(BaseModel):
     model_config = ConfigDict(
         extra='allow',
@@ -164,6 +127,43 @@ class CollectionsRemoveResponse(BaseModel):
     )
     params: Params
     task: Annotated[Task, Field(description='Deletion task details')]
+
+
+class PersonItem(RootModel[Sequence[Any]]):
+    root: Annotated[Sequence[Any], Field(max_length=2, min_length=2)]
+
+
+class LocationItem(RootModel[Sequence[Any]]):
+    root: Annotated[Sequence[Any], Field(max_length=2, min_length=2)]
+
+
+class Mention(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    person: Optional[Sequence[PersonItem]] = None
+    location: Optional[Sequence[LocationItem]] = None
+
+
+class ContentItemMatch(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    fragment: Annotated[str, Field(description='TODO')]
+    coords: Annotated[Optional[Sequence[float]], Field(None, description='TODO')]
+    pageUid: Annotated[Optional[str], Field(None, description='TODO')]
+    iiif: Annotated[Optional[str], Field(None, description='TODO')]
+
+
+class ContentItemRegion(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    pageUid: str
+    coords: Sequence[float]
+    isEmpty: Annotated[bool, Field(description='TODO')]
+    iiifFragment: Annotated[Optional[str], Field(None, description='IIIF fragment URL')]
+    g: Annotated[Optional[Sequence[str]], Field(None, description='TODO')]
 
 
 class Entity(BaseModel):
@@ -498,7 +498,7 @@ class TextReuseClusterDetails(BaseModel):
     ]
 
 
-class Article1(BaseModel):
+class Article(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
@@ -574,7 +574,7 @@ class TextReusePassage(BaseModel):
         ),
     ]
     article: Annotated[
-        Article1,
+        Article,
         Field(
             description='Details of the article the passage belongs to',
             title='Article details',
@@ -867,7 +867,7 @@ class Year(BaseModel):
     refs: Optional[YearWeights] = None
 
 
-class ArticleTopic(BaseModel):
+class ContentItemTopic(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
@@ -903,45 +903,49 @@ class SearchFacetBucket(BaseModel):
     ]
 
 
-class Article(BaseModel):
+class ContentItem(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    uid: Annotated[str, Field(description='The unique identifier of the article')]
+    uid: Annotated[str, Field(description='The unique identifier of the content item')]
     type: Annotated[
-        str, Field(description='The type of the article. NOTE: may be empty.')
+        str, Field(description='The type of the content item. NOTE: may be empty.')
     ]
-    title: Annotated[str, Field(description='The title of the article')]
-    size: Annotated[int, Field(description='The size of the article in characters')]
-    nbPages: Annotated[int, Field(description='The number of pages in this article')]
+    title: Annotated[str, Field(description='The title of the content item')]
+    size: Annotated[
+        int, Field(description='The size of the content item in characters')
+    ]
+    nbPages: Annotated[
+        int, Field(description='The number of pages in this content item')
+    ]
     pages: Sequence[Page]
     isCC: Annotated[bool, Field(description='TODO')]
-    excerpt: Annotated[str, Field(description='The excerpt of the article')]
+    excerpt: Annotated[str, Field(description='The excerpt of the content item')]
     locations: Optional[Sequence[Entity]] = None
     persons: Optional[Sequence[Entity]] = None
     language: Annotated[
-        Optional[str], Field(None, description='The language code of the article')
+        Optional[str], Field(None, description='The language code of the content item')
     ]
     issue: Optional[NewspaperIssue] = None
-    matches: Optional[Sequence[ArticleMatch]] = None
-    regions: Optional[Sequence[ArticleRegion]] = None
+    matches: Optional[Sequence[ContentItemMatch]] = None
+    regions: Optional[Sequence[ContentItemRegion]] = None
     regionBreaks: Optional[Sequence[int]] = None
     contentLineBreaks: Optional[Sequence[int]] = None
     labels: Annotated[Sequence[Literal['article']], Field(description='TODO')]
     accessRight: Literal['na', 'OpenPrivate', 'Closed', 'OpenPublic']
     isFront: Annotated[Optional[bool], Field(None, description='TODO')]
     date: Optional[AwareDatetime] = None
-    year: Annotated[int, Field(description='The year of the article')]
+    year: Annotated[int, Field(description='The year of the content item')]
     country: Annotated[
-        Optional[str], Field(None, description='The country code of the article')
+        Optional[str], Field(None, description='The country code of the content item')
     ]
     tags: Optional[Sequence[str]] = None
     collections: Optional[Union[Sequence[str], Sequence[Collection]]] = None
     newspaper: Optional[Newspaper] = None
     dataProvider: Optional[str] = None
-    topics: Optional[Sequence[ArticleTopic]] = None
+    topics: Optional[Sequence[ContentItemTopic]] = None
     content: Annotated[
-        Optional[str], Field(None, description='The content of the article')
+        Optional[str], Field(None, description='The content of the content item')
     ]
     mentions: Optional[Sequence[Mention]] = None
     v: Annotated[Optional[str], Field(None, description='TODO')]

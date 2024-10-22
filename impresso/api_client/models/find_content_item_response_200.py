@@ -3,29 +3,29 @@ from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar
 from attrs import define as _attrs_define
 
 if TYPE_CHECKING:
-    from ..models.article import Article
-    from ..models.find_articles_response_200_info import FindArticlesResponse200Info
+    from ..models.content_item import ContentItem
+    from ..models.find_content_item_response_200_info import FindContentItemResponse200Info
 
 
-T = TypeVar("T", bound="FindArticlesResponse200")
+T = TypeVar("T", bound="FindContentItemResponse200")
 
 
 @_attrs_define
-class FindArticlesResponse200:
+class FindContentItemResponse200:
     """
     Attributes:
         limit (int): The number of items returned in this response
         offset (int): Starting index of the items subset returned in this response
         total (int): The total number of items matching the query
-        info (FindArticlesResponse200Info): Additional information about the response.
-        data (List['Article']):
+        info (FindContentItemResponse200Info): Additional information about the response.
+        data (List['ContentItem']):
     """
 
     limit: int
     offset: int
     total: int
-    info: "FindArticlesResponse200Info"
-    data: List["Article"]
+    info: "FindContentItemResponse200Info"
+    data: List["ContentItem"]
 
     def to_dict(self) -> Dict[str, Any]:
         limit = self.limit
@@ -56,8 +56,8 @@ class FindArticlesResponse200:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.article import Article
-        from ..models.find_articles_response_200_info import FindArticlesResponse200Info
+        from ..models.content_item import ContentItem
+        from ..models.find_content_item_response_200_info import FindContentItemResponse200Info
 
         d = src_dict.copy()
         limit = d.pop("limit")
@@ -66,16 +66,16 @@ class FindArticlesResponse200:
 
         total = d.pop("total")
 
-        info = FindArticlesResponse200Info.from_dict(d.pop("info"))
+        info = FindContentItemResponse200Info.from_dict(d.pop("info"))
 
         data = []
         _data = d.pop("data")
         for data_item_data in _data:
-            data_item = Article.from_dict(data_item_data)
+            data_item = ContentItem.from_dict(data_item_data)
 
             data.append(data_item)
 
-        find_articles_response_200 = cls(
+        find_content_item_response_200 = cls(
             limit=limit,
             offset=offset,
             total=total,
@@ -83,4 +83,4 @@ class FindArticlesResponse200:
             data=data,
         )
 
-        return find_articles_response_200
+        return find_content_item_response_200

@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar
 from attrs import define as _attrs_define
 
 if TYPE_CHECKING:
-    from ..models.article import Article
+    from ..models.content_item import ContentItem
     from ..models.search_response_200_info import SearchResponse200Info
 
 
@@ -18,14 +18,14 @@ class SearchResponse200:
         offset (int): Starting index of the items subset returned in this response
         total (int): The total number of items matching the query
         info (SearchResponse200Info): Additional information about the response.
-        data (List['Article']):
+        data (List['ContentItem']):
     """
 
     limit: int
     offset: int
     total: int
     info: "SearchResponse200Info"
-    data: List["Article"]
+    data: List["ContentItem"]
 
     def to_dict(self) -> Dict[str, Any]:
         limit = self.limit
@@ -56,7 +56,7 @@ class SearchResponse200:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.article import Article
+        from ..models.content_item import ContentItem
         from ..models.search_response_200_info import SearchResponse200Info
 
         d = src_dict.copy()
@@ -71,7 +71,7 @@ class SearchResponse200:
         data = []
         _data = d.pop("data")
         for data_item_data in _data:
-            data_item = Article.from_dict(data_item_data)
+            data_item = ContentItem.from_dict(data_item_data)
 
             data.append(data_item)
 

@@ -4,11 +4,11 @@ from attrs import define as _attrs_define
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="ArticleRegion")
+T = TypeVar("T", bound="ContentItemRegion")
 
 
 @_attrs_define
-class ArticleRegion:
+class ContentItemRegion:
     """TODO
 
     Attributes:
@@ -66,7 +66,7 @@ class ArticleRegion:
 
         g = cast(List[str], d.pop("g", UNSET))
 
-        article_region = cls(
+        content_item_region = cls(
             page_uid=page_uid,
             coords=coords,
             is_empty=is_empty,
@@ -74,4 +74,4 @@ class ArticleRegion:
             g=g,
         )
 
-        return article_region
+        return content_item_region

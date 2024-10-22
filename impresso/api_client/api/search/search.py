@@ -130,7 +130,7 @@ def sync_detailed(
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, SearchResponse200]]:
-    """Find articles that match the given query
+    """Find content items that match the given query
 
     Args:
         q (Union[Unset, str]):
@@ -177,7 +177,7 @@ def sync(
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, SearchResponse200]]:
-    """Find articles that match the given query
+    """Find content items that match the given query
 
     Args:
         q (Union[Unset, str]):
@@ -219,7 +219,7 @@ async def asyncio_detailed(
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, SearchResponse200]]:
-    """Find articles that match the given query
+    """Find content items that match the given query
 
     Args:
         q (Union[Unset, str]):
@@ -264,7 +264,7 @@ async def asyncio(
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, SearchResponse200]]:
-    """Find articles that match the given query
+    """Find content items that match the given query
 
     Args:
         q (Union[Unset, str]):
