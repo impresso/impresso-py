@@ -8,11 +8,11 @@ if TYPE_CHECKING:
     from ..models.topic import Topic
 
 
-T = TypeVar("T", bound="ArticleTopic")
+T = TypeVar("T", bound="ContentItemTopic")
 
 
 @_attrs_define
-class ArticleTopic:
+class ContentItemTopic:
     """TODO
 
     Attributes:
@@ -63,10 +63,10 @@ class ArticleTopic:
 
         topic_uid = d.pop("topicUid", UNSET)
 
-        article_topic = cls(
+        content_item_topic = cls(
             relevance=relevance,
             topic=topic,
             topic_uid=topic_uid,
         )
 
-        return article_topic
+        return content_item_topic

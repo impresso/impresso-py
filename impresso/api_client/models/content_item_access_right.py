@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Literal
 
 
-class ArticleAccessRight(str, Enum):
+class ContentItemAccessRight(str, Enum):
     CLOSED = "Closed"
     NA = "na"
     OPENPRIVATE = "OpenPrivate"
@@ -12,7 +12,7 @@ class ArticleAccessRight(str, Enum):
         return str(self.value)
 
 
-ArticleAccessRightLiteral = Literal[
+ContentItemAccessRightLiteral = Literal[
     "Closed",
     "na",
     "OpenPrivate",

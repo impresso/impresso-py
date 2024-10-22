@@ -2,14 +2,14 @@ from typing import Any, Union
 
 from pandas import DataFrame, json_normalize
 
-from impresso.api_client.api.articles import find_articles, get_article
-from impresso.api_client.models.find_articles_order_by import (
-    FindArticlesOrderBy,
-    FindArticlesOrderByLiteral,
+from impresso.api_client.api.content_items import find_content_item, get_content_item
+from impresso.api_client.models.find_content_item_order_by import (
+    FindContentItemOrderBy,
+    FindContentItemOrderByLiteral,
 )
-from impresso.api_client.models.find_articles_resolve import (
-    FindArticlesResolve,
-    FindArticlesResolveLiteral,
+from impresso.api_client.models.find_content_item_resolve import (
+    FindContentItemResolve,
+    FindContentItemResolveLiteral,
 )
 from impresso.api_client.types import UNSET, Unset
 from impresso.api_models import Article, BaseFind
@@ -73,15 +73,15 @@ class ContentItemsResource(Resource):
 
     def find(
         self,
-        resolve: Union[Unset, FindArticlesResolveLiteral] = UNSET,
-        order_by: Union[Unset, FindArticlesOrderByLiteral] = UNSET,
+        resolve: Union[Unset, FindContentItemResolveLiteral] = UNSET,
+        order_by: Union[Unset, FindContentItemOrderByLiteral] = UNSET,
         limit: Union[Unset, int] = UNSET,
         offset: Union[Unset, int] = UNSET,
     ):
-        result = find_articles.sync(
+        result = find_content_item.sync(
             client=self._api_client,
-            resolve=get_enum_from_literal(resolve, FindArticlesResolve),
-            order_by=get_enum_from_literal(order_by, FindArticlesOrderBy),
+            resolve=get_enum_from_literal(resolve, FindContentItemResolve),
+            order_by=get_enum_from_literal(order_by, FindContentItemOrderBy),
             limit=limit,
             offset=offset,
         )
@@ -89,7 +89,7 @@ class ContentItemsResource(Resource):
         return ContentItemsDataContainer(result, ContentItemsResponseSchema)
 
     def get(self, id: str):
-        result = get_article.sync(client=self._api_client, id=id)
+        result = get_content_item.sync(client=self._api_client, id=id)
         raise_for_error(result)
 
         id_parts = id.split("-")

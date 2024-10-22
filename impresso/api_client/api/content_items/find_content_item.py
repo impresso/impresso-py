@@ -6,16 +6,16 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
-from ...models.find_articles_order_by import FindArticlesOrderBy
-from ...models.find_articles_resolve import FindArticlesResolve
-from ...models.find_articles_response_200 import FindArticlesResponse200
+from ...models.find_content_item_order_by import FindContentItemOrderBy
+from ...models.find_content_item_resolve import FindContentItemResolve
+from ...models.find_content_item_response_200 import FindContentItemResponse200
 from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
-    resolve: Union[Unset, FindArticlesResolve] = UNSET,
-    order_by: Union[Unset, FindArticlesOrderBy] = UNSET,
+    resolve: Union[Unset, FindContentItemResolve] = UNSET,
+    order_by: Union[Unset, FindContentItemOrderBy] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Dict[str, Any]:
@@ -41,7 +41,7 @@ def _get_kwargs(
 
     _kwargs: Dict[str, Any] = {
         "method": "get",
-        "url": "/articles",
+        "url": "/content-items",
         "params": params,
     }
 
@@ -50,9 +50,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Error, FindArticlesResponse200]]:
+) -> Optional[Union[Error, FindContentItemResponse200]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = FindArticlesResponse200.from_dict(response.json())
+        response_200 = FindContentItemResponse200.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -87,7 +87,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Error, FindArticlesResponse200]]:
+) -> Response[Union[Error, FindContentItemResponse200]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -99,16 +99,16 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    resolve: Union[Unset, FindArticlesResolve] = UNSET,
-    order_by: Union[Unset, FindArticlesOrderBy] = UNSET,
+    resolve: Union[Unset, FindContentItemResolve] = UNSET,
+    order_by: Union[Unset, FindContentItemOrderBy] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindArticlesResponse200]]:
-    """Find articles that match the given query
+) -> Response[Union[Error, FindContentItemResponse200]]:
+    """Find content items that match the given query
 
     Args:
-        resolve (Union[Unset, FindArticlesResolve]):
-        order_by (Union[Unset, FindArticlesOrderBy]):
+        resolve (Union[Unset, FindContentItemResolve]):
+        order_by (Union[Unset, FindContentItemOrderBy]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -117,7 +117,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindArticlesResponse200]]
+        Response[Union[Error, FindContentItemResponse200]]
     """
 
     kwargs = _get_kwargs(
@@ -137,16 +137,16 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    resolve: Union[Unset, FindArticlesResolve] = UNSET,
-    order_by: Union[Unset, FindArticlesOrderBy] = UNSET,
+    resolve: Union[Unset, FindContentItemResolve] = UNSET,
+    order_by: Union[Unset, FindContentItemOrderBy] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindArticlesResponse200]]:
-    """Find articles that match the given query
+) -> Optional[Union[Error, FindContentItemResponse200]]:
+    """Find content items that match the given query
 
     Args:
-        resolve (Union[Unset, FindArticlesResolve]):
-        order_by (Union[Unset, FindArticlesOrderBy]):
+        resolve (Union[Unset, FindContentItemResolve]):
+        order_by (Union[Unset, FindContentItemOrderBy]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -155,7 +155,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindArticlesResponse200]
+        Union[Error, FindContentItemResponse200]
     """
 
     return sync_detailed(
@@ -170,16 +170,16 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    resolve: Union[Unset, FindArticlesResolve] = UNSET,
-    order_by: Union[Unset, FindArticlesOrderBy] = UNSET,
+    resolve: Union[Unset, FindContentItemResolve] = UNSET,
+    order_by: Union[Unset, FindContentItemOrderBy] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindArticlesResponse200]]:
-    """Find articles that match the given query
+) -> Response[Union[Error, FindContentItemResponse200]]:
+    """Find content items that match the given query
 
     Args:
-        resolve (Union[Unset, FindArticlesResolve]):
-        order_by (Union[Unset, FindArticlesOrderBy]):
+        resolve (Union[Unset, FindContentItemResolve]):
+        order_by (Union[Unset, FindContentItemOrderBy]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -188,7 +188,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindArticlesResponse200]]
+        Response[Union[Error, FindContentItemResponse200]]
     """
 
     kwargs = _get_kwargs(
@@ -206,16 +206,16 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    resolve: Union[Unset, FindArticlesResolve] = UNSET,
-    order_by: Union[Unset, FindArticlesOrderBy] = UNSET,
+    resolve: Union[Unset, FindContentItemResolve] = UNSET,
+    order_by: Union[Unset, FindContentItemOrderBy] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindArticlesResponse200]]:
-    """Find articles that match the given query
+) -> Optional[Union[Error, FindContentItemResponse200]]:
+    """Find content items that match the given query
 
     Args:
-        resolve (Union[Unset, FindArticlesResolve]):
-        order_by (Union[Unset, FindArticlesOrderBy]):
+        resolve (Union[Unset, FindContentItemResolve]):
+        order_by (Union[Unset, FindContentItemOrderBy]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -224,7 +224,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindArticlesResponse200]
+        Union[Error, FindContentItemResponse200]
     """
 
     return (

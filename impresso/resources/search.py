@@ -7,7 +7,9 @@ from pandas import DataFrame, json_normalize
 
 from impresso.api_client.api.search import search
 from impresso.api_client.api.search_facets import get_search_facet
-from impresso.api_client.models.article_access_right import ArticleAccessRightLiteral
+from impresso.api_client.models.content_item_access_right import (
+    ContentItemAccessRightLiteral,
+)
 from impresso.api_client.models.get_search_facet_id import (
     GetSearchFacetId,
     GetSearchFacetIdLiteral,
@@ -132,7 +134,7 @@ class SearchResource(Resource):
         collection_id: str | OR[str] | None = None,
         country: str | OR[str] | None = None,
         access_rights: (
-            ArticleAccessRightLiteral | OR[ArticleAccessRightLiteral] | None
+            ContentItemAccessRightLiteral | OR[ContentItemAccessRightLiteral] | None
         ) = None,
         partner_id: str | OR[str] | None = None,
         text_reuse_cluster_id: str | OR[str] | None = None,
@@ -229,7 +231,7 @@ class SearchResource(Resource):
         collection_id: str | OR[str] | None = None,
         country: str | OR[str] | None = None,
         access_rights: (
-            ArticleAccessRightLiteral | OR[ArticleAccessRightLiteral] | None
+            ContentItemAccessRightLiteral | OR[ContentItemAccessRightLiteral] | None
         ) = None,
         partner_id: str | OR[str] | None = None,
         text_reuse_cluster_id: str | OR[str] | None = None,
@@ -301,7 +303,7 @@ class SearchResource(Resource):
         collection_id: str | OR[str] | None = None,
         country: str | OR[str] | None = None,
         access_rights: (
-            ArticleAccessRightLiteral | OR[ArticleAccessRightLiteral] | None
+            ContentItemAccessRightLiteral | OR[ContentItemAccessRightLiteral] | None
         ) = None,
         partner_id: str | OR[str] | None = None,
         text_reuse_cluster_id: str | OR[str] | None = None,

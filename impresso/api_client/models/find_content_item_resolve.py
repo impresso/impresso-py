@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Literal
 
 
-class FindArticlesResolve(str, Enum):
+class FindContentItemResolve(str, Enum):
     COLLECTION = "collection"
     TAGS = "tags"
 
@@ -10,7 +10,7 @@ class FindArticlesResolve(str, Enum):
         return str(self.value)
 
 
-FindArticlesResolveLiteral = Literal[
+FindContentItemResolveLiteral = Literal[
     "collection",
     "tags",
 ]
