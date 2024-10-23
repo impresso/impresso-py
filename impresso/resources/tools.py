@@ -3,6 +3,9 @@ from impresso.api_client.api.tools import perform_ner
 from impresso.api_client.models.impresso_named_entity_recognition_request import (
     ImpressoNamedEntityRecognitionRequest,
 )
+from impresso.api_client.models.impresso_named_entity_recognition_request_method import (
+    ImpressoNamedEntityRecognitionRequestMethod,
+)
 from impresso.api_models import ImpressoNerResponse
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
@@ -65,7 +68,9 @@ class ToolsResource(Resource):
         """
         result = perform_ner.sync(
             client=self._api_client,
-            body=ImpressoNamedEntityRecognitionRequest(text=text, method="ner"),
+            body=ImpressoNamedEntityRecognitionRequest(
+                text=text, method=ImpressoNamedEntityRecognitionRequestMethod.NER
+            ),
         )
         raise_for_error(result)
 
@@ -88,7 +93,9 @@ class ToolsResource(Resource):
         """
         result = perform_ner.sync(
             client=self._api_client,
-            body=ImpressoNamedEntityRecognitionRequest(text=text, method="ner-nel"),
+            body=ImpressoNamedEntityRecognitionRequest(
+                text=text, method=ImpressoNamedEntityRecognitionRequestMethod.NER_NEL
+            ),
         )
         raise_for_error(result)
 
@@ -111,7 +118,9 @@ class ToolsResource(Resource):
         """
         result = perform_ner.sync(
             client=self._api_client,
-            body=ImpressoNamedEntityRecognitionRequest(text=text, method="nel"),
+            body=ImpressoNamedEntityRecognitionRequest(
+                text=text, method=ImpressoNamedEntityRecognitionRequestMethod.NEL
+            ),
         )
         raise_for_error(result)
 
