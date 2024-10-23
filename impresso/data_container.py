@@ -53,7 +53,10 @@ class DataContainer(Generic[IT, T]):
             ),
             "</div>",
             (
-                f'<div style="align-content: center;"><img src="data:image/png;base64,{preview_img}" style="max-width: 800px; width: 100%;"></div>'
+                (
+                    f'<div style="align-content: center;"><img src="data:image/png;base64,{preview_img}" '
+                    + 'style="max-width: 800px; width: 100%;"></div>'
+                )
                 if preview_img
                 else None
             ),
