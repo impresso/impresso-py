@@ -80,7 +80,7 @@ def sync_detailed(
     client: AuthenticatedClient,
     body: ImpressoNamedEntityRecognitionRequest,
 ) -> Response[Union[Error, ImpressoNamedEntityRecognitionResponse]]:
-    """Perform Named Entity Recognition of a text
+    """Perform named entity recognition (and optional named entity linking) of a text
 
     Args:
         body (ImpressoNamedEntityRecognitionRequest): Request body for the Impresso NER endpoint
@@ -109,7 +109,7 @@ def sync(
     client: AuthenticatedClient,
     body: ImpressoNamedEntityRecognitionRequest,
 ) -> Optional[Union[Error, ImpressoNamedEntityRecognitionResponse]]:
-    """Perform Named Entity Recognition of a text
+    """Perform named entity recognition (and optional named entity linking) of a text
 
     Args:
         body (ImpressoNamedEntityRecognitionRequest): Request body for the Impresso NER endpoint
@@ -133,7 +133,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient,
     body: ImpressoNamedEntityRecognitionRequest,
 ) -> Response[Union[Error, ImpressoNamedEntityRecognitionResponse]]:
-    """Perform Named Entity Recognition of a text
+    """Perform named entity recognition (and optional named entity linking) of a text
 
     Args:
         body (ImpressoNamedEntityRecognitionRequest): Request body for the Impresso NER endpoint
@@ -160,7 +160,7 @@ async def asyncio(
     client: AuthenticatedClient,
     body: ImpressoNamedEntityRecognitionRequest,
 ) -> Optional[Union[Error, ImpressoNamedEntityRecognitionResponse]]:
-    """Perform Named Entity Recognition of a text
+    """Perform named entity recognition (and optional named entity linking) of a text
 
     Args:
         body (ImpressoNamedEntityRecognitionRequest): Request body for the Impresso NER endpoint

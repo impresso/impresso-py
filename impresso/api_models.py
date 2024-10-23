@@ -329,6 +329,13 @@ class ImpressoNerRequest(BaseModel):
             min_length=1,
         ),
     ]
+    method: Annotated[
+        Optional[Literal['ner', 'ner-nel', 'nel']],
+        Field(
+            'ner',
+            description='NER method to be used: `ner` (default), `ner-nel` (named entity recognition with named entity linking) and `nel` (linking only - enclose entities in [START] [END] tags).',
+        ),
+    ]
 
 
 class ImpressoNerResponse(BaseModel):

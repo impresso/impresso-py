@@ -22,7 +22,7 @@ packages = [
 ]
 readme = "README.md"
 repository = "https://github.com/impresso/impresso-py"
-version = "0.9.7"
+version = "0.9.8"
 
 [tool.poetry.urls]
 Endpoint = "https://impresso-project.ch/public-api"

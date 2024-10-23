@@ -154,13 +154,15 @@ class SearchResource(Resource):
             entity_id: Return only content items that mention this entity or all/any of the entities.
             date_range: Return only content items that were published in this date range.
             language: Return only content items that are in this language or all/any of the languages.
-            mention: Return only content items that mention an entity with this term or all/any of entities with the terms.
+            mention: Return only content items that mention an entity with this term or all/any
+                     of entities with the terms.
             topic_id: Return only content items that are about this topic or all/any of the topics.
             collection_id: Return only content items that are in this collection or all/any of the collections.
             country: Return only content items that are from this country or all/any of the countries.
             access_rights: Return only content items with this access right or all/any of the access rights.
             partner_id: Return only content items that are from this partner or all/any of the partners.
-            text_reuse_cluster_id: Return only content items that are in this text reuse cluster or all/any of the clusters.
+            text_reuse_cluster_id: Return only content items that are in this text reuse cluster
+                                   or all/any of the clusters.
 
         Returns:
             _type_: _description_
