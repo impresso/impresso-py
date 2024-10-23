@@ -55,6 +55,8 @@ class ToolsResource(Resource):
     def ner(self, text: str) -> NerContainer:
         """Named Entity Recognition
 
+        This method is faster than `ner_nel` but does not provide any linking to external resources.
+
         Args:
             text (str): Text to process
 
@@ -75,6 +77,8 @@ class ToolsResource(Resource):
 
     def ner_nel(self, text: str) -> NerContainer:
         """Named Entity Recognition and Named Entity Linking
+
+        This method is slower than `ner` but provides linking to external resources.
 
         Args:
             text (str): Text to process
