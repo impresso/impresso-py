@@ -3,6 +3,7 @@ from typing import Literal
 
 
 class ImpressoNamedEntityRecognitionRequestMethod(str, Enum):
+    NEL = "nel"
     NER = "ner"
     NER_NEL = "ner-nel"
 
@@ -11,6 +12,7 @@ class ImpressoNamedEntityRecognitionRequestMethod(str, Enum):
 
 
 ImpressoNamedEntityRecognitionRequestMethodLiteral = Literal[
+    "nel",
     "ner",
     "ner-nel",
 ]

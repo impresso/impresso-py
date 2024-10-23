@@ -14,9 +14,9 @@ class ImpressoNamedEntityRecognitionRequest:
 
     Attributes:
         text (str): Text to be processed for named entity recognition
-        method (Union[Unset, ImpressoNamedEntityRecognitionRequestMethod]): NER method to be used: `ner` (default) or
-            `ner-nel` (named entity recognition with named entity linking). Default:
-            ImpressoNamedEntityRecognitionRequestMethod.NER.
+        method (Union[Unset, ImpressoNamedEntityRecognitionRequestMethod]): NER method to be used: `ner` (default),
+            `ner-nel` (named entity recognition with named entity linking) and `nel` (linking only - enclose entities in
+            [START] [END] tags). Default: ImpressoNamedEntityRecognitionRequestMethod.NER.
     """
 
     text: str
