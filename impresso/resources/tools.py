@@ -97,3 +97,26 @@ class ToolsResource(Resource):
             ImpressoNerSchema,
             web_app_search_result_url=None,
         )
+
+    def nel(self, text: str) -> NerContainer:
+        """Named Entity Linking
+
+        This method requires named entities to be enclosed in tags: [START]entity[END].
+
+        Args:
+            text (str): Text to process
+
+        Returns:
+            NerContainer: List of named entities
+        """
+        result = perform_ner.sync(
+            client=self._api_client,
+            body=ImpressoNamedEntityRecognitionRequest(text=text, method="nel"),
+        )
+        raise_for_error(result)
+
+        return NerContainer(
+            result,
+            ImpressoNerSchema,
+            web_app_search_result_url=None,
+        )
