@@ -93,6 +93,7 @@ from .impresso_named_entity_recognition_entity_offset import ImpressoNamedEntity
 from .impresso_named_entity_recognition_entity_type import ImpressoNamedEntityRecognitionEntityType
 from .impresso_named_entity_recognition_entity_wikidata import ImpressoNamedEntityRecognitionEntityWikidata
 from .impresso_named_entity_recognition_request import ImpressoNamedEntityRecognitionRequest
+from .impresso_named_entity_recognition_request_method import ImpressoNamedEntityRecognitionRequestMethod
 from .impresso_named_entity_recognition_response import ImpressoNamedEntityRecognitionResponse
 from .location_specific_fields import LocationSpecificFields
 from .location_specific_fields_descriptions import LocationSpecificFieldsDescriptions
@@ -230,6 +231,7 @@ __all__ = (
     "ImpressoNamedEntityRecognitionEntityType",
     "ImpressoNamedEntityRecognitionEntityWikidata",
     "ImpressoNamedEntityRecognitionRequest",
+    "ImpressoNamedEntityRecognitionRequestMethod",
     "ImpressoNamedEntityRecognitionResponse",
     "LocationSpecificFields",
     "LocationSpecificFieldsDescriptions",

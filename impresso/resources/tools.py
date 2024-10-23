@@ -63,7 +63,28 @@ class ToolsResource(Resource):
         """
         result = perform_ner.sync(
             client=self._api_client,
-            body=ImpressoNamedEntityRecognitionRequest(text=text),
+            body=ImpressoNamedEntityRecognitionRequest(text=text, method="ner"),
+        )
+        raise_for_error(result)
+
+        return NerContainer(
+            result,
+            ImpressoNerSchema,
+            web_app_search_result_url=None,
+        )
+
+    def ner_nel(self, text: str) -> NerContainer:
+        """Named Entity Recognition and Named Entity Linking
+
+        Args:
+            text (str): Text to process
+
+        Returns:
+            NerContainer: List of named entities
+        """
+        result = perform_ner.sync(
+            client=self._api_client,
+            body=ImpressoNamedEntityRecognitionRequest(text=text, method="ner-nel"),
         )
         raise_for_error(result)
 
