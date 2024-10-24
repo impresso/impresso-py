@@ -23,9 +23,9 @@ class ImpressoNamedEntityRecognitionEntity:
     Attributes:
         id (str): ID of the entity
         type (ImpressoNamedEntityRecognitionEntityType): Type of the entity
-        surface_form (str): Surface form of the entity
-        offset (ImpressoNamedEntityRecognitionEntityOffset):
         confidence (ImpressoNamedEntityRecognitionEntityConfidence):
+        surface_form (Union[Unset, str]): Surface form of the entity
+        offset (Union[Unset, ImpressoNamedEntityRecognitionEntityOffset]):
         is_type_nested (Union[Unset, bool]): Whether the entity type is nested
         wikidata (Union[Unset, ImpressoNamedEntityRecognitionEntityWikidata]):
         function (Union[Unset, str]): Function of the entity
@@ -34,9 +34,9 @@ class ImpressoNamedEntityRecognitionEntity:
 
     id: str
     type: ImpressoNamedEntityRecognitionEntityType
-    surface_form: str
-    offset: "ImpressoNamedEntityRecognitionEntityOffset"
     confidence: "ImpressoNamedEntityRecognitionEntityConfidence"
+    surface_form: Union[Unset, str] = UNSET
+    offset: Union[Unset, "ImpressoNamedEntityRecognitionEntityOffset"] = UNSET
     is_type_nested: Union[Unset, bool] = UNSET
     wikidata: Union[Unset, "ImpressoNamedEntityRecognitionEntityWikidata"] = UNSET
     function: Union[Unset, str] = UNSET
@@ -47,11 +47,13 @@ class ImpressoNamedEntityRecognitionEntity:
 
         type = self.type.value
 
+        confidence = self.confidence.to_dict()
+
         surface_form = self.surface_form
 
-        offset = self.offset.to_dict()
-
-        confidence = self.confidence.to_dict()
+        offset: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.offset, Unset):
+            offset = self.offset.to_dict()
 
         is_type_nested = self.is_type_nested
 
@@ -68,11 +70,13 @@ class ImpressoNamedEntityRecognitionEntity:
             {
                 "id": id,
                 "type": type,
-                "surfaceForm": surface_form,
-                "offset": offset,
                 "confidence": confidence,
             }
         )
+        if surface_form is not UNSET:
+            field_dict["surfaceForm"] = surface_form
+        if offset is not UNSET:
+            field_dict["offset"] = offset
         if is_type_nested is not UNSET:
             field_dict["isTypeNested"] = is_type_nested
         if wikidata is not UNSET:
@@ -99,11 +103,16 @@ class ImpressoNamedEntityRecognitionEntity:
 
         type = ImpressoNamedEntityRecognitionEntityType(d.pop("type"))
 
-        surface_form = d.pop("surfaceForm")
-
-        offset = ImpressoNamedEntityRecognitionEntityOffset.from_dict(d.pop("offset"))
-
         confidence = ImpressoNamedEntityRecognitionEntityConfidence.from_dict(d.pop("confidence"))
+
+        surface_form = d.pop("surfaceForm", UNSET)
+
+        _offset = d.pop("offset", UNSET)
+        offset: Union[Unset, ImpressoNamedEntityRecognitionEntityOffset]
+        if isinstance(_offset, Unset):
+            offset = UNSET
+        else:
+            offset = ImpressoNamedEntityRecognitionEntityOffset.from_dict(_offset)
 
         is_type_nested = d.pop("isTypeNested", UNSET)
 
@@ -121,9 +130,9 @@ class ImpressoNamedEntityRecognitionEntity:
         impresso_named_entity_recognition_entity = cls(
             id=id,
             type=type,
+            confidence=confidence,
             surface_form=surface_form,
             offset=offset,
-            confidence=confidence,
             is_type_nested=is_type_nested,
             wikidata=wikidata,
             function=function,

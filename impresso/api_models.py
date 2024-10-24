@@ -244,7 +244,8 @@ class Confidence(BaseModel):
         extra='forbid',
     )
     ner: Annotated[
-        float, Field(description='Confidence score for the named entity recognition')
+        Optional[float],
+        Field(None, description='Confidence score for the named entity recognition'),
     ]
     nel: Annotated[
         Optional[float],
@@ -259,6 +260,9 @@ class Wikidata(BaseModel):
     id: Annotated[str, Field(description='Wikidata ID of the entity')]
     wikipediaPageName: Annotated[
         Optional[str], Field(None, description='Wikipedia page name of the entity')
+    ]
+    wikipediaPageUrl: Annotated[
+        Optional[str], Field(None, description='Wikipedia page URL of the entity')
     ]
 
 
@@ -291,6 +295,30 @@ class ImpressoNerEntity(BaseModel):
             'org.adm',
             'org.ent',
             'org.ent.pressagency',
+            'org.ent.pressagency.AFP',
+            'org.ent.pressagency.ANSA',
+            'org.ent.pressagency.AP',
+            'org.ent.pressagency.APA',
+            'org.ent.pressagency.ATS-SDA',
+            'org.ent.pressagency.Belga',
+            'org.ent.pressagency.CTK',
+            'org.ent.pressagency.DDP-DAPD',
+            'org.ent.pressagency.DNB',
+            'org.ent.pressagency.DPA',
+            'org.ent.pressagency.Domei',
+            'org.ent.pressagency.Europapress',
+            'org.ent.pressagency.Extel',
+            'org.ent.pressagency.Havas',
+            'org.ent.pressagency.Kipa',
+            'org.ent.pressagency.Reuters',
+            'org.ent.pressagency.SPK-SMP',
+            'org.ent.pressagency.Stefani',
+            'org.ent.pressagency.TASS',
+            'org.ent.pressagency.UP-UPI',
+            'org.ent.pressagency.Wolff',
+            'org.ent.pressagency.Xinhua',
+            'org.ent.pressagency.ag',
+            'org.ent.pressagency.unk',
             'pers',
             'pers.coll',
             'pers.ind',
@@ -301,11 +329,14 @@ class ImpressoNerEntity(BaseModel):
             'time',
             'time.date.abs',
             'time.hour.abs',
+            'unk',
         ],
         Field(description='Type of the entity'),
     ]
-    surfaceForm: Annotated[str, Field(description='Surface form of the entity')]
-    offset: Offset
+    surfaceForm: Annotated[
+        Optional[str], Field(None, description='Surface form of the entity')
+    ]
+    offset: Optional[Offset] = None
     isTypeNested: Annotated[
         Optional[bool], Field(None, description='Whether the entity type is nested')
     ]

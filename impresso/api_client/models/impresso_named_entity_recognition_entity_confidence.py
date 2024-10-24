@@ -11,11 +11,11 @@ T = TypeVar("T", bound="ImpressoNamedEntityRecognitionEntityConfidence")
 class ImpressoNamedEntityRecognitionEntityConfidence:
     """
     Attributes:
-        ner (float): Confidence score for the named entity recognition
+        ner (Union[Unset, float]): Confidence score for the named entity recognition
         nel (Union[Unset, float]): Confidence score for the named entity linking
     """
 
-    ner: float
+    ner: Union[Unset, float] = UNSET
     nel: Union[Unset, float] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
@@ -24,11 +24,9 @@ class ImpressoNamedEntityRecognitionEntityConfidence:
         nel = self.nel
 
         field_dict: Dict[str, Any] = {}
-        field_dict.update(
-            {
-                "ner": ner,
-            }
-        )
+        field_dict.update({})
+        if ner is not UNSET:
+            field_dict["ner"] = ner
         if nel is not UNSET:
             field_dict["nel"] = nel
 
@@ -37,7 +35,7 @@ class ImpressoNamedEntityRecognitionEntityConfidence:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        ner = d.pop("ner")
+        ner = d.pop("ner", UNSET)
 
         nel = d.pop("nel", UNSET)
 
