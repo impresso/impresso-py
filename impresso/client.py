@@ -11,6 +11,7 @@ import httpx
 from impresso.api_client import AuthenticatedClient
 from impresso.client_base import ImpressoApiResourcesBase
 from impresso.config_file import DEFAULT_API_URL, ImpressoPyConfig
+from impresso.util.error import handle_known_errors
 from impresso.util.token import get_jwt_status
 
 logger = logging.getLogger(__name__)
@@ -28,6 +29,9 @@ DEFAULT_LOCALHOST_TOKEN_NETLOC = "impresso-project.ch"
 def _log_non_2xx(response: httpx.Response) -> None:
     if response.status_code >= 400:
         response.read()
+
+        handle_known_errors(response.status_code, response.text)
+
         logging.error(
             f"Received error response ({response.status_code}): {response.text}"
         )
