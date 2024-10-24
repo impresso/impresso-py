@@ -1,4 +1,3 @@
-from json import JSONDecodeError
 from typing import TypeVar
 
 from impresso.api_client.models.error import Error as ApiError
