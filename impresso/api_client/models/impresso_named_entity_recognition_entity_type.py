@@ -25,6 +25,30 @@ class ImpressoNamedEntityRecognitionEntityType(str, Enum):
     ORG_ADM = "org.adm"
     ORG_ENT = "org.ent"
     ORG_ENT_PRESSAGENCY = "org.ent.pressagency"
+    ORG_ENT_PRESSAGENCY_AFP = "org.ent.pressagency.AFP"
+    ORG_ENT_PRESSAGENCY_AG = "org.ent.pressagency.ag"
+    ORG_ENT_PRESSAGENCY_ANSA = "org.ent.pressagency.ANSA"
+    ORG_ENT_PRESSAGENCY_AP = "org.ent.pressagency.AP"
+    ORG_ENT_PRESSAGENCY_APA = "org.ent.pressagency.APA"
+    ORG_ENT_PRESSAGENCY_ATS_SDA = "org.ent.pressagency.ATS-SDA"
+    ORG_ENT_PRESSAGENCY_BELGA = "org.ent.pressagency.Belga"
+    ORG_ENT_PRESSAGENCY_CTK = "org.ent.pressagency.CTK"
+    ORG_ENT_PRESSAGENCY_DDP_DAPD = "org.ent.pressagency.DDP-DAPD"
+    ORG_ENT_PRESSAGENCY_DNB = "org.ent.pressagency.DNB"
+    ORG_ENT_PRESSAGENCY_DOMEI = "org.ent.pressagency.Domei"
+    ORG_ENT_PRESSAGENCY_DPA = "org.ent.pressagency.DPA"
+    ORG_ENT_PRESSAGENCY_EUROPAPRESS = "org.ent.pressagency.Europapress"
+    ORG_ENT_PRESSAGENCY_EXTEL = "org.ent.pressagency.Extel"
+    ORG_ENT_PRESSAGENCY_HAVAS = "org.ent.pressagency.Havas"
+    ORG_ENT_PRESSAGENCY_KIPA = "org.ent.pressagency.Kipa"
+    ORG_ENT_PRESSAGENCY_REUTERS = "org.ent.pressagency.Reuters"
+    ORG_ENT_PRESSAGENCY_SPK_SMP = "org.ent.pressagency.SPK-SMP"
+    ORG_ENT_PRESSAGENCY_STEFANI = "org.ent.pressagency.Stefani"
+    ORG_ENT_PRESSAGENCY_TASS = "org.ent.pressagency.TASS"
+    ORG_ENT_PRESSAGENCY_UNK = "org.ent.pressagency.unk"
+    ORG_ENT_PRESSAGENCY_UP_UPI = "org.ent.pressagency.UP-UPI"
+    ORG_ENT_PRESSAGENCY_WOLFF = "org.ent.pressagency.Wolff"
+    ORG_ENT_PRESSAGENCY_XINHUA = "org.ent.pressagency.Xinhua"
     PERS = "pers"
     PERS_COLL = "pers.coll"
     PERS_IND = "pers.ind"
@@ -35,6 +59,7 @@ class ImpressoNamedEntityRecognitionEntityType(str, Enum):
     TIME = "time"
     TIME_DATE_ABS = "time.date.abs"
     TIME_HOUR_ABS = "time.hour.abs"
+    UNK = "unk"
 
     def __str__(self) -> str:
         return str(self.value)
@@ -63,6 +88,30 @@ ImpressoNamedEntityRecognitionEntityTypeLiteral = Literal[
     "org.adm",
     "org.ent",
     "org.ent.pressagency",
+    "org.ent.pressagency.AFP",
+    "org.ent.pressagency.ag",
+    "org.ent.pressagency.ANSA",
+    "org.ent.pressagency.AP",
+    "org.ent.pressagency.APA",
+    "org.ent.pressagency.ATS-SDA",
+    "org.ent.pressagency.Belga",
+    "org.ent.pressagency.CTK",
+    "org.ent.pressagency.DDP-DAPD",
+    "org.ent.pressagency.DNB",
+    "org.ent.pressagency.Domei",
+    "org.ent.pressagency.DPA",
+    "org.ent.pressagency.Europapress",
+    "org.ent.pressagency.Extel",
+    "org.ent.pressagency.Havas",
+    "org.ent.pressagency.Kipa",
+    "org.ent.pressagency.Reuters",
+    "org.ent.pressagency.SPK-SMP",
+    "org.ent.pressagency.Stefani",
+    "org.ent.pressagency.TASS",
+    "org.ent.pressagency.unk",
+    "org.ent.pressagency.UP-UPI",
+    "org.ent.pressagency.Wolff",
+    "org.ent.pressagency.Xinhua",
     "pers",
     "pers.coll",
     "pers.ind",
@@ -73,4 +122,5 @@ ImpressoNamedEntityRecognitionEntityTypeLiteral = Literal[
     "time",
     "time.date.abs",
     "time.hour.abs",
+    "unk",
 ]
