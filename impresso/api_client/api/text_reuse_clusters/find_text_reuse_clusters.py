@@ -7,14 +7,14 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
 from ...models.filter_ import Filter
+from ...models.find_text_reuse_clusters_base_find_response import FindTextReuseClustersBaseFindResponse
 from ...models.find_text_reuse_clusters_order_by import FindTextReuseClustersOrderBy
-from ...models.find_text_reuse_clusters_response import FindTextReuseClustersResponse
 from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
-    text: Union[Unset, str] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindTextReuseClustersOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
@@ -22,7 +22,7 @@ def _get_kwargs(
 ) -> Dict[str, Any]:
     params: Dict[str, Any] = {}
 
-    params["text"] = text
+    params["term"] = term
 
     json_order_by: Union[Unset, str] = UNSET
     if not isinstance(order_by, Unset):
@@ -60,9 +60,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Error, FindTextReuseClustersResponse]]:
+) -> Optional[Union[Error, FindTextReuseClustersBaseFindResponse]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = FindTextReuseClustersResponse.from_dict(response.json())
+        response_200 = FindTextReuseClustersBaseFindResponse.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -97,7 +97,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Error, FindTextReuseClustersResponse]]:
+) -> Response[Union[Error, FindTextReuseClustersBaseFindResponse]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -109,16 +109,16 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    text: Union[Unset, str] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindTextReuseClustersOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindTextReuseClustersResponse]]:
+) -> Response[Union[Error, FindTextReuseClustersBaseFindResponse]]:
     """Find text reuse clusters
 
     Args:
-        text (Union[Unset, str]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindTextReuseClustersOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -129,11 +129,11 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindTextReuseClustersResponse]]
+        Response[Union[Error, FindTextReuseClustersBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
-        text=text,
+        term=term,
         order_by=order_by,
         filters=filters,
         limit=limit,
@@ -150,16 +150,16 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    text: Union[Unset, str] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindTextReuseClustersOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindTextReuseClustersResponse]]:
+) -> Optional[Union[Error, FindTextReuseClustersBaseFindResponse]]:
     """Find text reuse clusters
 
     Args:
-        text (Union[Unset, str]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindTextReuseClustersOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -170,12 +170,12 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindTextReuseClustersResponse]
+        Union[Error, FindTextReuseClustersBaseFindResponse]
     """
 
     return sync_detailed(
         client=client,
-        text=text,
+        term=term,
         order_by=order_by,
         filters=filters,
         limit=limit,
@@ -186,16 +186,16 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    text: Union[Unset, str] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindTextReuseClustersOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindTextReuseClustersResponse]]:
+) -> Response[Union[Error, FindTextReuseClustersBaseFindResponse]]:
     """Find text reuse clusters
 
     Args:
-        text (Union[Unset, str]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindTextReuseClustersOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -206,11 +206,11 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindTextReuseClustersResponse]]
+        Response[Union[Error, FindTextReuseClustersBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
-        text=text,
+        term=term,
         order_by=order_by,
         filters=filters,
         limit=limit,
@@ -225,16 +225,16 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    text: Union[Unset, str] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindTextReuseClustersOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindTextReuseClustersResponse]]:
+) -> Optional[Union[Error, FindTextReuseClustersBaseFindResponse]]:
     """Find text reuse clusters
 
     Args:
-        text (Union[Unset, str]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindTextReuseClustersOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -245,13 +245,13 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindTextReuseClustersResponse]
+        Union[Error, FindTextReuseClustersBaseFindResponse]
     """
 
     return (
         await asyncio_detailed(
             client=client,
-            text=text,
+            term=term,
             order_by=order_by,
             filters=filters,
             limit=limit,

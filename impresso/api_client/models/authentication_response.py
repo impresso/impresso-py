@@ -4,7 +4,7 @@ from attrs import define as _attrs_define
 
 if TYPE_CHECKING:
     from ..models.authentication_response_authentication import AuthenticationResponseAuthentication
-    from ..models.user import User
+    from ..models.authentication_response_user import AuthenticationResponseUser
 
 
 T = TypeVar("T", bound="AuthenticationResponse")
@@ -17,12 +17,12 @@ class AuthenticationResponse:
     Attributes:
         access_token (str):
         authentication (AuthenticationResponseAuthentication):
-        user (User): User details
+        user (AuthenticationResponseUser): User details
     """
 
     access_token: str
     authentication: "AuthenticationResponseAuthentication"
-    user: "User"
+    user: "AuthenticationResponseUser"
 
     def to_dict(self) -> Dict[str, Any]:
         access_token = self.access_token
@@ -45,14 +45,14 @@ class AuthenticationResponse:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         from ..models.authentication_response_authentication import AuthenticationResponseAuthentication
-        from ..models.user import User
+        from ..models.authentication_response_user import AuthenticationResponseUser
 
         d = src_dict.copy()
         access_token = d.pop("accessToken")
 
         authentication = AuthenticationResponseAuthentication.from_dict(d.pop("authentication"))
 
-        user = User.from_dict(d.pop("user"))
+        user = AuthenticationResponseUser.from_dict(d.pop("user"))
 
         authentication_response = cls(
             access_token=access_token,

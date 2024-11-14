@@ -7,19 +7,15 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
 from ...models.filter_ import Filter
-from ...models.find_text_reuse_passages_addons import FindTextReusePassagesAddons
-from ...models.find_text_reuse_passages_group_by import FindTextReusePassagesGroupBy
+from ...models.find_text_reuse_passages_base_find_response import FindTextReusePassagesBaseFindResponse
 from ...models.find_text_reuse_passages_order_by import FindTextReusePassagesOrderBy
-from ...models.find_text_reuse_passages_response_200 import FindTextReusePassagesResponse200
 from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
     order_by: Union[Unset, FindTextReusePassagesOrderBy] = UNSET,
-    group_by: Union[Unset, FindTextReusePassagesGroupBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
-    addons: Union[Unset, "FindTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Dict[str, Any]:
@@ -30,12 +26,6 @@ def _get_kwargs(
         json_order_by = order_by.value
 
     params["order_by"] = json_order_by
-
-    json_group_by: Union[Unset, str] = UNSET
-    if not isinstance(group_by, Unset):
-        json_group_by = group_by.value
-
-    params["group_by"] = json_group_by
 
     json_filters: Union[List[Dict[str, Any]], Unset, str]
     if isinstance(filters, Unset):
@@ -49,12 +39,6 @@ def _get_kwargs(
     else:
         json_filters = filters
     params["filters"] = json_filters
-
-    json_addons: Union[Unset, Dict[str, Any]] = UNSET
-    if not isinstance(addons, Unset):
-        json_addons = addons.to_dict()
-    if not isinstance(json_addons, Unset):
-        params.update(json_addons)
 
     params["limit"] = limit
 
@@ -73,9 +57,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Error, FindTextReusePassagesResponse200]]:
+) -> Optional[Union[Error, FindTextReusePassagesBaseFindResponse]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = FindTextReusePassagesResponse200.from_dict(response.json())
+        response_200 = FindTextReusePassagesBaseFindResponse.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -110,7 +94,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Error, FindTextReusePassagesResponse200]]:
+) -> Response[Union[Error, FindTextReusePassagesBaseFindResponse]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -123,19 +107,15 @@ def sync_detailed(
     *,
     client: AuthenticatedClient,
     order_by: Union[Unset, FindTextReusePassagesOrderBy] = UNSET,
-    group_by: Union[Unset, FindTextReusePassagesGroupBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
-    addons: Union[Unset, "FindTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindTextReusePassagesResponse200]]:
+) -> Response[Union[Error, FindTextReusePassagesBaseFindResponse]]:
     """Find text reuse passages
 
     Args:
         order_by (Union[Unset, FindTextReusePassagesOrderBy]):
-        group_by (Union[Unset, FindTextReusePassagesGroupBy]):
         filters (Union[List['Filter'], Unset, str]):
-        addons (Union[Unset, FindTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -144,14 +124,12 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindTextReusePassagesResponse200]]
+        Response[Union[Error, FindTextReusePassagesBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
         order_by=order_by,
-        group_by=group_by,
         filters=filters,
-        addons=addons,
         limit=limit,
         offset=offset,
     )
@@ -167,19 +145,15 @@ def sync(
     *,
     client: AuthenticatedClient,
     order_by: Union[Unset, FindTextReusePassagesOrderBy] = UNSET,
-    group_by: Union[Unset, FindTextReusePassagesGroupBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
-    addons: Union[Unset, "FindTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindTextReusePassagesResponse200]]:
+) -> Optional[Union[Error, FindTextReusePassagesBaseFindResponse]]:
     """Find text reuse passages
 
     Args:
         order_by (Union[Unset, FindTextReusePassagesOrderBy]):
-        group_by (Union[Unset, FindTextReusePassagesGroupBy]):
         filters (Union[List['Filter'], Unset, str]):
-        addons (Union[Unset, FindTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -188,15 +162,13 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindTextReusePassagesResponse200]
+        Union[Error, FindTextReusePassagesBaseFindResponse]
     """
 
     return sync_detailed(
         client=client,
         order_by=order_by,
-        group_by=group_by,
         filters=filters,
-        addons=addons,
         limit=limit,
         offset=offset,
     ).parsed
@@ -206,19 +178,15 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
     order_by: Union[Unset, FindTextReusePassagesOrderBy] = UNSET,
-    group_by: Union[Unset, FindTextReusePassagesGroupBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
-    addons: Union[Unset, "FindTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindTextReusePassagesResponse200]]:
+) -> Response[Union[Error, FindTextReusePassagesBaseFindResponse]]:
     """Find text reuse passages
 
     Args:
         order_by (Union[Unset, FindTextReusePassagesOrderBy]):
-        group_by (Union[Unset, FindTextReusePassagesGroupBy]):
         filters (Union[List['Filter'], Unset, str]):
-        addons (Union[Unset, FindTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -227,14 +195,12 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindTextReusePassagesResponse200]]
+        Response[Union[Error, FindTextReusePassagesBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
         order_by=order_by,
-        group_by=group_by,
         filters=filters,
-        addons=addons,
         limit=limit,
         offset=offset,
     )
@@ -248,19 +214,15 @@ async def asyncio(
     *,
     client: AuthenticatedClient,
     order_by: Union[Unset, FindTextReusePassagesOrderBy] = UNSET,
-    group_by: Union[Unset, FindTextReusePassagesGroupBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
-    addons: Union[Unset, "FindTextReusePassagesAddons"] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindTextReusePassagesResponse200]]:
+) -> Optional[Union[Error, FindTextReusePassagesBaseFindResponse]]:
     """Find text reuse passages
 
     Args:
         order_by (Union[Unset, FindTextReusePassagesOrderBy]):
-        group_by (Union[Unset, FindTextReusePassagesGroupBy]):
         filters (Union[List['Filter'], Unset, str]):
-        addons (Union[Unset, FindTextReusePassagesAddons]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -269,16 +231,14 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindTextReusePassagesResponse200]
+        Union[Error, FindTextReusePassagesBaseFindResponse]
     """
 
     return (
         await asyncio_detailed(
             client=client,
             order_by=order_by,
-            group_by=group_by,
             filters=filters,
-            addons=addons,
             limit=limit,
             offset=offset,
         )

@@ -13,30 +13,30 @@ T = TypeVar("T", bound="TextReuseCluster")
 
 @_attrs_define
 class TextReuseCluster:
-    """Represents a cluster of text reuse passages
+    """Text reuse cluster details.
 
     Attributes:
-        id (str): ID of the text reuse passage Example: abc123.
-        lexical_overlap (Union[Unset, float]): Percentage of overlap between passages in the cluster
-        cluster_size (Union[Unset, float]): Number of passages in cluster
-        connected_clusters_count (Union[Unset, float]): Number of connected clusters
-        time_coverage (Union[Unset, TextReuseClusterTimeCoverage]): Time window covered by documents in the cluster
+        uid (str): Unique ID of the text reuse cluster.
+        lexical_overlap (Union[Unset, float]): Overlap in percents between the passages in the cluster.
+        cluster_size (Union[Unset, int]): Number of passages in the cluster.
+        text_sample (Union[Unset, str]): Sample of a text from one of the passages in the cluster.
+        time_coverage (Union[Unset, TextReuseClusterTimeCoverage]): Time coverage of the cluster.
     """
 
-    id: str
+    uid: str
     lexical_overlap: Union[Unset, float] = UNSET
-    cluster_size: Union[Unset, float] = UNSET
-    connected_clusters_count: Union[Unset, float] = UNSET
+    cluster_size: Union[Unset, int] = UNSET
+    text_sample: Union[Unset, str] = UNSET
     time_coverage: Union[Unset, "TextReuseClusterTimeCoverage"] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
-        id = self.id
+        uid = self.uid
 
         lexical_overlap = self.lexical_overlap
 
         cluster_size = self.cluster_size
 
-        connected_clusters_count = self.connected_clusters_count
+        text_sample = self.text_sample
 
         time_coverage: Union[Unset, Dict[str, Any]] = UNSET
         if not isinstance(self.time_coverage, Unset):
@@ -45,15 +45,15 @@ class TextReuseCluster:
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
-                "id": id,
+                "uid": uid,
             }
         )
         if lexical_overlap is not UNSET:
             field_dict["lexicalOverlap"] = lexical_overlap
         if cluster_size is not UNSET:
             field_dict["clusterSize"] = cluster_size
-        if connected_clusters_count is not UNSET:
-            field_dict["connectedClustersCount"] = connected_clusters_count
+        if text_sample is not UNSET:
+            field_dict["textSample"] = text_sample
         if time_coverage is not UNSET:
             field_dict["timeCoverage"] = time_coverage
 
@@ -64,13 +64,13 @@ class TextReuseCluster:
         from ..models.text_reuse_cluster_time_coverage import TextReuseClusterTimeCoverage
 
         d = src_dict.copy()
-        id = d.pop("id")
+        uid = d.pop("uid")
 
         lexical_overlap = d.pop("lexicalOverlap", UNSET)
 
         cluster_size = d.pop("clusterSize", UNSET)
 
-        connected_clusters_count = d.pop("connectedClustersCount", UNSET)
+        text_sample = d.pop("textSample", UNSET)
 
         _time_coverage = d.pop("timeCoverage", UNSET)
         time_coverage: Union[Unset, TextReuseClusterTimeCoverage]
@@ -80,10 +80,10 @@ class TextReuseCluster:
             time_coverage = TextReuseClusterTimeCoverage.from_dict(_time_coverage)
 
         text_reuse_cluster = cls(
-            id=id,
+            uid=uid,
             lexical_overlap=lexical_overlap,
             cluster_size=cluster_size,
-            connected_clusters_count=connected_clusters_count,
+            text_sample=text_sample,
             time_coverage=time_coverage,
         )
 

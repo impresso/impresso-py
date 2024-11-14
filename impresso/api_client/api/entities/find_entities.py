@@ -7,15 +7,14 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
 from ...models.filter_ import Filter
+from ...models.find_entities_base_find_response import FindEntitiesBaseFindResponse
 from ...models.find_entities_order_by import FindEntitiesOrderBy
-from ...models.find_entities_response_200 import FindEntitiesResponse200
 from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
-    q: Union[Unset, str] = UNSET,
-    resolve: Union[Unset, bool] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindEntitiesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
@@ -23,9 +22,7 @@ def _get_kwargs(
 ) -> Dict[str, Any]:
     params: Dict[str, Any] = {}
 
-    params["q"] = q
-
-    params["resolve"] = resolve
+    params["term"] = term
 
     json_order_by: Union[Unset, str] = UNSET
     if not isinstance(order_by, Unset):
@@ -63,9 +60,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Error, FindEntitiesResponse200]]:
+) -> Optional[Union[Error, FindEntitiesBaseFindResponse]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = FindEntitiesResponse200.from_dict(response.json())
+        response_200 = FindEntitiesBaseFindResponse.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -100,7 +97,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Error, FindEntitiesResponse200]]:
+) -> Response[Union[Error, FindEntitiesBaseFindResponse]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -112,18 +109,16 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    resolve: Union[Unset, bool] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindEntitiesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindEntitiesResponse200]]:
+) -> Response[Union[Error, FindEntitiesBaseFindResponse]]:
     """Find entities that match the given query
 
     Args:
-        q (Union[Unset, str]):
-        resolve (Union[Unset, bool]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindEntitiesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -134,12 +129,11 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindEntitiesResponse200]]
+        Response[Union[Error, FindEntitiesBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
-        q=q,
-        resolve=resolve,
+        term=term,
         order_by=order_by,
         filters=filters,
         limit=limit,
@@ -156,18 +150,16 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    resolve: Union[Unset, bool] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindEntitiesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindEntitiesResponse200]]:
+) -> Optional[Union[Error, FindEntitiesBaseFindResponse]]:
     """Find entities that match the given query
 
     Args:
-        q (Union[Unset, str]):
-        resolve (Union[Unset, bool]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindEntitiesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -178,13 +170,12 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindEntitiesResponse200]
+        Union[Error, FindEntitiesBaseFindResponse]
     """
 
     return sync_detailed(
         client=client,
-        q=q,
-        resolve=resolve,
+        term=term,
         order_by=order_by,
         filters=filters,
         limit=limit,
@@ -195,18 +186,16 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    resolve: Union[Unset, bool] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindEntitiesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindEntitiesResponse200]]:
+) -> Response[Union[Error, FindEntitiesBaseFindResponse]]:
     """Find entities that match the given query
 
     Args:
-        q (Union[Unset, str]):
-        resolve (Union[Unset, bool]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindEntitiesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -217,12 +206,11 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindEntitiesResponse200]]
+        Response[Union[Error, FindEntitiesBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
-        q=q,
-        resolve=resolve,
+        term=term,
         order_by=order_by,
         filters=filters,
         limit=limit,
@@ -237,18 +225,16 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    resolve: Union[Unset, bool] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindEntitiesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindEntitiesResponse200]]:
+) -> Optional[Union[Error, FindEntitiesBaseFindResponse]]:
     """Find entities that match the given query
 
     Args:
-        q (Union[Unset, str]):
-        resolve (Union[Unset, bool]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindEntitiesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -259,14 +245,13 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindEntitiesResponse200]
+        Union[Error, FindEntitiesBaseFindResponse]
     """
 
     return (
         await asyncio_detailed(
             client=client,
-            q=q,
-            resolve=resolve,
+            term=term,
             order_by=order_by,
             filters=filters,
             limit=limit,

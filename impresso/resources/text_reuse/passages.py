@@ -14,7 +14,11 @@ from impresso.api_client.models.get_tr_passages_facet_order_by import (
     GetTrPassagesFacetOrderBy,
 )
 from impresso.api_client.types import UNSET, Unset
-from impresso.api_models import BaseFind, SearchFacet, TextReusePassage
+from impresso.api_models import (
+    BaseFind,
+    SearchFacetBucket,
+    TextReusePassage,
+)
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
 from impresso.resources.search import FacetDataContainer
@@ -39,7 +43,7 @@ class FindTextReusePassagesContainer(DataContainer):
         """Return the data as a pandas dataframe."""
         data = self._data.to_dict()["data"]
         if len(data):
-            return json_normalize(self._data.to_dict()["data"]).set_index("id")
+            return json_normalize(self._data.to_dict()["data"]).set_index("uid")
         return DataFrame()
 
 
@@ -50,7 +54,7 @@ class TextReusePassagesResource(Resource):
 
     def find(
         self,
-        text: str | None = None,
+        term: str | None = None,
         limit: int | None = None,
         offset: int | None = None,
         order_by: FindTextReusePassagesOrderByLiteral | None = None,
@@ -86,8 +90,8 @@ class TextReusePassagesResource(Resource):
             mention=mention,
             entity_id=entity_id,
         )
-        if text is not None:
-            filters.extend(and_or_filter(text, "string"))
+        if term is not None:
+            filters.extend(and_or_filter(term, "string"))
         filters_pb = filters_as_protobuf(filters or [])
 
         result = find_text_reuse_passages.sync(
@@ -117,7 +121,7 @@ class TextReusePassagesResource(Resource):
     def facet(
         self,
         facet: GetTrPassagesFacetIdLiteral,
-        text: str | None = None,
+        term: str | None = None,
         limit: int | None = None,
         offset: int | None = None,
         order_by: FindTextReusePassagesOrderByLiteral | None = None,
@@ -157,8 +161,8 @@ class TextReusePassagesResource(Resource):
             entity_id=entity_id,
         )
 
-        if text is not None:
-            filters.extend(and_or_filter(text, "string"))
+        if term is not None:
+            filters.extend(and_or_filter(term, "string"))
 
         filters_pb = filters_as_protobuf(filters or [])
 
@@ -177,9 +181,7 @@ class TextReusePassagesResource(Resource):
         raise_for_error(result)
         return FacetDataContainer(
             result,
-            SearchFacet,
-            limit=limit,
-            offset=offset,
+            SearchFacetBucket,
             web_app_search_result_url=_build_web_app_find_passages_url(
                 base_url=self._get_web_app_base_url(),
                 filters=filters_pb,

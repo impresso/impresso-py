@@ -6,33 +6,27 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
+from ...models.find_newspapers_base_find_response import FindNewspapersBaseFindResponse
 from ...models.find_newspapers_order_by import FindNewspapersOrderBy
-from ...models.find_newspapers_response_200 import FindNewspapersResponse200
 from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
-    included_only: Union[Unset, bool] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
-    faster: Union[Unset, bool] = UNSET,
-    q: Union[Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Dict[str, Any]:
     params: Dict[str, Any] = {}
 
-    params["includedOnly"] = included_only
+    params["term"] = term
 
     json_order_by: Union[Unset, str] = UNSET
     if not isinstance(order_by, Unset):
         json_order_by = order_by.value
 
     params["order_by"] = json_order_by
-
-    params["faster"] = faster
-
-    params["q"] = q
 
     params["limit"] = limit
 
@@ -51,9 +45,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Error, FindNewspapersResponse200]]:
+) -> Optional[Union[Error, FindNewspapersBaseFindResponse]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = FindNewspapersResponse200.from_dict(response.json())
+        response_200 = FindNewspapersBaseFindResponse.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -88,7 +82,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Error, FindNewspapersResponse200]]:
+) -> Response[Union[Error, FindNewspapersBaseFindResponse]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -100,20 +94,16 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    included_only: Union[Unset, bool] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
-    faster: Union[Unset, bool] = UNSET,
-    q: Union[Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindNewspapersResponse200]]:
+) -> Response[Union[Error, FindNewspapersBaseFindResponse]]:
     """Find newspapers that match the given query
 
     Args:
-        included_only (Union[Unset, bool]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindNewspapersOrderBy]):
-        faster (Union[Unset, bool]):
-        q (Union[Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -122,14 +112,12 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindNewspapersResponse200]]
+        Response[Union[Error, FindNewspapersBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
-        included_only=included_only,
+        term=term,
         order_by=order_by,
-        faster=faster,
-        q=q,
         limit=limit,
         offset=offset,
     )
@@ -144,20 +132,16 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    included_only: Union[Unset, bool] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
-    faster: Union[Unset, bool] = UNSET,
-    q: Union[Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindNewspapersResponse200]]:
+) -> Optional[Union[Error, FindNewspapersBaseFindResponse]]:
     """Find newspapers that match the given query
 
     Args:
-        included_only (Union[Unset, bool]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindNewspapersOrderBy]):
-        faster (Union[Unset, bool]):
-        q (Union[Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -166,15 +150,13 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindNewspapersResponse200]
+        Union[Error, FindNewspapersBaseFindResponse]
     """
 
     return sync_detailed(
         client=client,
-        included_only=included_only,
+        term=term,
         order_by=order_by,
-        faster=faster,
-        q=q,
         limit=limit,
         offset=offset,
     ).parsed
@@ -183,20 +165,16 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    included_only: Union[Unset, bool] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
-    faster: Union[Unset, bool] = UNSET,
-    q: Union[Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindNewspapersResponse200]]:
+) -> Response[Union[Error, FindNewspapersBaseFindResponse]]:
     """Find newspapers that match the given query
 
     Args:
-        included_only (Union[Unset, bool]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindNewspapersOrderBy]):
-        faster (Union[Unset, bool]):
-        q (Union[Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -205,14 +183,12 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindNewspapersResponse200]]
+        Response[Union[Error, FindNewspapersBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
-        included_only=included_only,
+        term=term,
         order_by=order_by,
-        faster=faster,
-        q=q,
         limit=limit,
         offset=offset,
     )
@@ -225,20 +201,16 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    included_only: Union[Unset, bool] = UNSET,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
-    faster: Union[Unset, bool] = UNSET,
-    q: Union[Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindNewspapersResponse200]]:
+) -> Optional[Union[Error, FindNewspapersBaseFindResponse]]:
     """Find newspapers that match the given query
 
     Args:
-        included_only (Union[Unset, bool]):
+        term (Union[Unset, str]):
         order_by (Union[Unset, FindNewspapersOrderBy]):
-        faster (Union[Unset, bool]):
-        q (Union[Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -247,16 +219,14 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindNewspapersResponse200]
+        Union[Error, FindNewspapersBaseFindResponse]
     """
 
     return (
         await asyncio_detailed(
             client=client,
-            included_only=included_only,
+            term=term,
             order_by=order_by,
-            faster=faster,
-            q=q,
             limit=limit,
             offset=offset,
         )

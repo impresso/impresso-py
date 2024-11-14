@@ -5,8 +5,8 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.api_version import APIVersion
 from ...models.error import Error
+from ...models.version_details import VersionDetails
 from ...types import Response
 
 
@@ -21,9 +21,9 @@ def _get_kwargs() -> Dict[str, Any]:
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[APIVersion, Error]]:
+) -> Optional[Union[Error, VersionDetails]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = APIVersion.from_dict(response.json())
+        response_200 = VersionDetails.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.NOT_FOUND:
@@ -46,7 +46,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[APIVersion, Error]]:
+) -> Response[Union[Error, VersionDetails]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -58,7 +58,7 @@ def _build_response(
 def sync_detailed(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[Union[APIVersion, Error]]:
+) -> Response[Union[Error, VersionDetails]]:
     """Get version object
 
     Raises:
@@ -66,7 +66,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[APIVersion, Error]]
+        Response[Union[Error, VersionDetails]]
     """
 
     kwargs = _get_kwargs()
@@ -81,7 +81,7 @@ def sync_detailed(
 def sync(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[Union[APIVersion, Error]]:
+) -> Optional[Union[Error, VersionDetails]]:
     """Get version object
 
     Raises:
@@ -89,7 +89,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[APIVersion, Error]
+        Union[Error, VersionDetails]
     """
 
     return sync_detailed(
@@ -100,7 +100,7 @@ def sync(
 async def asyncio_detailed(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Response[Union[APIVersion, Error]]:
+) -> Response[Union[Error, VersionDetails]]:
     """Get version object
 
     Raises:
@@ -108,7 +108,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[APIVersion, Error]]
+        Response[Union[Error, VersionDetails]]
     """
 
     kwargs = _get_kwargs()
@@ -121,7 +121,7 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: Union[AuthenticatedClient, Client],
-) -> Optional[Union[APIVersion, Error]]:
+) -> Optional[Union[Error, VersionDetails]]:
     """Get version object
 
     Raises:
@@ -129,7 +129,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[APIVersion, Error]
+        Union[Error, VersionDetails]
     """
 
     return (

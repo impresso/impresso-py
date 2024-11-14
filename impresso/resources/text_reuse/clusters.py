@@ -19,8 +19,8 @@ from impresso.api_models import (
     BaseFind,
     Filter,
     Q,
-    SearchFacet,
-    TextReuseClusterCompound,
+    SearchFacetBucket,
+    TextReuseCluster,
 )
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
@@ -34,49 +34,49 @@ from impresso.util.py import get_enum_from_literal
 class FindTextReuseClusterResponseSchema(BaseFind):
     """Schema for the text reuse clusters response."""
 
-    data: list[TextReuseClusterCompound]
+    data: list[TextReuseCluster]
 
 
 class FindTextReuseClustersContainer(DataContainer):
     @property
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
-        data = self._data.to_dict()["clusters"]
+        data = self._data.to_dict()["data"]
         if len(data):
-            return json_normalize(data).set_index("cluster.id")
+            return json_normalize(data).set_index("uid")
         return DataFrame()
 
-    @property
-    def pydantic(self):
-        """Return the data as a pydantic model."""
-        remapped_raw = {
-            "data": self.raw.get("clusters", []),
-            "info": self.raw.get("info", {}),
-            "total": self.total,
-            "limit": self.limit,
-            "offset": self.offset,
-        }
-        return self._pydantic_model.model_validate(remapped_raw)
+    # @property
+    # def pydantic(self):
+    #     """Return the data as a pydantic model."""
+    #     remapped_raw = {
+    #         "data": self.raw.get("clusters", []),
+    #         "info": self.raw.get("info", {}),
+    #         "total": self.total,
+    #         "limit": self.limit,
+    #         "offset": self.offset,
+    #     }
+    #     return self._pydantic_model.model_validate(remapped_raw)
 
-    @property
-    def size(self) -> int:
-        """Current page size."""
-        return len(self.raw.get("clusters", []))
+    # @property
+    # def size(self) -> int:
+    #     """Current page size."""
+    #     return len(self.raw.get("clusters", []))
 
-    @property
-    def total(self) -> int:
-        """Total number of results."""
-        return self.raw.get("info", {}).get("total", 0)
+    # @property
+    # def total(self) -> int:
+    #     """Total number of results."""
+    #     return self.raw.get("info", {}).get("total", 0)
 
-    @property
-    def limit(self) -> int:
-        """Page size."""
-        return self.raw.get("info", {}).get("limit", 0)
+    # @property
+    # def limit(self) -> int:
+    #     """Page size."""
+    #     return self.raw.get("info", {}).get("limit", 0)
 
-    @property
-    def offset(self) -> int:
-        """Page offset."""
-        return self.raw.get("info", {}).get("offset", 0)
+    # @property
+    # def offset(self) -> int:
+    #     """Page offset."""
+    #     return self.raw.get("info", {}).get("offset", 0)
 
 
 Range = tuple[int, int]
@@ -89,7 +89,7 @@ class TextReuseClustersResource(Resource):
 
     def find(
         self,
-        text: str | None = None,
+        term: str | None = None,
         title: str | AND[str] | OR[str] | None = None,
         order_by: FindTextReuseClustersOrderByLiteral | None = None,
         cluster_size: Range | AND[Range] | OR[Range] | None = None,
@@ -109,7 +109,7 @@ class TextReuseClustersResource(Resource):
     ) -> FindTextReuseClustersContainer:
 
         filters = _build_filters(
-            text=text,
+            text=term,
             cluster_size=cluster_size,
             title=title,
             lexical_overlap=lexical_overlap,
@@ -191,9 +191,7 @@ class TextReuseClustersResource(Resource):
         raise_for_error(result)
         return FacetDataContainer(
             result,
-            SearchFacet,
-            limit=limit,
-            offset=offset,
+            SearchFacetBucket,
             web_app_search_result_url=_build_web_app_find_clusters_url(
                 base_url=self._get_web_app_base_url(),
                 filters=filters_pb,

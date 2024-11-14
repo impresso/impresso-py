@@ -88,17 +88,17 @@ class DataContainer(Generic[IT, T]):
     @property
     def total(self) -> int:
         """Total number of results."""
-        return self.raw.get("total", 0)
+        return self.raw.get("pagination", {}).get("total", 0)
 
     @property
     def limit(self) -> int:
         """Page size."""
-        return self.raw.get("limit", 0)
+        return self.raw.get("pagination", {}).get("limit", 0)
 
     @property
     def offset(self) -> int:
         """Page offset."""
-        return self.raw.get("offset", 0)
+        return self.raw.get("pagination", {}).get("offset", 0)
 
     @property
     def size(self) -> int:

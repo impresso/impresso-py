@@ -7,9 +7,6 @@ from pandas import DataFrame, json_normalize
 
 from impresso.api_client.api.search import search
 from impresso.api_client.api.search_facets import get_search_facet
-from impresso.api_client.models.content_item_access_right import (
-    ContentItemAccessRightLiteral,
-)
 from impresso.api_client.models.get_search_facet_id import (
     GetSearchFacetId,
     GetSearchFacetIdLiteral,
@@ -18,13 +15,12 @@ from impresso.api_client.models.get_search_facet_order_by import (
     GetSearchFacetOrderBy,
     GetSearchFacetOrderByLiteral,
 )
-from impresso.api_client.models.search_group_by import SearchGroupBy
 from impresso.api_client.models.search_order_by import (
     SearchOrderBy,
     SearchOrderByLiteral,
 )
 from impresso.api_client.types import UNSET, Unset
-from impresso.api_models import ContentItem, BaseFind, Filter, Q, SearchFacet
+from impresso.api_models import ContentItem, BaseFind, Filter, Q, SearchFacetBucket
 from impresso.data_container import IT, DataContainer, T
 from impresso.resources.base import DEFAULT_PAGE_SIZE, Resource
 from impresso.structures import AND, OR, DateRange
@@ -37,6 +33,12 @@ class SearchResponseSchema(BaseFind):
     """Schema for the content items response."""
 
     data: list[ContentItem]
+
+
+class FacetResponseSchema(BaseFind):
+    """Schema for a facet response."""
+
+    data: list[SearchFacetBucket]
 
 
 class SearchDataContainer(DataContainer):
@@ -54,54 +56,62 @@ class SearchDataContainer(DataContainer):
 class FacetDataContainer(DataContainer):
     """Response of a get facet call."""
 
-    def __init__(
-        self,
-        data: IT,
-        pydantic_model: type[T],
-        limit: int | None,
-        offset: int | None,
-        web_app_search_result_url: str,
-    ):
-        super().__init__(data, pydantic_model, web_app_search_result_url)
-        self._limit = limit
-        self._offset = offset
+    # def __init__(
+    #     self,
+    #     data: IT,
+    #     pydantic_model: type[T],
+    #     limit: int | None,
+    #     offset: int | None,
+    #     web_app_search_result_url: str,
+    # ):
+    #     super().__init__(data, pydantic_model, web_app_search_result_url)
+    #     self._limit = limit
+    #     self._offset = offset
 
-    @property
-    def raw(self) -> dict[str, Any]:
-        """Return the data as a python dictionary."""
-        return self._data.to_dict()
+    # @property
+    # def raw(self) -> dict[str, Any]:
+    #     """Return the data as a python dictionary."""
+    #     return self._data.to_dict()
 
-    @property
-    def pydantic(self) -> SearchFacet:
-        """Return the data as a pydantic model."""
-        return self._pydantic_model.model_validate(self.raw)
+    # @property
+    # def pydantic(self) -> list[SearchFacetBucket]:
+    #     """Return the data as a pydantic model."""
+    #     return self._pydantic_model.model_validate(self.raw)
+
+    # @property
+    # def df(self) -> DataFrame:
+    #     """Return the data as a pandas dataframe."""
+    #     if len(self.raw["buckets"]) == 0:
+    #         return DataFrame()
+    #     return json_normalize(self.raw["buckets"]).set_index("val")
+
+    # @property
+    # def size(self) -> int:
+    #     """Current page size."""
+    #     return len(self.raw.get("buckets", []))
+
+    # @property
+    # def total(self) -> int:
+    #     """Total number of results."""
+    #     return self.raw.get("numBuckets", 0)
+
+    # @property
+    # def limit(self) -> int:
+    #     """Page size."""
+    #     return self._limit or len(self.raw["buckets"])
+
+    # @property
+    # def offset(self) -> int:
+    #     """Page offset."""
+    #     return self._offset or 0
 
     @property
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
-        if len(self.raw["buckets"]) == 0:
-            return DataFrame()
-        return json_normalize(self.raw["buckets"]).set_index("val")
-
-    @property
-    def size(self) -> int:
-        """Current page size."""
-        return len(self.raw.get("buckets", []))
-
-    @property
-    def total(self) -> int:
-        """Total number of results."""
-        return self.raw.get("numBuckets", 0)
-
-    @property
-    def limit(self) -> int:
-        """Page size."""
-        return self._limit or len(self.raw["buckets"])
-
-    @property
-    def offset(self) -> int:
-        """Page offset."""
-        return self._offset or 0
+        data = self._data.to_dict()["data"]
+        if len(data):
+            return json_normalize(self._data.to_dict()["data"]).set_index("value")
+        return DataFrame()
 
     def _get_preview_image_(self) -> str | None:
         if self.size == 0:
@@ -118,7 +128,7 @@ class SearchResource(Resource):
 
     def find(
         self,
-        q: str | AND[str] | OR[str] | None = None,
+        term: str | AND[str] | OR[str] | None = None,
         order_by: SearchOrderByLiteral | None = None,
         limit: int | None = None,
         offset: int | None = None,
@@ -133,9 +143,6 @@ class SearchResource(Resource):
         topic_id: str | AND[str] | OR[str] | None = None,
         collection_id: str | OR[str] | None = None,
         country: str | OR[str] | None = None,
-        access_rights: (
-            ContentItemAccessRightLiteral | OR[ContentItemAccessRightLiteral] | None
-        ) = None,
         partner_id: str | OR[str] | None = None,
         text_reuse_cluster_id: str | OR[str] | None = None,
     ) -> SearchDataContainer:
@@ -169,7 +176,7 @@ class SearchResource(Resource):
         """
 
         filters = self._build_filters(
-            string=q,
+            string=term,
             with_text_contents=with_text_contents,
             title=title,
             front_page=front_page,
@@ -181,7 +188,6 @@ class SearchResource(Resource):
             topic_id=topic_id,
             collection_id=collection_id,
             country=country,
-            access_rights=access_rights,
             partner_id=partner_id,
             text_reuse_cluster_id=text_reuse_cluster_id,
         )
@@ -190,13 +196,12 @@ class SearchResource(Resource):
 
         result = search.sync(
             client=self._api_client,
-            q=UNSET,
+            term=UNSET,
             order_by=(
                 get_enum_from_literal(order_by, SearchOrderBy)
                 if order_by is not None
                 else UNSET
             ),
-            group_by=get_enum_from_literal_required("articles", SearchGroupBy),
             filters=filters_pb if filters_pb else UNSET,
             limit=limit if limit is not None else DEFAULT_PAGE_SIZE,
             offset=offset if offset is not None else UNSET,
@@ -217,7 +222,7 @@ class SearchResource(Resource):
     def facet(
         self,
         facet: GetSearchFacetIdLiteral,
-        q: str | AND[str] | OR[str] | None = None,
+        term: str | AND[str] | OR[str] | None = None,
         order_by: GetSearchFacetOrderByLiteral | None = "value",
         limit: int | None = None,
         offset: int | None = None,
@@ -232,9 +237,6 @@ class SearchResource(Resource):
         topic_id: str | AND[str] | OR[str] | None = None,
         collection_id: str | OR[str] | None = None,
         country: str | OR[str] | None = None,
-        access_rights: (
-            ContentItemAccessRightLiteral | OR[ContentItemAccessRightLiteral] | None
-        ) = None,
         partner_id: str | OR[str] | None = None,
         text_reuse_cluster_id: str | OR[str] | None = None,
     ) -> FacetDataContainer:
@@ -244,7 +246,7 @@ class SearchResource(Resource):
             raise ValueError(f"{facet} is not a valid value")
 
         filters = self._build_filters(
-            string=q,
+            string=term,
             with_text_contents=with_text_contents,
             title=title,
             front_page=front_page,
@@ -256,7 +258,6 @@ class SearchResource(Resource):
             topic_id=topic_id,
             collection_id=collection_id,
             country=country,
-            access_rights=access_rights,
             partner_id=partner_id,
             text_reuse_cluster_id=text_reuse_cluster_id,
         )
@@ -278,10 +279,8 @@ class SearchResource(Resource):
         raise_for_error(result)
         return FacetDataContainer(
             result,
-            SearchFacet,
-            limit=limit,
-            offset=offset,
-            web_app_search_result_url=_build_web_app_facet_url(
+            FacetResponseSchema,
+            _build_web_app_facet_url(
                 f"{self._get_web_app_base_url()}/search",
                 facet=facet,
                 filters=filters_pb,
@@ -289,6 +288,19 @@ class SearchResource(Resource):
                 offset=offset,
             ),
         )
+        # return FacetDataContainer(
+        #     result,
+        #     SearchFacet,
+        #     limit=limit,
+        #     offset=offset,
+        #     web_app_search_result_url=_build_web_app_facet_url(
+        #         f"{self._get_web_app_base_url()}/search",
+        #         facet=facet,
+        #         filters=filters_pb,
+        #         limit=limit,
+        #         offset=offset,
+        #     ),
+        # )
 
     def _build_filters(
         self,
@@ -304,9 +316,6 @@ class SearchResource(Resource):
         topic_id: str | AND[str] | OR[str] | None = None,
         collection_id: str | OR[str] | None = None,
         country: str | OR[str] | None = None,
-        access_rights: (
-            ContentItemAccessRightLiteral | OR[ContentItemAccessRightLiteral] | None
-        ) = None,
         partner_id: str | OR[str] | None = None,
         text_reuse_cluster_id: str | OR[str] | None = None,
     ) -> list[Filter]:
@@ -342,8 +351,6 @@ class SearchResource(Resource):
             filters.extend(and_or_filter(collection_id, "collection"))
         if country is not None:
             filters.extend(and_or_filter(country, "country"))
-        if access_rights is not None:
-            filters.extend(and_or_filter(access_rights, "access_right"))  # type: ignore
         if partner_id is not None:
             filters.extend(and_or_filter(partner_id, "partner"))
         if text_reuse_cluster_id is not None:

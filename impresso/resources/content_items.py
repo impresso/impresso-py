@@ -1,22 +1,12 @@
-from typing import Any, Union
+from typing import Any
 
 from pandas import DataFrame, json_normalize
 
-from impresso.api_client.api.content_items import find_content_item, get_content_item
-from impresso.api_client.models.find_content_item_order_by import (
-    FindContentItemOrderBy,
-    FindContentItemOrderByLiteral,
-)
-from impresso.api_client.models.find_content_item_resolve import (
-    FindContentItemResolve,
-    FindContentItemResolveLiteral,
-)
-from impresso.api_client.types import UNSET, Unset
+from impresso.api_client.api.content_items import get_content_item
 from impresso.api_models import ContentItem, BaseFind
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
 from impresso.util.error import raise_for_error
-from impresso.util.py import get_enum_from_literal
 
 
 class ContentItemsResponseSchema(BaseFind):
@@ -70,23 +60,6 @@ class ContentItemsResource(Resource):
     """Get content items from the impresso database."""
 
     name = "content_items"
-
-    def find(
-        self,
-        resolve: Union[Unset, FindContentItemResolveLiteral] = UNSET,
-        order_by: Union[Unset, FindContentItemOrderByLiteral] = UNSET,
-        limit: Union[Unset, int] = UNSET,
-        offset: Union[Unset, int] = UNSET,
-    ):
-        result = find_content_item.sync(
-            client=self._api_client,
-            resolve=get_enum_from_literal(resolve, FindContentItemResolve),
-            order_by=get_enum_from_literal(order_by, FindContentItemOrderBy),
-            limit=limit,
-            offset=offset,
-        )
-        raise_for_error(result)
-        return ContentItemsDataContainer(result, ContentItemsResponseSchema)
 
     def get(self, id: str):
         result = get_content_item.sync(client=self._api_client, id=id)

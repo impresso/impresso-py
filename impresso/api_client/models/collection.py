@@ -1,120 +1,119 @@
 import datetime
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
+from typing import Any, Dict, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 from dateutil.parser import isoparse
 
+from ..models.collection_access_level import CollectionAccessLevel
 from ..types import UNSET, Unset
-
-if TYPE_CHECKING:
-    from ..models.base_user import BaseUser
-
 
 T = TypeVar("T", bound="Collection")
 
 
 @_attrs_define
 class Collection:
-    """Description of the collection object (Collection class)
+    """Collection details.
 
     Attributes:
-        uid (str):
-        name (str):
-        description (str):
-        status (str):  Example: PRI.
-        creation_date (datetime.datetime):
-        last_modified_date (datetime.datetime):
-        count_items (Union[int, str]):
-        creator (BaseUser):
-        labels (Union[Unset, List[str]]):
+        uid (str): Unique identifier of the collection.
+        title (Union[Unset, str]): Title of the collection.
+        description (Union[Unset, str]): Description of the collection.
+        access_level (Union[Unset, CollectionAccessLevel]): Access level of the collection.
+        created_at (Union[Unset, datetime.datetime]): Creation date of the collection.
+        updated_at (Union[Unset, datetime.datetime]): Last update date of the collection.
+        total_items (Union[Unset, int]): Total number of items in the collection.
     """
 
     uid: str
-    name: str
-    description: str
-    status: str
-    creation_date: datetime.datetime
-    last_modified_date: datetime.datetime
-    count_items: Union[int, str]
-    creator: "BaseUser"
-    labels: Union[Unset, List[str]] = UNSET
+    title: Union[Unset, str] = UNSET
+    description: Union[Unset, str] = UNSET
+    access_level: Union[Unset, CollectionAccessLevel] = UNSET
+    created_at: Union[Unset, datetime.datetime] = UNSET
+    updated_at: Union[Unset, datetime.datetime] = UNSET
+    total_items: Union[Unset, int] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
         uid = self.uid
 
-        name = self.name
+        title = self.title
 
         description = self.description
 
-        status = self.status
+        access_level: Union[Unset, str] = UNSET
+        if not isinstance(self.access_level, Unset):
+            access_level = self.access_level.value
 
-        creation_date = self.creation_date.isoformat()
+        created_at: Union[Unset, str] = UNSET
+        if not isinstance(self.created_at, Unset):
+            created_at = self.created_at.isoformat()
 
-        last_modified_date = self.last_modified_date.isoformat()
+        updated_at: Union[Unset, str] = UNSET
+        if not isinstance(self.updated_at, Unset):
+            updated_at = self.updated_at.isoformat()
 
-        count_items: Union[int, str]
-        count_items = self.count_items
-
-        creator = self.creator.to_dict()
-
-        labels: Union[Unset, List[str]] = UNSET
-        if not isinstance(self.labels, Unset):
-            labels = self.labels
+        total_items = self.total_items
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
                 "uid": uid,
-                "name": name,
-                "description": description,
-                "status": status,
-                "creationDate": creation_date,
-                "lastModifiedDate": last_modified_date,
-                "countItems": count_items,
-                "creator": creator,
             }
         )
-        if labels is not UNSET:
-            field_dict["labels"] = labels
+        if title is not UNSET:
+            field_dict["title"] = title
+        if description is not UNSET:
+            field_dict["description"] = description
+        if access_level is not UNSET:
+            field_dict["accessLevel"] = access_level
+        if created_at is not UNSET:
+            field_dict["createdAt"] = created_at
+        if updated_at is not UNSET:
+            field_dict["updatedAt"] = updated_at
+        if total_items is not UNSET:
+            field_dict["totalItems"] = total_items
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.base_user import BaseUser
-
         d = src_dict.copy()
         uid = d.pop("uid")
 
-        name = d.pop("name")
+        title = d.pop("title", UNSET)
 
-        description = d.pop("description")
+        description = d.pop("description", UNSET)
 
-        status = d.pop("status")
+        _access_level = d.pop("accessLevel", UNSET)
+        access_level: Union[Unset, CollectionAccessLevel]
+        if isinstance(_access_level, Unset):
+            access_level = UNSET
+        else:
+            access_level = CollectionAccessLevel(_access_level)
 
-        creation_date = isoparse(d.pop("creationDate"))
+        _created_at = d.pop("createdAt", UNSET)
+        created_at: Union[Unset, datetime.datetime]
+        if isinstance(_created_at, Unset):
+            created_at = UNSET
+        else:
+            created_at = isoparse(_created_at)
 
-        last_modified_date = isoparse(d.pop("lastModifiedDate"))
+        _updated_at = d.pop("updatedAt", UNSET)
+        updated_at: Union[Unset, datetime.datetime]
+        if isinstance(_updated_at, Unset):
+            updated_at = UNSET
+        else:
+            updated_at = isoparse(_updated_at)
 
-        def _parse_count_items(data: object) -> Union[int, str]:
-            return cast(Union[int, str], data)
-
-        count_items = _parse_count_items(d.pop("countItems"))
-
-        creator = BaseUser.from_dict(d.pop("creator"))
-
-        labels = cast(List[str], d.pop("labels", UNSET))
+        total_items = d.pop("totalItems", UNSET)
 
         collection = cls(
             uid=uid,
-            name=name,
+            title=title,
             description=description,
-            status=status,
-            creation_date=creation_date,
-            last_modified_date=last_modified_date,
-            count_items=count_items,
-            creator=creator,
-            labels=labels,
+            access_level=access_level,
+            created_at=created_at,
+            updated_at=updated_at,
+            total_items=total_items,
         )
 
         return collection

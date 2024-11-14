@@ -57,12 +57,11 @@ class EntitiesResource(Resource):
 
     def find(
         self,
-        q: str | None = None,
+        term: str | None = None,
         wikidata_id: str | AND[str] | OR[str] | None = None,
         entity_id: str | AND[str] | OR[str] | None = None,
         entity_type: EntityType | AND[EntityType] | OR[EntityType] | None = None,
         order_by: FindEntitiesOrderByLiteral | None = None,
-        load_wikidata: bool = False,
         limit: int | None = None,
         offset: int | None = None,
     ) -> FindEntitiesContainer:
@@ -80,7 +79,7 @@ class EntitiesResource(Resource):
 
         result = find_entities.sync(
             client=self._api_client,
-            q=q if q is not None else UNSET,
+            term=term if term is not None else UNSET,
             order_by=(
                 get_enum_from_literal(order_by, FindEntitiesOrderBy)
                 if order_by is not None
@@ -89,7 +88,6 @@ class EntitiesResource(Resource):
             limit=limit if limit is not None else UNSET,
             offset=offset if offset is not None else UNSET,
             filters=filters_pb if filters_pb else UNSET,
-            resolve=load_wikidata,
         )
         raise_for_error(result)
         return FindEntitiesContainer(
@@ -98,7 +96,7 @@ class EntitiesResource(Resource):
             web_app_search_result_url=(
                 _build_web_app_find_entities_url(
                     base_url=self._get_web_app_base_url(),
-                    q=q,
+                    term=term,
                 )
                 if wikidata_id is None and entity_type is None
                 else None
@@ -125,10 +123,10 @@ class EntitiesResource(Resource):
 
 def _build_web_app_find_entities_url(
     base_url: str,
-    q: str | None = None,
+    term: str | None = None,
 ) -> str:
     query_params = {
-        "q": q,
+        "q": term,
     }
     query_string = "&".join(
         f"{key}={value}" for key, value in query_params.items() if value is not None
