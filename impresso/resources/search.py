@@ -1,4 +1,3 @@
-from typing import Any
 import matplotlib.pyplot as plt
 import io
 import base64
@@ -21,12 +20,12 @@ from impresso.api_client.models.search_order_by import (
 )
 from impresso.api_client.types import UNSET, Unset
 from impresso.api_models import ContentItem, BaseFind, Filter, Q, SearchFacetBucket
-from impresso.data_container import IT, DataContainer, T
+from impresso.data_container import DataContainer
 from impresso.resources.base import DEFAULT_PAGE_SIZE, Resource
 from impresso.structures import AND, OR, DateRange
 from impresso.util.error import raise_for_error
 from impresso.util.filters import and_or_filter, filters_as_protobuf
-from impresso.util.py import get_enum_from_literal, get_enum_from_literal_required
+from impresso.util.py import get_enum_from_literal
 
 
 class SearchResponseSchema(BaseFind):
