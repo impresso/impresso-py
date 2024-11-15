@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Any, Literal
 
 from pandas import DataFrame, json_normalize
 
@@ -45,6 +45,10 @@ class GetEntityContainer(DataContainer):
         if len(data):
             return json_normalize([self._data.to_dict()]).set_index("uid")
         return DataFrame()
+
+    def _get_next_page_kwargs(self) -> dict[str, Any] | None:
+        """Get the next page kwargs."""
+        return None
 
 
 EntityType = Literal["person", "location"]

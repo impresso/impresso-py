@@ -55,6 +55,10 @@ class ContentItemDataContainer(DataContainer):
         """Total number of results."""
         return self.size
 
+    def _get_next_page_kwargs(self) -> dict[str, Any] | None:
+        """Get the next page kwargs."""
+        return None
+
 
 class ContentItemsResource(Resource):
     """Get content items from the impresso database."""

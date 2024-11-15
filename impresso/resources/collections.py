@@ -1,3 +1,4 @@
+from typing import Any
 from pandas import DataFrame, json_normalize
 from impresso.api_client.api.collections import (
     find_collections,
@@ -61,6 +62,10 @@ class GetCollectionContainer(DataContainer):
     def total(self) -> int:
         """Total number of results."""
         return self.size
+
+    def _get_next_page_kwargs(self) -> dict[str, Any] | None:
+        """Get the next page kwargs."""
+        return None
 
 
 class CollectionsResource(Resource):

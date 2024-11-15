@@ -73,6 +73,9 @@ class TextReusePassagesResource(Resource):
         mention: str | AND[str] | OR[str] | None = None,
         entity_id: str | AND[str] | OR[str] | None = None,
     ) -> FindTextReusePassagesContainer:
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
+
         # reusing build filters from clusters - they are the same
         filters = _build_filters(
             cluster_id=cluster_id,
@@ -109,6 +112,7 @@ class TextReusePassagesResource(Resource):
         return FindTextReusePassagesContainer(
             result,
             FindTextReusePassageResponseSchema,
+            data_provider=(self.find, kwargs),
             web_app_search_result_url=_build_web_app_find_passages_url(
                 base_url=self._get_web_app_base_url(),
                 filters=filters_pb,
@@ -140,6 +144,9 @@ class TextReusePassagesResource(Resource):
         mention: str | AND[str] | OR[str] | None = None,
         entity_id: str | AND[str] | OR[str] | None = None,
     ) -> FacetDataContainer:
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
+
         facet_id = get_enum_from_literal(facet, GetTrPassagesFacetId)
         if isinstance(facet_id, Unset):
             raise ValueError(f"{facet} is not a valid value")
@@ -182,6 +189,7 @@ class TextReusePassagesResource(Resource):
         return FacetDataContainer(
             result,
             SearchFacetBucket,
+            data_provider=(self.facet, kwargs),
             web_app_search_result_url=_build_web_app_find_passages_url(
                 base_url=self._get_web_app_base_url(),
                 filters=filters_pb,
