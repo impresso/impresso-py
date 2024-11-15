@@ -76,6 +76,8 @@ class CollectionsResource(Resource):
         offset: int | None = None,
     ) -> FindCollectionsContainer:
         """Find collections."""
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
 
         result = find_collections.sync(
             client=self._api_client,
@@ -92,6 +94,7 @@ class CollectionsResource(Resource):
         return FindCollectionsContainer(
             result,
             FindCollectionsSchema,
+            data_provider=(self.find, kwargs),
             web_app_search_result_url=_build_web_app_find_collections_url(
                 base_url=self._get_web_app_base_url(),
                 term=term,
@@ -101,6 +104,8 @@ class CollectionsResource(Resource):
 
     def get(self, id: str) -> GetCollectionContainer:
         """Get collection by ID."""
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
 
         result = get_collection.sync(
             client=self._api_client,
@@ -110,6 +115,7 @@ class CollectionsResource(Resource):
         return GetCollectionContainer(
             result,
             FindCollectionsSchema,
+            data_provider=(self.get, kwargs),
             web_app_search_result_url=_build_web_app_get_collection_url(
                 base_url=self._get_web_app_base_url(),
                 collection_id=id,

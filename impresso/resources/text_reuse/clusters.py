@@ -46,38 +46,6 @@ class FindTextReuseClustersContainer(DataContainer):
             return json_normalize(data).set_index("uid")
         return DataFrame()
 
-    # @property
-    # def pydantic(self):
-    #     """Return the data as a pydantic model."""
-    #     remapped_raw = {
-    #         "data": self.raw.get("clusters", []),
-    #         "info": self.raw.get("info", {}),
-    #         "total": self.total,
-    #         "limit": self.limit,
-    #         "offset": self.offset,
-    #     }
-    #     return self._pydantic_model.model_validate(remapped_raw)
-
-    # @property
-    # def size(self) -> int:
-    #     """Current page size."""
-    #     return len(self.raw.get("clusters", []))
-
-    # @property
-    # def total(self) -> int:
-    #     """Total number of results."""
-    #     return self.raw.get("info", {}).get("total", 0)
-
-    # @property
-    # def limit(self) -> int:
-    #     """Page size."""
-    #     return self.raw.get("info", {}).get("limit", 0)
-
-    # @property
-    # def offset(self) -> int:
-    #     """Page offset."""
-    #     return self.raw.get("info", {}).get("offset", 0)
-
 
 Range = tuple[int, int]
 
@@ -107,6 +75,8 @@ class TextReuseClustersResource(Resource):
         mention: str | AND[str] | OR[str] | None = None,
         entity_id: str | AND[str] | OR[str] | None = None,
     ) -> FindTextReuseClustersContainer:
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
 
         filters = _build_filters(
             text=term,
@@ -141,6 +111,7 @@ class TextReuseClustersResource(Resource):
         return FindTextReuseClustersContainer(
             result,
             FindTextReuseClusterResponseSchema,
+            data_provider=(self.find, kwargs),
             web_app_search_result_url=_build_web_app_find_clusters_url(
                 base_url=self._get_web_app_base_url(),
                 filters=filters_pb,
@@ -162,6 +133,9 @@ class TextReuseClustersResource(Resource):
         lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
         day_delta: Range | AND[Range] | OR[Range] | None = None,
     ) -> FacetDataContainer:
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
+
         facet_id = get_enum_from_literal(facet, GetTrClustersFacetId)
         if isinstance(facet_id, Unset):
             raise ValueError(f"{facet} is not a valid value")
@@ -192,6 +166,7 @@ class TextReuseClustersResource(Resource):
         return FacetDataContainer(
             result,
             SearchFacetBucket,
+            data_provider=(self.facet, kwargs),
             web_app_search_result_url=_build_web_app_find_clusters_url(
                 base_url=self._get_web_app_base_url(),
                 filters=filters_pb,

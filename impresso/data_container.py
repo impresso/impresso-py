@@ -1,4 +1,4 @@
-from typing import Any, Generic, TypeVar
+from typing import Any, Callable, Generic, Iterator, TypeVar
 from pydantic import BaseModel
 from pandas import DataFrame
 
@@ -13,12 +13,14 @@ class DataContainer(Generic[IT, T]):
         self,
         data: IT,
         pydantic_model: type[T],
+        data_provider: tuple[Callable[..., Any], dict[Any, Any]],
         web_app_search_result_url: str | None = None,
     ):
         if data is None or getattr(data, "to_dict") is None:
             raise ValueError(f"Unexpected data object: {data}")
         self._data = data
         self._pydantic_model = pydantic_model
+        self._data_provider = data_provider
         self._web_app_search_result_url = web_app_search_result_url
 
     def _repr_html_(self):
@@ -109,3 +111,42 @@ class DataContainer(Generic[IT, T]):
     def url(self) -> str | None:
         """A URL of the result set in the Impresso web app."""
         return self._web_app_search_result_url
+
+    @property
+    def query_parameters(self) -> dict[str, Any]:
+        """Query parameters used to fetch this result container."""
+        return self._data_provider[1]
+
+    def _get_next_page_kwargs(self) -> dict[str, Any] | None:
+        """Get the next page kwargs."""
+        if self._data_provider is None:
+            return {}
+        offset = self.offset + self.limit
+        if offset >= self.total:
+            return None
+        return {
+            **self._data_provider[1],
+            "offset": self.offset + self.limit,
+        }
+
+    def next_page(self) -> Iterator["DataContainer[IT, T]"]:
+        """Get the next page of results."""
+        if self._data_provider is None:
+            raise StopIteration()
+
+        current_result = self
+        while (current_result.offset + current_result.limit) < current_result.total:
+            kwargs = current_result._get_next_page_kwargs()
+            if kwargs is None:
+                break
+            next_data_container = self._data_provider[0](**kwargs)
+            current_result = next_data_container
+            yield next_data_container
+
+    def __next__(self) -> "DataContainer[IT, T]":
+        """Get the next page of results."""
+        return next(self.next_page())
+
+    def __iter__(self) -> Iterator["DataContainer[IT, T]"]:
+        """Get the next page of results."""
+        return self.next_page()

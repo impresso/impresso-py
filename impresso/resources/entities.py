@@ -66,6 +66,8 @@ class EntitiesResource(Resource):
         offset: int | None = None,
     ) -> FindEntitiesContainer:
         """Find entities."""
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
 
         filters: list[Filter] = []
         if entity_type is not None:
@@ -93,6 +95,7 @@ class EntitiesResource(Resource):
         return FindEntitiesContainer(
             result,
             FindEntitiesSchema,
+            data_provider=(self.find, kwargs),
             web_app_search_result_url=(
                 _build_web_app_find_entities_url(
                     base_url=self._get_web_app_base_url(),
@@ -105,6 +108,8 @@ class EntitiesResource(Resource):
 
     def get(self, id: str) -> GetEntityContainer:
         """Get entity by ID."""
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
 
         result = get_entity.sync(
             client=self._api_client,
@@ -114,6 +119,7 @@ class EntitiesResource(Resource):
         return GetEntityContainer(
             result,
             FindEntitiesSchema,
+            data_provider=(self.get, kwargs),
             web_app_search_result_url=_build_web_app_get_entity_url(
                 base_url=self._get_web_app_base_url(),
                 id=id,

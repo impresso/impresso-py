@@ -43,6 +43,8 @@ class NewspapersResource(Resource):
         limit: int | None = None,
         offset: int | None = None,
     ) -> FindNewspapersContainer:
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
 
         result = find_newspapers.sync(
             client=self._api_client,
@@ -59,6 +61,7 @@ class NewspapersResource(Resource):
         return FindNewspapersContainer(
             result,
             FindNewspapersSchema,
+            data_provider=(self.find, kwargs),
             web_app_search_result_url=_build_web_app_newspapers_url(
                 base_url=self._get_web_app_base_url(),
                 term=term,

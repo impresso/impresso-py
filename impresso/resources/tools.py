@@ -66,6 +66,9 @@ class ToolsResource(Resource):
         Returns:
             NerContainer: List of named entities
         """
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
+
         result = perform_ner.sync(
             client=self._api_client,
             body=ImpressoNamedEntityRecognitionRequest(
@@ -77,6 +80,7 @@ class ToolsResource(Resource):
         return NerContainer(
             result,
             ImpressoNerSchema,
+            data_provider=(self.ner, kwargs),
             web_app_search_result_url=None,
         )
 
@@ -91,6 +95,9 @@ class ToolsResource(Resource):
         Returns:
             NerContainer: List of named entities
         """
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
+
         result = perform_ner.sync(
             client=self._api_client,
             body=ImpressoNamedEntityRecognitionRequest(
@@ -102,6 +109,7 @@ class ToolsResource(Resource):
         return NerContainer(
             result,
             ImpressoNerSchema,
+            data_provider=(self.ner_nel, kwargs),
             web_app_search_result_url=None,
         )
 
@@ -116,6 +124,9 @@ class ToolsResource(Resource):
         Returns:
             NerContainer: List of named entities
         """
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
+
         result = perform_ner.sync(
             client=self._api_client,
             body=ImpressoNamedEntityRecognitionRequest(
@@ -127,5 +138,6 @@ class ToolsResource(Resource):
         return NerContainer(
             result,
             ImpressoNerSchema,
+            data_provider=(self.nel, kwargs),
             web_app_search_result_url=None,
         )

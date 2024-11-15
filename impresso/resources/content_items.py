@@ -62,6 +62,9 @@ class ContentItemsResource(Resource):
     name = "content_items"
 
     def get(self, id: str):
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
+
         result = get_content_item.sync(client=self._api_client, id=id)
         raise_for_error(result)
 
@@ -72,5 +75,6 @@ class ContentItemsResource(Resource):
         return ContentItemDataContainer(
             result,
             ContentItem,
-            f"{self._get_web_app_base_url()}/issue/{issue_id}/view?articleId={article_id}",
+            data_provider=(self.get, kwargs),
+            web_app_search_result_url=f"{self._get_web_app_base_url()}/issue/{issue_id}/view?articleId={article_id}",
         )

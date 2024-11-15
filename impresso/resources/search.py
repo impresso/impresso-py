@@ -55,55 +55,6 @@ class SearchDataContainer(DataContainer):
 class FacetDataContainer(DataContainer):
     """Response of a get facet call."""
 
-    # def __init__(
-    #     self,
-    #     data: IT,
-    #     pydantic_model: type[T],
-    #     limit: int | None,
-    #     offset: int | None,
-    #     web_app_search_result_url: str,
-    # ):
-    #     super().__init__(data, pydantic_model, web_app_search_result_url)
-    #     self._limit = limit
-    #     self._offset = offset
-
-    # @property
-    # def raw(self) -> dict[str, Any]:
-    #     """Return the data as a python dictionary."""
-    #     return self._data.to_dict()
-
-    # @property
-    # def pydantic(self) -> list[SearchFacetBucket]:
-    #     """Return the data as a pydantic model."""
-    #     return self._pydantic_model.model_validate(self.raw)
-
-    # @property
-    # def df(self) -> DataFrame:
-    #     """Return the data as a pandas dataframe."""
-    #     if len(self.raw["buckets"]) == 0:
-    #         return DataFrame()
-    #     return json_normalize(self.raw["buckets"]).set_index("val")
-
-    # @property
-    # def size(self) -> int:
-    #     """Current page size."""
-    #     return len(self.raw.get("buckets", []))
-
-    # @property
-    # def total(self) -> int:
-    #     """Total number of results."""
-    #     return self.raw.get("numBuckets", 0)
-
-    # @property
-    # def limit(self) -> int:
-    #     """Page size."""
-    #     return self._limit or len(self.raw["buckets"])
-
-    # @property
-    # def offset(self) -> int:
-    #     """Page offset."""
-    #     return self._offset or 0
-
     @property
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
@@ -173,6 +124,8 @@ class SearchResource(Resource):
         Returns:
             _type_: _description_
         """
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
 
         filters = self._build_filters(
             string=term,
@@ -206,10 +159,12 @@ class SearchResource(Resource):
             offset=offset if offset is not None else UNSET,
         )
         raise_for_error(result)
+
         return SearchDataContainer(
             result,
             SearchResponseSchema,
-            _build_web_app_search_url(
+            data_provider=(self.find, kwargs),
+            web_app_search_result_url=_build_web_app_search_url(
                 f"{self._get_web_app_base_url()}/search",
                 order_by=order_by,
                 filters=filters_pb,
@@ -239,6 +194,8 @@ class SearchResource(Resource):
         partner_id: str | OR[str] | None = None,
         text_reuse_cluster_id: str | OR[str] | None = None,
     ) -> FacetDataContainer:
+        kwargs = {k: v for k, v in locals().items() if v is not None}
+        kwargs.pop("self")
 
         facet_id = get_enum_from_literal(facet, GetSearchFacetId)
         if isinstance(facet_id, Unset):
@@ -279,7 +236,8 @@ class SearchResource(Resource):
         return FacetDataContainer(
             result,
             FacetResponseSchema,
-            _build_web_app_facet_url(
+            data_provider=(self.facet, kwargs),
+            web_app_search_result_url=_build_web_app_facet_url(
                 f"{self._get_web_app_base_url()}/search",
                 facet=facet,
                 filters=filters_pb,
@@ -287,19 +245,6 @@ class SearchResource(Resource):
                 offset=offset,
             ),
         )
-        # return FacetDataContainer(
-        #     result,
-        #     SearchFacet,
-        #     limit=limit,
-        #     offset=offset,
-        #     web_app_search_result_url=_build_web_app_facet_url(
-        #         f"{self._get_web_app_base_url()}/search",
-        #         facet=facet,
-        #         filters=filters_pb,
-        #         limit=limit,
-        #         offset=offset,
-        #     ),
-        # )
 
     def _build_filters(
         self,
