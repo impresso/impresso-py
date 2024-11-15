@@ -7,7 +7,7 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.collectable_items_updated_response import CollectableItemsUpdatedResponse
 from ...models.error import Error
-from ...models.update_collectable_items import UpdateCollectableItems
+from ...models.update_collectable_items_request import UpdateCollectableItemsRequest
 from ...types import Response
 
 
@@ -15,7 +15,7 @@ def _get_kwargs(
     collection_id: str,
     id: int,
     *,
-    body: UpdateCollectableItems,
+    body: UpdateCollectableItemsRequest,
 ) -> Dict[str, Any]:
     headers: Dict[str, Any] = {}
 
@@ -86,14 +86,14 @@ def sync_detailed(
     id: int,
     *,
     client: Union[AuthenticatedClient, Client],
-    body: UpdateCollectableItems,
+    body: UpdateCollectableItemsRequest,
 ) -> Response[Union[CollectableItemsUpdatedResponse, Error]]:
     """Updates the resource identified by id using data.
 
     Args:
         collection_id (str):
         id (int):
-        body (UpdateCollectableItems): Request to update collectible items in a collection
+        body (UpdateCollectableItemsRequest): Request to update collectible items in a collection
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -121,14 +121,14 @@ def sync(
     id: int,
     *,
     client: Union[AuthenticatedClient, Client],
-    body: UpdateCollectableItems,
+    body: UpdateCollectableItemsRequest,
 ) -> Optional[Union[CollectableItemsUpdatedResponse, Error]]:
     """Updates the resource identified by id using data.
 
     Args:
         collection_id (str):
         id (int):
-        body (UpdateCollectableItems): Request to update collectible items in a collection
+        body (UpdateCollectableItemsRequest): Request to update collectible items in a collection
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -151,14 +151,14 @@ async def asyncio_detailed(
     id: int,
     *,
     client: Union[AuthenticatedClient, Client],
-    body: UpdateCollectableItems,
+    body: UpdateCollectableItemsRequest,
 ) -> Response[Union[CollectableItemsUpdatedResponse, Error]]:
     """Updates the resource identified by id using data.
 
     Args:
         collection_id (str):
         id (int):
-        body (UpdateCollectableItems): Request to update collectible items in a collection
+        body (UpdateCollectableItemsRequest): Request to update collectible items in a collection
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -184,14 +184,14 @@ async def asyncio(
     id: int,
     *,
     client: Union[AuthenticatedClient, Client],
-    body: UpdateCollectableItems,
+    body: UpdateCollectableItemsRequest,
 ) -> Optional[Union[CollectableItemsUpdatedResponse, Error]]:
     """Updates the resource identified by id using data.
 
     Args:
         collection_id (str):
         id (int):
-        body (UpdateCollectableItems): Request to update collectible items in a collection
+        body (UpdateCollectableItemsRequest): Request to update collectible items in a collection
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

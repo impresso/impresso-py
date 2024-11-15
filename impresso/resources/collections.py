@@ -8,7 +8,9 @@ from impresso.api_client.models.find_collections_order_by import (
     FindCollectionsOrderBy,
     FindCollectionsOrderByLiteral,
 )
-from impresso.api_client.models.update_collectable_items import UpdateCollectableItems
+from impresso.api_client.models.update_collectable_items_request import (
+    UpdateCollectableItemsRequest,
+)
 from impresso.api_client.types import UNSET
 from impresso.api_models import BaseFind, Collection
 from impresso.data_container import DataContainer
@@ -68,7 +70,7 @@ class CollectionsResource(Resource):
 
     def find(
         self,
-        q: str | None = None,
+        term: str | None = None,
         order_by: FindCollectionsOrderByLiteral | None = None,
         limit: int | None = None,
         offset: int | None = None,
@@ -77,7 +79,7 @@ class CollectionsResource(Resource):
 
         result = find_collections.sync(
             client=self._api_client,
-            q=q if q is not None else UNSET,
+            term=term if term is not None else UNSET,
             order_by=(
                 get_enum_from_literal(order_by, FindCollectionsOrderBy)  # type: ignore
                 if order_by is not None
@@ -92,7 +94,7 @@ class CollectionsResource(Resource):
             FindCollectionsSchema,
             web_app_search_result_url=_build_web_app_find_collections_url(
                 base_url=self._get_web_app_base_url(),
-                q=q,
+                term=term,
                 order_by=order_by,
             ),
         )
@@ -137,7 +139,7 @@ class CollectionsResource(Resource):
         result = patch_collections_collection_id_items.sync(
             client=self._api_client,
             collection_id=collection_id,
-            body=UpdateCollectableItems(
+            body=UpdateCollectableItemsRequest(
                 add=item_ids,
                 remove=UNSET,
             ),
@@ -155,7 +157,7 @@ class CollectionsResource(Resource):
         result = patch_collections_collection_id_items.sync(
             client=self._api_client,
             collection_id=collection_id,
-            body=UpdateCollectableItems(
+            body=UpdateCollectableItemsRequest(
                 remove=item_ids,
                 add=UNSET,
             ),
@@ -165,12 +167,12 @@ class CollectionsResource(Resource):
 
 def _build_web_app_find_collections_url(
     base_url: str,
-    q: str | None = None,
+    term: str | None = None,
     order_by: FindCollectionsOrderByLiteral | None = None,
 ) -> str:
     query_params = {
         "orderBy": order_by,
-        "q": q,
+        "q": term,
     }
     query_string = "&".join(
         f"{key}={value}" for key, value in query_params.items() if value is not None

@@ -7,14 +7,14 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.collection import Collection
 from ...models.error import Error
-from ...models.new_collection import NewCollection
+from ...models.new_collection_request import NewCollectionRequest
 from ...types import Response
 
 
 def _get_kwargs(
     id: str,
     *,
-    body: NewCollection,
+    body: NewCollectionRequest,
 ) -> Dict[str, Any]:
     headers: Dict[str, Any] = {}
 
@@ -84,13 +84,13 @@ def sync_detailed(
     id: str,
     *,
     client: AuthenticatedClient,
-    body: NewCollection,
+    body: NewCollectionRequest,
 ) -> Response[Union[Collection, Error]]:
     """Update a collection
 
     Args:
         id (str):
-        body (NewCollection): Create new collection request
+        body (NewCollectionRequest): Create new collection request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -116,13 +116,13 @@ def sync(
     id: str,
     *,
     client: AuthenticatedClient,
-    body: NewCollection,
+    body: NewCollectionRequest,
 ) -> Optional[Union[Collection, Error]]:
     """Update a collection
 
     Args:
         id (str):
-        body (NewCollection): Create new collection request
+        body (NewCollectionRequest): Create new collection request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -143,13 +143,13 @@ async def asyncio_detailed(
     id: str,
     *,
     client: AuthenticatedClient,
-    body: NewCollection,
+    body: NewCollectionRequest,
 ) -> Response[Union[Collection, Error]]:
     """Update a collection
 
     Args:
         id (str):
-        body (NewCollection): Create new collection request
+        body (NewCollectionRequest): Create new collection request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -173,13 +173,13 @@ async def asyncio(
     id: str,
     *,
     client: AuthenticatedClient,
-    body: NewCollection,
+    body: NewCollectionRequest,
 ) -> Optional[Union[Collection, Error]]:
     """Update a collection
 
     Args:
         id (str):
-        body (NewCollection): Create new collection request
+        body (NewCollectionRequest): Create new collection request
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

@@ -38,7 +38,7 @@ class NewspapersResource(Resource):
 
     def find(
         self,
-        q: str | None = None,
+        term: str | None = None,
         order_by: FindNewspapersOrderByLiteral | None = None,
         limit: int | None = None,
         offset: int | None = None,
@@ -46,7 +46,7 @@ class NewspapersResource(Resource):
 
         result = find_newspapers.sync(
             client=self._api_client,
-            q=q if q is not None else UNSET,
+            term=term if term is not None else UNSET,
             order_by=(
                 get_enum_from_literal(order_by, FindNewspapersOrderBy)
                 if order_by is not None
@@ -61,7 +61,7 @@ class NewspapersResource(Resource):
             FindNewspapersSchema,
             web_app_search_result_url=_build_web_app_newspapers_url(
                 base_url=self._get_web_app_base_url(),
-                q=q,
+                term=term,
                 order_by=order_by,
             ),
         )
@@ -69,12 +69,12 @@ class NewspapersResource(Resource):
 
 def _build_web_app_newspapers_url(
     base_url: str,
-    q: str | None = None,
+    term: str | None = None,
     order_by: FindNewspapersOrderByLiteral | None = None,
 ) -> str:
     query_params = {
         "orderBy": order_by,
-        "q": q,
+        "q": term,
     }
     query_string = "&".join(
         f"{key}={value}" for key, value in query_params.items() if value is not None

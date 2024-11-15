@@ -7,41 +7,28 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
 from ...models.filter_ import Filter
-from ...models.search_facets import SearchFacets
-from ...models.search_group_by import SearchGroupBy
+from ...models.search_base_find_response import SearchBaseFindResponse
 from ...models.search_order_by import SearchOrderBy
-from ...models.search_response_200 import SearchResponse200
 from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     *,
-    q: Union[Unset, str] = UNSET,
-    group_by: SearchGroupBy = SearchGroupBy.ARTICLES,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
-    facets: Union[Unset, SearchFacets] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Dict[str, Any]:
     params: Dict[str, Any] = {}
 
-    params["q"] = q
-
-    json_group_by = group_by.value
-    params["group_by"] = json_group_by
+    params["term"] = term
 
     json_order_by: Union[Unset, str] = UNSET
     if not isinstance(order_by, Unset):
         json_order_by = order_by.value
 
     params["order_by"] = json_order_by
-
-    json_facets: Union[Unset, str] = UNSET
-    if not isinstance(facets, Unset):
-        json_facets = facets.value
-
-    params["facets"] = json_facets
 
     json_filters: Union[List[Dict[str, Any]], Unset, str]
     if isinstance(filters, Unset):
@@ -73,9 +60,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Error, SearchResponse200]]:
+) -> Optional[Union[Error, SearchBaseFindResponse]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = SearchResponse200.from_dict(response.json())
+        response_200 = SearchBaseFindResponse.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -110,7 +97,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Error, SearchResponse200]]:
+) -> Response[Union[Error, SearchBaseFindResponse]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -122,21 +109,17 @@ def _build_response(
 def sync_detailed(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    group_by: SearchGroupBy = SearchGroupBy.ARTICLES,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
-    facets: Union[Unset, SearchFacets] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, SearchResponse200]]:
+) -> Response[Union[Error, SearchBaseFindResponse]]:
     """Find content items that match the given query
 
     Args:
-        q (Union[Unset, str]):
-        group_by (SearchGroupBy):  Default: SearchGroupBy.ARTICLES.
+        term (Union[Unset, str]):
         order_by (Union[Unset, SearchOrderBy]):
-        facets (Union[Unset, SearchFacets]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
@@ -146,14 +129,12 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, SearchResponse200]]
+        Response[Union[Error, SearchBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
-        q=q,
-        group_by=group_by,
+        term=term,
         order_by=order_by,
-        facets=facets,
         filters=filters,
         limit=limit,
         offset=offset,
@@ -169,21 +150,17 @@ def sync_detailed(
 def sync(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    group_by: SearchGroupBy = SearchGroupBy.ARTICLES,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
-    facets: Union[Unset, SearchFacets] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, SearchResponse200]]:
+) -> Optional[Union[Error, SearchBaseFindResponse]]:
     """Find content items that match the given query
 
     Args:
-        q (Union[Unset, str]):
-        group_by (SearchGroupBy):  Default: SearchGroupBy.ARTICLES.
+        term (Union[Unset, str]):
         order_by (Union[Unset, SearchOrderBy]):
-        facets (Union[Unset, SearchFacets]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
@@ -193,15 +170,13 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, SearchResponse200]
+        Union[Error, SearchBaseFindResponse]
     """
 
     return sync_detailed(
         client=client,
-        q=q,
-        group_by=group_by,
+        term=term,
         order_by=order_by,
-        facets=facets,
         filters=filters,
         limit=limit,
         offset=offset,
@@ -211,21 +186,17 @@ def sync(
 async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    group_by: SearchGroupBy = SearchGroupBy.ARTICLES,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
-    facets: Union[Unset, SearchFacets] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, SearchResponse200]]:
+) -> Response[Union[Error, SearchBaseFindResponse]]:
     """Find content items that match the given query
 
     Args:
-        q (Union[Unset, str]):
-        group_by (SearchGroupBy):  Default: SearchGroupBy.ARTICLES.
+        term (Union[Unset, str]):
         order_by (Union[Unset, SearchOrderBy]):
-        facets (Union[Unset, SearchFacets]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
@@ -235,14 +206,12 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, SearchResponse200]]
+        Response[Union[Error, SearchBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
-        q=q,
-        group_by=group_by,
+        term=term,
         order_by=order_by,
-        facets=facets,
         filters=filters,
         limit=limit,
         offset=offset,
@@ -256,21 +225,17 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: AuthenticatedClient,
-    q: Union[Unset, str] = UNSET,
-    group_by: SearchGroupBy = SearchGroupBy.ARTICLES,
+    term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
-    facets: Union[Unset, SearchFacets] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, SearchResponse200]]:
+) -> Optional[Union[Error, SearchBaseFindResponse]]:
     """Find content items that match the given query
 
     Args:
-        q (Union[Unset, str]):
-        group_by (SearchGroupBy):  Default: SearchGroupBy.ARTICLES.
+        term (Union[Unset, str]):
         order_by (Union[Unset, SearchOrderBy]):
-        facets (Union[Unset, SearchFacets]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
@@ -280,16 +245,14 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, SearchResponse200]
+        Union[Error, SearchBaseFindResponse]
     """
 
     return (
         await asyncio_detailed(
             client=client,
-            q=q,
-            group_by=group_by,
+            term=term,
             order_by=order_by,
-            facets=facets,
             filters=filters,
             limit=limit,
             offset=offset,

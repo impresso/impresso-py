@@ -7,11 +7,9 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
 from ...models.filter_ import Filter
-from ...models.get_search_facet_group_by import GetSearchFacetGroupBy
+from ...models.get_search_facet_base_find_response import GetSearchFacetBaseFindResponse
 from ...models.get_search_facet_id import GetSearchFacetId
 from ...models.get_search_facet_order_by import GetSearchFacetOrderBy
-from ...models.get_search_facet_range_include import GetSearchFacetRangeInclude
-from ...models.search_facet import SearchFacet
 from ...types import UNSET, Response, Unset
 
 
@@ -19,12 +17,7 @@ def _get_kwargs(
     id: GetSearchFacetId,
     *,
     order_by: Union[Unset, GetSearchFacetOrderBy] = UNSET,
-    group_by: Union[Unset, GetSearchFacetGroupBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
-    range_start: Union[Unset, float] = UNSET,
-    range_end: Union[Unset, float] = UNSET,
-    range_gap: Union[Unset, float] = UNSET,
-    range_include: Union[Unset, GetSearchFacetRangeInclude] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Dict[str, Any]:
@@ -35,12 +28,6 @@ def _get_kwargs(
         json_order_by = order_by.value
 
     params["order_by"] = json_order_by
-
-    json_group_by: Union[Unset, str] = UNSET
-    if not isinstance(group_by, Unset):
-        json_group_by = group_by.value
-
-    params["group_by"] = json_group_by
 
     json_filters: Union[List[Dict[str, Any]], Unset, str]
     if isinstance(filters, Unset):
@@ -54,18 +41,6 @@ def _get_kwargs(
     else:
         json_filters = filters
     params["filters"] = json_filters
-
-    params["range_start"] = range_start
-
-    params["range_end"] = range_end
-
-    params["range_gap"] = range_gap
-
-    json_range_include: Union[Unset, str] = UNSET
-    if not isinstance(range_include, Unset):
-        json_range_include = range_include.value
-
-    params["range_include"] = json_range_include
 
     params["limit"] = limit
 
@@ -84,9 +59,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Error, SearchFacet]]:
+) -> Optional[Union[Error, GetSearchFacetBaseFindResponse]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = SearchFacet.from_dict(response.json())
+        response_200 = GetSearchFacetBaseFindResponse.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -121,7 +96,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Error, SearchFacet]]:
+) -> Response[Union[Error, GetSearchFacetBaseFindResponse]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -135,26 +110,16 @@ def sync_detailed(
     *,
     client: AuthenticatedClient,
     order_by: Union[Unset, GetSearchFacetOrderBy] = UNSET,
-    group_by: Union[Unset, GetSearchFacetGroupBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
-    range_start: Union[Unset, float] = UNSET,
-    range_end: Union[Unset, float] = UNSET,
-    range_gap: Union[Unset, float] = UNSET,
-    range_include: Union[Unset, GetSearchFacetRangeInclude] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, SearchFacet]]:
+) -> Response[Union[Error, GetSearchFacetBaseFindResponse]]:
     """Get a single search index facet
 
     Args:
         id (GetSearchFacetId):
         order_by (Union[Unset, GetSearchFacetOrderBy]):
-        group_by (Union[Unset, GetSearchFacetGroupBy]):
         filters (Union[List['Filter'], Unset, str]):
-        range_start (Union[Unset, float]):
-        range_end (Union[Unset, float]):
-        range_gap (Union[Unset, float]):
-        range_include (Union[Unset, GetSearchFacetRangeInclude]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -163,18 +128,13 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, SearchFacet]]
+        Response[Union[Error, GetSearchFacetBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
         id=id,
         order_by=order_by,
-        group_by=group_by,
         filters=filters,
-        range_start=range_start,
-        range_end=range_end,
-        range_gap=range_gap,
-        range_include=range_include,
         limit=limit,
         offset=offset,
     )
@@ -191,26 +151,16 @@ def sync(
     *,
     client: AuthenticatedClient,
     order_by: Union[Unset, GetSearchFacetOrderBy] = UNSET,
-    group_by: Union[Unset, GetSearchFacetGroupBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
-    range_start: Union[Unset, float] = UNSET,
-    range_end: Union[Unset, float] = UNSET,
-    range_gap: Union[Unset, float] = UNSET,
-    range_include: Union[Unset, GetSearchFacetRangeInclude] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, SearchFacet]]:
+) -> Optional[Union[Error, GetSearchFacetBaseFindResponse]]:
     """Get a single search index facet
 
     Args:
         id (GetSearchFacetId):
         order_by (Union[Unset, GetSearchFacetOrderBy]):
-        group_by (Union[Unset, GetSearchFacetGroupBy]):
         filters (Union[List['Filter'], Unset, str]):
-        range_start (Union[Unset, float]):
-        range_end (Union[Unset, float]):
-        range_gap (Union[Unset, float]):
-        range_include (Union[Unset, GetSearchFacetRangeInclude]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -219,19 +169,14 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, SearchFacet]
+        Union[Error, GetSearchFacetBaseFindResponse]
     """
 
     return sync_detailed(
         id=id,
         client=client,
         order_by=order_by,
-        group_by=group_by,
         filters=filters,
-        range_start=range_start,
-        range_end=range_end,
-        range_gap=range_gap,
-        range_include=range_include,
         limit=limit,
         offset=offset,
     ).parsed
@@ -242,26 +187,16 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
     order_by: Union[Unset, GetSearchFacetOrderBy] = UNSET,
-    group_by: Union[Unset, GetSearchFacetGroupBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
-    range_start: Union[Unset, float] = UNSET,
-    range_end: Union[Unset, float] = UNSET,
-    range_gap: Union[Unset, float] = UNSET,
-    range_include: Union[Unset, GetSearchFacetRangeInclude] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, SearchFacet]]:
+) -> Response[Union[Error, GetSearchFacetBaseFindResponse]]:
     """Get a single search index facet
 
     Args:
         id (GetSearchFacetId):
         order_by (Union[Unset, GetSearchFacetOrderBy]):
-        group_by (Union[Unset, GetSearchFacetGroupBy]):
         filters (Union[List['Filter'], Unset, str]):
-        range_start (Union[Unset, float]):
-        range_end (Union[Unset, float]):
-        range_gap (Union[Unset, float]):
-        range_include (Union[Unset, GetSearchFacetRangeInclude]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -270,18 +205,13 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, SearchFacet]]
+        Response[Union[Error, GetSearchFacetBaseFindResponse]]
     """
 
     kwargs = _get_kwargs(
         id=id,
         order_by=order_by,
-        group_by=group_by,
         filters=filters,
-        range_start=range_start,
-        range_end=range_end,
-        range_gap=range_gap,
-        range_include=range_include,
         limit=limit,
         offset=offset,
     )
@@ -296,26 +226,16 @@ async def asyncio(
     *,
     client: AuthenticatedClient,
     order_by: Union[Unset, GetSearchFacetOrderBy] = UNSET,
-    group_by: Union[Unset, GetSearchFacetGroupBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
-    range_start: Union[Unset, float] = UNSET,
-    range_end: Union[Unset, float] = UNSET,
-    range_gap: Union[Unset, float] = UNSET,
-    range_include: Union[Unset, GetSearchFacetRangeInclude] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, SearchFacet]]:
+) -> Optional[Union[Error, GetSearchFacetBaseFindResponse]]:
     """Get a single search index facet
 
     Args:
         id (GetSearchFacetId):
         order_by (Union[Unset, GetSearchFacetOrderBy]):
-        group_by (Union[Unset, GetSearchFacetGroupBy]):
         filters (Union[List['Filter'], Unset, str]):
-        range_start (Union[Unset, float]):
-        range_end (Union[Unset, float]):
-        range_gap (Union[Unset, float]):
-        range_include (Union[Unset, GetSearchFacetRangeInclude]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -324,7 +244,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, SearchFacet]
+        Union[Error, GetSearchFacetBaseFindResponse]
     """
 
     return (
@@ -332,12 +252,7 @@ async def asyncio(
             id=id,
             client=client,
             order_by=order_by,
-            group_by=group_by,
             filters=filters,
-            range_start=range_start,
-            range_end=range_end,
-            range_gap=range_gap,
-            range_include=range_include,
             limit=limit,
             offset=offset,
         )
