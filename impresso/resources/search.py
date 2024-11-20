@@ -149,7 +149,7 @@ class SearchResource(Resource):
         Search for content items in Impresso.
 
         Args:
-            q: Search term.
+            term: Search term.
             order_by: Order by aspect.
             limit: Number of results to return.
             offset: Number of results to skip.
@@ -165,7 +165,6 @@ class SearchResource(Resource):
             topic_id: Return only content items that are about this topic or all/any of the topics.
             collection_id: Return only content items that are in this collection or all/any of the collections.
             country: Return only content items that are from this country or all/any of the countries.
-            access_rights: Return only content items with this access right or all/any of the access rights.
             partner_id: Return only content items that are from this partner or all/any of the partners.
             text_reuse_cluster_id: Return only content items that are in this text reuse cluster
                                    or all/any of the clusters.

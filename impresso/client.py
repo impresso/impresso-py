@@ -79,7 +79,7 @@ def connect(
     public_api_url: str | None = None,
     persisted_token: bool = True,
 ) -> ImpressoClient:
-    f"""
+    """
     Connect to the Impresso API and return a client object.
 
     Args:

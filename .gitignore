@@ -17,3 +17,4 @@ __pycache__/
 impresso.egg-info/*
 tmp/
 dist/
+site/
