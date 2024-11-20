@@ -15,6 +15,7 @@ from ...types import UNSET, Response, Unset
 def _get_kwargs(
     *,
     term: Union[Unset, str] = UNSET,
+    resolve: Union[Unset, bool] = False,
     order_by: Union[Unset, FindEntitiesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
@@ -23,6 +24,8 @@ def _get_kwargs(
     params: Dict[str, Any] = {}
 
     params["term"] = term
+
+    params["resolve"] = resolve
 
     json_order_by: Union[Unset, str] = UNSET
     if not isinstance(order_by, Unset):
@@ -110,6 +113,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient,
     term: Union[Unset, str] = UNSET,
+    resolve: Union[Unset, bool] = False,
     order_by: Union[Unset, FindEntitiesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
@@ -119,6 +123,7 @@ def sync_detailed(
 
     Args:
         term (Union[Unset, str]):
+        resolve (Union[Unset, bool]):  Default: False.
         order_by (Union[Unset, FindEntitiesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -134,6 +139,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         term=term,
+        resolve=resolve,
         order_by=order_by,
         filters=filters,
         limit=limit,
@@ -151,6 +157,7 @@ def sync(
     *,
     client: AuthenticatedClient,
     term: Union[Unset, str] = UNSET,
+    resolve: Union[Unset, bool] = False,
     order_by: Union[Unset, FindEntitiesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
@@ -160,6 +167,7 @@ def sync(
 
     Args:
         term (Union[Unset, str]):
+        resolve (Union[Unset, bool]):  Default: False.
         order_by (Union[Unset, FindEntitiesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -176,6 +184,7 @@ def sync(
     return sync_detailed(
         client=client,
         term=term,
+        resolve=resolve,
         order_by=order_by,
         filters=filters,
         limit=limit,
@@ -187,6 +196,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
     term: Union[Unset, str] = UNSET,
+    resolve: Union[Unset, bool] = False,
     order_by: Union[Unset, FindEntitiesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
@@ -196,6 +206,7 @@ async def asyncio_detailed(
 
     Args:
         term (Union[Unset, str]):
+        resolve (Union[Unset, bool]):  Default: False.
         order_by (Union[Unset, FindEntitiesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -211,6 +222,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         term=term,
+        resolve=resolve,
         order_by=order_by,
         filters=filters,
         limit=limit,
@@ -226,6 +238,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient,
     term: Union[Unset, str] = UNSET,
+    resolve: Union[Unset, bool] = False,
     order_by: Union[Unset, FindEntitiesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
     limit: Union[Unset, int] = UNSET,
@@ -235,6 +248,7 @@ async def asyncio(
 
     Args:
         term (Union[Unset, str]):
+        resolve (Union[Unset, bool]):  Default: False.
         order_by (Union[Unset, FindEntitiesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
         limit (Union[Unset, int]):
@@ -252,6 +266,7 @@ async def asyncio(
         await asyncio_detailed(
             client=client,
             term=term,
+            resolve=resolve,
             order_by=order_by,
             filters=filters,
             limit=limit,

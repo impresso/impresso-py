@@ -62,6 +62,7 @@ class EntitiesResource(Resource):
         entity_id: str | AND[str] | OR[str] | None = None,
         entity_type: EntityType | AND[EntityType] | OR[EntityType] | None = None,
         order_by: FindEntitiesOrderByLiteral | None = None,
+        resolve: bool = False,
         limit: int | None = None,
         offset: int | None = None,
     ) -> FindEntitiesContainer:
@@ -88,6 +89,7 @@ class EntitiesResource(Resource):
             limit=limit if limit is not None else UNSET,
             offset=offset if offset is not None else UNSET,
             filters=filters_pb if filters_pb else UNSET,
+            resolve=resolve,
         )
         raise_for_error(result)
         return FindEntitiesContainer(
