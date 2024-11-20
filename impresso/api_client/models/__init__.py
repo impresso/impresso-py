@@ -74,6 +74,15 @@ from .text_reuse_passage_offset import TextReusePassageOffset
 from .topic_mention import TopicMention
 from .update_collectable_items_request import UpdateCollectableItemsRequest
 from .version_details import VersionDetails
+from .wikidata_location import WikidataLocation
+from .wikidata_location_coordinates import WikidataLocationCoordinates
+from .wikidata_location_descriptions import WikidataLocationDescriptions
+from .wikidata_location_labels import WikidataLocationLabels
+from .wikidata_location_type import WikidataLocationType
+from .wikidata_person import WikidataPerson
+from .wikidata_person_descriptions import WikidataPersonDescriptions
+from .wikidata_person_labels import WikidataPersonLabels
+from .wikidata_person_type import WikidataPersonType
 
 __all__ = (
     "AuthenticationCreateRequest",
@@ -150,4 +159,13 @@ __all__ = (
     "TopicMention",
     "UpdateCollectableItemsRequest",
     "VersionDetails",
+    "WikidataLocation",
+    "WikidataLocationCoordinates",
+    "WikidataLocationDescriptions",
+    "WikidataLocationLabels",
+    "WikidataLocationType",
+    "WikidataPerson",
+    "WikidataPersonDescriptions",
+    "WikidataPersonLabels",
+    "WikidataPersonType",
 )

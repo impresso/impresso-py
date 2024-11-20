@@ -25,7 +25,7 @@ repository = "https://github.com/impresso/impresso-py"
 version = "0.9.9"
 
 [tool.poetry.urls]
-Endpoint = "https://impresso-project.ch/public-api"
+Endpoint = "https://impresso-project.ch/public-api/v1"
 Issues = "https://github.com/impresso/impresso-py/issues"
 
 [build-system]

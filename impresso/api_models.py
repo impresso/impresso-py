@@ -371,29 +371,6 @@ class Collection(BaseModel):
     ]
 
 
-class EntityDetails(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    uid: Annotated[str, Field(description='Unique identifier of the entity')]
-    label: Annotated[Optional[str], Field(None, description='Entity label')]
-    type: Optional[Literal['person', 'location']] = None
-    wikidataId: Annotated[
-        Optional[str], Field(None, description='Wikidata identifier of the entity.')
-    ]
-    totalMentions: Annotated[
-        Optional[int],
-        Field(None, description='Total number of mentions of the entity.'),
-    ]
-    totalContentItems: Annotated[
-        Optional[int],
-        Field(
-            None,
-            description='Total number of content items the entity is mentioned in.',
-        ),
-    ]
-
-
 class EntityMention(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -564,6 +541,40 @@ class VersionDetails(BaseModel):
     version: Annotated[str, Field(description='Version of the API.')]
 
 
+class Coordinates(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    latitude: Annotated[
+        Optional[float], Field(None, description='The latitude of the location')
+    ]
+    longitude: Annotated[
+        Optional[float], Field(None, description='The longitude of the location')
+    ]
+
+
+class WikidataLocation(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[
+        str,
+        Field(
+            description='The Q Wikidata ID of the location (https://www.wikidata.org/wiki/Wikidata:Identifiers)'
+        ),
+    ]
+    type: Annotated[Literal['location'], Field(description='The type of the entity')]
+    labels: Annotated[
+        Optional[Mapping[str, Sequence[str]]],
+        Field(None, description='Labels of the location in different languages'),
+    ]
+    descriptions: Annotated[
+        Optional[Mapping[str, Sequence[str]]],
+        Field(None, description='Descriptions of the location in different languages'),
+    ]
+    coordinates: Optional[Coordinates] = None
+
+
 class ContentItem(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -638,3 +649,62 @@ class ContentItem(BaseModel):
         Optional[Literal['newspaper']],
         Field(None, description='The type of the media the content item belongs to.'),
     ]
+
+
+class WikidataHuman(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[
+        str,
+        Field(
+            description='The Q Wikidata ID of the person (https://www.wikidata.org/wiki/Wikidata:Identifiers)'
+        ),
+    ]
+    type: Annotated[Literal['human'], Field(description='The type of the entity')]
+    labels: Annotated[
+        Optional[Mapping[str, Sequence[str]]],
+        Field(None, description='Labels of the person in different languages'),
+    ]
+    descriptions: Annotated[
+        Optional[Mapping[str, Sequence[str]]],
+        Field(None, description='Descriptions of the person in different languages'),
+    ]
+    birthDate: Annotated[
+        Optional[AwareDatetime], Field(None, description='The birth date of the person')
+    ]
+    deathDate: Annotated[
+        Optional[AwareDatetime], Field(None, description='The death date of the person')
+    ]
+    birthPlace: Annotated[
+        Optional[WikidataLocation],
+        Field(None, description='The birth place of the person'),
+    ]
+    deathPlace: Annotated[
+        Optional[WikidataLocation],
+        Field(None, description='The death place of the person'),
+    ]
+
+
+class EntityDetails(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='Unique identifier of the entity')]
+    label: Annotated[Optional[str], Field(None, description='Entity label')]
+    type: Optional[Literal['person', 'location']] = None
+    wikidataId: Annotated[
+        Optional[str], Field(None, description='Wikidata identifier of the entity.')
+    ]
+    totalMentions: Annotated[
+        Optional[int],
+        Field(None, description='Total number of mentions of the entity.'),
+    ]
+    totalContentItems: Annotated[
+        Optional[int],
+        Field(
+            None,
+            description='Total number of content items the entity is mentioned in.',
+        ),
+    ]
+    wikidataDetails: Optional[Union[WikidataHuman, WikidataLocation]] = None

@@ -5,7 +5,7 @@ import yaml
 
 from impresso.util.token import get_jwt_status
 
-DEFAULT_API_URL = "https://impresso-project.ch/public-api"
+DEFAULT_API_URL = "https://impresso-project.ch/public-api/v1"
 
 
 class ImpressoApiToken(BaseModel):
