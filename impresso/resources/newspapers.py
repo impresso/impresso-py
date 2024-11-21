@@ -32,7 +32,7 @@ class FindNewspapersContainer(DataContainer):
 
 
 class NewspapersResource(Resource):
-    """Search newspapers"""
+    """Search newspapers in the Impresso database."""
 
     name = "newspapers"
 
@@ -43,7 +43,18 @@ class NewspapersResource(Resource):
         limit: int | None = None,
         offset: int | None = None,
     ) -> FindNewspapersContainer:
+        """
+        Search newspapers in Impresso.
 
+        Args:
+            term: Search term.
+            order_by: Field to order results by.
+            limit: Number of results to return.
+            offset: Number of results to skip.
+
+        Returns:
+            FindNewspapersContainer: Data container with a page of results of the search.
+        """
         result = find_newspapers.sync(
             client=self._api_client,
             term=term if term is not None else UNSET,

@@ -7,7 +7,11 @@ T = TypeVar("T", bound=BaseModel)
 
 
 class DataContainer(Generic[IT, T]):
-    """Response of a resource call"""
+    """
+    Generic container for responses from the Impresso API
+    returned by resource methods (`get`, `find`).
+    Generally represents a single page of the result.
+    """
 
     def __init__(
         self,
@@ -72,17 +76,17 @@ class DataContainer(Generic[IT, T]):
 
     @property
     def raw(self) -> dict[str, Any]:
-        """Return the data as a python dictionary."""
+        """Returns the response data as a python dictionary."""
         return getattr(self._data, "to_dict")()
 
     @property
     def pydantic(self) -> T:
-        """Return the data as a pydantic model."""
+        """Returns the response data as a pydantic model."""
         return self._pydantic_model.model_validate(self.raw)
 
     @property
     def df(self) -> DataFrame:
-        """Return the data as a pandas dataframe."""
+        """Returns the response data as a pandas dataframe."""
         return DataFrame.from_dict(self._data)  # type: ignore
 
     @property
@@ -92,12 +96,12 @@ class DataContainer(Generic[IT, T]):
 
     @property
     def limit(self) -> int:
-        """Page size."""
+        """Current page size."""
         return self.raw.get("pagination", {}).get("limit", 0)
 
     @property
     def offset(self) -> int:
-        """Page offset."""
+        """Current page offset."""
         return self.raw.get("pagination", {}).get("offset", 0)
 
     @property
@@ -107,5 +111,8 @@ class DataContainer(Generic[IT, T]):
 
     @property
     def url(self) -> str | None:
-        """A URL of the result set in the Impresso web app."""
+        """
+        URL of an Impresso web application page
+        representing the result set from this container.
+        """
         return self._web_app_search_result_url

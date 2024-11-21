@@ -82,6 +82,12 @@ def connect(
     """
     Connect to the Impresso API and return a client object.
 
+    ```python
+    from impresso import connect
+
+    impresso = connect()
+    ```
+
     Args:
         public_api_url (str): The URL of the Impresso API to connect to. By default using the default URL set
                               in the config file (~/.impresso_py.yml) or the Impresso default URL ({DEFAULT_API_URL}).

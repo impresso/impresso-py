@@ -51,7 +51,7 @@ EntityType = Literal["person", "location"]
 
 
 class EntitiesResource(Resource):
-    """Work with entities"""
+    """Search entities in the Impresso database."""
 
     name = "entities"
 
@@ -66,7 +66,22 @@ class EntitiesResource(Resource):
         limit: int | None = None,
         offset: int | None = None,
     ) -> FindEntitiesContainer:
-        """Find entities."""
+        """
+        Search entities in Impresso.
+
+        Args:
+            term: Search term.
+            wikidata_id: Return only entities resolved to this Wikidata ID.
+            entity_id: Return only entity with this ID.
+            entity_type: Return only entities of this type.
+            order_by: Field to order results by.
+            resolve: Return Wikidata details of the entities, if the entity is linked to a Wikidata entry.
+            limit: Number of results to return.
+            offset: Number of results to skip.
+
+        Returns:
+            FindEntitiesContainer: Data container with a page of results of the search.
+        """
 
         filters: list[Filter] = []
         if entity_type is not None:
