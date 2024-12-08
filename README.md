@@ -3,7 +3,10 @@
 [![PyPI version](https://badge.fury.io/py/impresso.svg)](https://badge.fury.io/py/impresso)
 ![PyPI - License](https://img.shields.io/pypi/l/impresso)
 
-Impresso is a library to interact with the [Impresso](https://impresso-project.ch/app) dataset. It provides a set of classes to interact with the API and a set of tools that make working with the data easier.
+
+Impresso is a library designed to facilitate interaction with the [Impresso](https://impresso-project.ch/app) dataset. It offers a comprehensive set of classes for API interaction and a variety of tools to streamline data manipulation and analysis.
+
+You can find the full documentation at [https://impresso.github.io/impresso-py/](https://impresso.github.io/impresso-py/).
 
 ## Installation
 
