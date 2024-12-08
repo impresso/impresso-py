@@ -1,0 +1,32 @@
+site_name: "Impresso"
+
+theme:
+  name: "material"
+
+plugins:
+- search
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          show_docstring_description: true
+          allow_inspection: true
+          show_signature: true
+          show_source: false
+          show_root_heading: true
+          docstring_style: google
+          docstring_section_style: table
+          annotations_path: brief
+          docstring_options:
+            ignore_init_summary: false
+            trim_doctest_flags: true
+
+markdown_extensions:
+- toc
+- tables
+
+nav:
+  - Home: index.md
+  - Result Object: result.md
+  - Resources: resources.md
+  - Preparing Queries: preparing_queries.md

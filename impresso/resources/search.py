@@ -55,55 +55,6 @@ class SearchDataContainer(DataContainer):
 class FacetDataContainer(DataContainer):
     """Response of a get facet call."""
 
-    # def __init__(
-    #     self,
-    #     data: IT,
-    #     pydantic_model: type[T],
-    #     limit: int | None,
-    #     offset: int | None,
-    #     web_app_search_result_url: str,
-    # ):
-    #     super().__init__(data, pydantic_model, web_app_search_result_url)
-    #     self._limit = limit
-    #     self._offset = offset
-
-    # @property
-    # def raw(self) -> dict[str, Any]:
-    #     """Return the data as a python dictionary."""
-    #     return self._data.to_dict()
-
-    # @property
-    # def pydantic(self) -> list[SearchFacetBucket]:
-    #     """Return the data as a pydantic model."""
-    #     return self._pydantic_model.model_validate(self.raw)
-
-    # @property
-    # def df(self) -> DataFrame:
-    #     """Return the data as a pandas dataframe."""
-    #     if len(self.raw["buckets"]) == 0:
-    #         return DataFrame()
-    #     return json_normalize(self.raw["buckets"]).set_index("val")
-
-    # @property
-    # def size(self) -> int:
-    #     """Current page size."""
-    #     return len(self.raw.get("buckets", []))
-
-    # @property
-    # def total(self) -> int:
-    #     """Total number of results."""
-    #     return self.raw.get("numBuckets", 0)
-
-    # @property
-    # def limit(self) -> int:
-    #     """Page size."""
-    #     return self._limit or len(self.raw["buckets"])
-
-    # @property
-    # def offset(self) -> int:
-    #     """Page offset."""
-    #     return self._offset or 0
-
     @property
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
@@ -149,7 +100,7 @@ class SearchResource(Resource):
         Search for content items in Impresso.
 
         Args:
-            q: Search term.
+            term: Search term.
             order_by: Order by aspect.
             limit: Number of results to return.
             offset: Number of results to skip.
@@ -165,13 +116,12 @@ class SearchResource(Resource):
             topic_id: Return only content items that are about this topic or all/any of the topics.
             collection_id: Return only content items that are in this collection or all/any of the collections.
             country: Return only content items that are from this country or all/any of the countries.
-            access_rights: Return only content items with this access right or all/any of the access rights.
             partner_id: Return only content items that are from this partner or all/any of the partners.
             text_reuse_cluster_id: Return only content items that are in this text reuse cluster
                                    or all/any of the clusters.
 
         Returns:
-            _type_: _description_
+            SearchDataContainer: Data container with a page of results of the search.
         """
 
         filters = self._build_filters(

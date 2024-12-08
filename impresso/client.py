@@ -79,8 +79,14 @@ def connect(
     public_api_url: str | None = None,
     persisted_token: bool = True,
 ) -> ImpressoClient:
-    f"""
+    """
     Connect to the Impresso API and return a client object.
+
+    ```python
+    from impresso import connect
+
+    impresso = connect()
+    ```
 
     Args:
         public_api_url (str): The URL of the Impresso API to connect to. By default using the default URL set

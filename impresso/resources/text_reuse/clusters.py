@@ -46,38 +46,6 @@ class FindTextReuseClustersContainer(DataContainer):
             return json_normalize(data).set_index("uid")
         return DataFrame()
 
-    # @property
-    # def pydantic(self):
-    #     """Return the data as a pydantic model."""
-    #     remapped_raw = {
-    #         "data": self.raw.get("clusters", []),
-    #         "info": self.raw.get("info", {}),
-    #         "total": self.total,
-    #         "limit": self.limit,
-    #         "offset": self.offset,
-    #     }
-    #     return self._pydantic_model.model_validate(remapped_raw)
-
-    # @property
-    # def size(self) -> int:
-    #     """Current page size."""
-    #     return len(self.raw.get("clusters", []))
-
-    # @property
-    # def total(self) -> int:
-    #     """Total number of results."""
-    #     return self.raw.get("info", {}).get("total", 0)
-
-    # @property
-    # def limit(self) -> int:
-    #     """Page size."""
-    #     return self.raw.get("info", {}).get("limit", 0)
-
-    # @property
-    # def offset(self) -> int:
-    #     """Page offset."""
-    #     return self.raw.get("info", {}).get("offset", 0)
-
 
 Range = tuple[int, int]
 
