@@ -1,7 +1,7 @@
 # Result object
 
-Every time you run a query, you get a `DataContainer` object. This object contains the results of the query and some metadata about the query. It also contains a collection of utility methods that you can use to access the result in different ways.
+When you execute a query, a `DataContainer` object is returned. This object encapsulates the query results along with metadata about the query. Additionally, it provides a suite of utility methods for accessing the results in various ways.
 
-When the `DataContainer` object is used in a Python notebook environment, it can render itself as a preview of the data it contains. This is useful for quickly inspecting the results of a query.
+In a Python notebook environment, the `DataContainer` object can render a preview of its data, facilitating quick inspection of the query results.
 
 ::: impresso.data_container.DataContainer

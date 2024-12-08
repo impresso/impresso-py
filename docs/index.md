@@ -4,7 +4,7 @@
   <img src="https://github.com/impresso/impresso.github.io/blob/master/assets/images/3x1--Yellow-Impresso-Black-on-White--transparent.png?raw=true" width="350" alt="Impresso Project Logo"/>
 </p>
 
-Impresso is a library to interact with the [Impresso](https://impresso-project.ch/app) dataset. It provides a set of classes to interact with the API and a set of tools that make working with the data easier.
+Impresso is a library designed to facilitate interaction with the [Impresso](https://impresso-project.ch/app) dataset. It offers a comprehensive set of classes for API interaction and a variety of tools to streamline data manipulation and analysis.
 
 ## Installation and prerequisites
 
@@ -14,7 +14,7 @@ The Impresso python library can be installed using `pip`:
 pip install impresso
 ```
 
-The library requires Python version `3.10` as a minimum. It has a number of dependencies that are likely already present in a Jupyter environment like `matplotlib` and `pandas`.
+The library requires Python version `3.10` or higher. It also depends on several packages commonly found in Jupyter environments, such as `matplotlib` and `pandas`.
 
 ## Create a session
 

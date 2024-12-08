@@ -1,9 +1,9 @@
 # Preparing queries
 
-Some filter parameters accept a combination of modifiers that can be used to create complex queries. For example, if we want to search for a term `Titanic` and `ship`, we can use the `AND` modifier to combine the two conditions:
+Some filter parameters accept a combination of modifiers to create complex queries. For example, to search for content that mentions both `Titanic` and `ship`, you can use the `AND` modifier to combine these conditions:
 
 ```python
-from impresso import AND, OR
+from impresso import AND
 
 impresso.search.find(term=AND("Titanic", "ship"))
 ```
