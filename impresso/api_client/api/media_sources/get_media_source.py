@@ -6,38 +6,16 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
-from ...models.find_newspapers_base_find_response import FindNewspapersBaseFindResponse
-from ...models.find_newspapers_order_by import FindNewspapersOrderBy
-from ...types import UNSET, Response, Unset
+from ...models.media_source import MediaSource
+from ...types import Response
 
 
 def _get_kwargs(
-    *,
-    term: Union[Unset, str] = UNSET,
-    order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
-    limit: Union[Unset, int] = UNSET,
-    offset: Union[Unset, int] = UNSET,
+    id: str,
 ) -> Dict[str, Any]:
-    params: Dict[str, Any] = {}
-
-    params["term"] = term
-
-    json_order_by: Union[Unset, str] = UNSET
-    if not isinstance(order_by, Unset):
-        json_order_by = order_by.value
-
-    params["order_by"] = json_order_by
-
-    params["limit"] = limit
-
-    params["offset"] = offset
-
-    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
-
     _kwargs: Dict[str, Any] = {
         "method": "get",
-        "url": "/newspapers",
-        "params": params,
+        "url": f"/media-sources/{id}",
     }
 
     return _kwargs
@@ -45,9 +23,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Error, FindNewspapersBaseFindResponse]]:
+) -> Optional[Union[Error, MediaSource]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = FindNewspapersBaseFindResponse.from_dict(response.json())
+        response_200 = MediaSource.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -82,7 +60,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Error, FindNewspapersBaseFindResponse]]:
+) -> Response[Union[Error, MediaSource]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -92,34 +70,25 @@ def _build_response(
 
 
 def sync_detailed(
+    id: str,
     *,
     client: AuthenticatedClient,
-    term: Union[Unset, str] = UNSET,
-    order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
-    limit: Union[Unset, int] = UNSET,
-    offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindNewspapersBaseFindResponse]]:
-    """Find newspapers that match the given query
+) -> Response[Union[Error, MediaSource]]:
+    """Get media source by ID
 
     Args:
-        term (Union[Unset, str]):
-        order_by (Union[Unset, FindNewspapersOrderBy]):
-        limit (Union[Unset, int]):
-        offset (Union[Unset, int]):
+        id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindNewspapersBaseFindResponse]]
+        Response[Union[Error, MediaSource]]
     """
 
     kwargs = _get_kwargs(
-        term=term,
-        order_by=order_by,
-        limit=limit,
-        offset=offset,
+        id=id,
     )
 
     response = client.get_httpx_client().request(
@@ -130,67 +99,49 @@ def sync_detailed(
 
 
 def sync(
+    id: str,
     *,
     client: AuthenticatedClient,
-    term: Union[Unset, str] = UNSET,
-    order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
-    limit: Union[Unset, int] = UNSET,
-    offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindNewspapersBaseFindResponse]]:
-    """Find newspapers that match the given query
+) -> Optional[Union[Error, MediaSource]]:
+    """Get media source by ID
 
     Args:
-        term (Union[Unset, str]):
-        order_by (Union[Unset, FindNewspapersOrderBy]):
-        limit (Union[Unset, int]):
-        offset (Union[Unset, int]):
+        id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindNewspapersBaseFindResponse]
+        Union[Error, MediaSource]
     """
 
     return sync_detailed(
+        id=id,
         client=client,
-        term=term,
-        order_by=order_by,
-        limit=limit,
-        offset=offset,
     ).parsed
 
 
 async def asyncio_detailed(
+    id: str,
     *,
     client: AuthenticatedClient,
-    term: Union[Unset, str] = UNSET,
-    order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
-    limit: Union[Unset, int] = UNSET,
-    offset: Union[Unset, int] = UNSET,
-) -> Response[Union[Error, FindNewspapersBaseFindResponse]]:
-    """Find newspapers that match the given query
+) -> Response[Union[Error, MediaSource]]:
+    """Get media source by ID
 
     Args:
-        term (Union[Unset, str]):
-        order_by (Union[Unset, FindNewspapersOrderBy]):
-        limit (Union[Unset, int]):
-        offset (Union[Unset, int]):
+        id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, FindNewspapersBaseFindResponse]]
+        Response[Union[Error, MediaSource]]
     """
 
     kwargs = _get_kwargs(
-        term=term,
-        order_by=order_by,
-        limit=limit,
-        offset=offset,
+        id=id,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -199,35 +150,26 @@ async def asyncio_detailed(
 
 
 async def asyncio(
+    id: str,
     *,
     client: AuthenticatedClient,
-    term: Union[Unset, str] = UNSET,
-    order_by: Union[Unset, FindNewspapersOrderBy] = UNSET,
-    limit: Union[Unset, int] = UNSET,
-    offset: Union[Unset, int] = UNSET,
-) -> Optional[Union[Error, FindNewspapersBaseFindResponse]]:
-    """Find newspapers that match the given query
+) -> Optional[Union[Error, MediaSource]]:
+    """Get media source by ID
 
     Args:
-        term (Union[Unset, str]):
-        order_by (Union[Unset, FindNewspapersOrderBy]):
-        limit (Union[Unset, int]):
-        offset (Union[Unset, int]):
+        id (str):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, FindNewspapersBaseFindResponse]
+        Union[Error, MediaSource]
     """
 
     return (
         await asyncio_detailed(
+            id=id,
             client=client,
-            term=term,
-            order_by=order_by,
-            limit=limit,
-            offset=offset,
         )
     ).parsed

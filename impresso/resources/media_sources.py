@@ -1,25 +1,29 @@
 from pandas import DataFrame, json_normalize
 
-from impresso.api_client.api.newspapers import find_newspapers
-from impresso.api_client.models.find_newspapers_order_by import (
-    FindNewspapersOrderBy,
-    FindNewspapersOrderByLiteral,
+from impresso.api_client.api.media_sources import find_media_sources
+from impresso.api_client.models.find_media_sources_order_by import (
+    FindMediaSourcesOrderBy,
+    FindMediaSourcesOrderByLiteral,
+)
+from impresso.api_client.models.find_media_sources_type import (
+    FindMediaSourcesType,
+    FindMediaSourcesTypeLiteral,
 )
 from impresso.api_client.types import UNSET
-from impresso.api_models import BaseFind, Newspaper
+from impresso.api_models import BaseFind, MediaSource
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
 from impresso.util.error import raise_for_error
 from impresso.util.py import get_enum_from_literal
 
 
-class FindNewspapersSchema(BaseFind):
-    """Schema for the find newspapers response."""
+class FindMediaSourcesSchema(BaseFind):
+    """Schema for the find media sources response."""
 
-    data: list[Newspaper]
+    data: list[MediaSource]
 
 
-class FindNewspapersContainer(DataContainer):
+class FindMediaSourcesContainer(DataContainer):
     """Response of a search call."""
 
     @property
@@ -31,46 +35,56 @@ class FindNewspapersContainer(DataContainer):
         return DataFrame()
 
 
-class NewspapersResource(Resource):
-    """Search newspapers in the Impresso database."""
+class MediaSourcesResource(Resource):
+    """Search media sources in the Impresso database."""
 
-    name = "newspapers"
+    name = "media_sources"
 
     def find(
         self,
         term: str | None = None,
-        order_by: FindNewspapersOrderByLiteral | None = None,
+        type: FindMediaSourcesTypeLiteral | None = None,
+        order_by: FindMediaSourcesOrderByLiteral | None = None,
+        with_properties: bool = False,
         limit: int | None = None,
         offset: int | None = None,
-    ) -> FindNewspapersContainer:
+    ) -> FindMediaSourcesContainer:
         """
-        Search newspapers in Impresso.
+        Search media sources in Impresso.
 
         Args:
             term: Search term.
+            type: Type of media sources to search for.
             order_by: Field to order results by.
+            with_properties: Include properties in the results.
             limit: Number of results to return.
             offset: Number of results to skip.
 
         Returns:
-            FindNewspapersContainer: Data container with a page of results of the search.
+            FindMediaSourcesContainer: Data container with a page of results of the search.
         """
-        result = find_newspapers.sync(
+        result = find_media_sources.sync(
             client=self._api_client,
             term=term if term is not None else UNSET,
             order_by=(
-                get_enum_from_literal(order_by, FindNewspapersOrderBy)
+                get_enum_from_literal(order_by, FindMediaSourcesOrderBy)
                 if order_by is not None
                 else UNSET
             ),
+            type=(
+                get_enum_from_literal(type, FindMediaSourcesType)
+                if type is not None
+                else UNSET
+            ),
+            include_properties=with_properties,
             limit=limit if limit is not None else UNSET,
             offset=offset if offset is not None else UNSET,
         )
         raise_for_error(result)
-        return FindNewspapersContainer(
+        return FindMediaSourcesContainer(
             result,
-            FindNewspapersSchema,
-            web_app_search_result_url=_build_web_app_newspapers_url(
+            FindMediaSourcesSchema,
+            web_app_search_result_url=_build_web_app_media_sources_url(
                 base_url=self._get_web_app_base_url(),
                 term=term,
                 order_by=order_by,
@@ -78,10 +92,10 @@ class NewspapersResource(Resource):
         )
 
 
-def _build_web_app_newspapers_url(
+def _build_web_app_media_sources_url(
     base_url: str,
     term: str | None = None,
-    order_by: FindNewspapersOrderByLiteral | None = None,
+    order_by: FindMediaSourcesOrderByLiteral | None = None,
 ) -> str:
     query_params = {
         "orderBy": order_by,

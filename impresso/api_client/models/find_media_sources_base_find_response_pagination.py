@@ -2,11 +2,11 @@ from typing import Any, Dict, Type, TypeVar
 
 from attrs import define as _attrs_define
 
-T = TypeVar("T", bound="FindNewspapersBaseFindResponsePagination")
+T = TypeVar("T", bound="FindMediaSourcesBaseFindResponsePagination")
 
 
 @_attrs_define
-class FindNewspapersBaseFindResponsePagination:
+class FindMediaSourcesBaseFindResponsePagination:
     """
     Attributes:
         total (int): The total number of items matching the query
@@ -45,10 +45,10 @@ class FindNewspapersBaseFindResponsePagination:
 
         offset = d.pop("offset")
 
-        find_newspapers_base_find_response_pagination = cls(
+        find_media_sources_base_find_response_pagination = cls(
             total=total,
             limit=limit,
             offset=offset,
         )
 
-        return find_newspapers_base_find_response_pagination
+        return find_media_sources_base_find_response_pagination
