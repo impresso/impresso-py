@@ -382,6 +382,68 @@ class EntityMention(BaseModel):
     ]
 
 
+class Totals(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    articles: Annotated[
+        Optional[int],
+        Field(None, description='The number of articles in the media source.'),
+    ]
+    issues: Annotated[
+        Optional[int],
+        Field(None, description='The number of issues in the media source.'),
+    ]
+    pages: Annotated[
+        Optional[int],
+        Field(None, description='The number of pages in the media source.'),
+    ]
+
+
+class Property(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='The unique identifier of the property.')]
+    label: Annotated[str, Field(description='The name of the property.')]
+    value: Annotated[str, Field(description='The value of the property.')]
+
+
+class MediaSource(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='The unique identifier of the media source.')]
+    type: Annotated[
+        Literal['newspaper'], Field(description='The type of the media source.')
+    ]
+    name: Annotated[str, Field(description='A display name of the media source.')]
+    languageCodes: Annotated[
+        Sequence[str],
+        Field(description='ISO 639-2 language codes this media source has content in.'),
+    ]
+    publishedPeriodYears: Annotated[
+        Optional[Sequence[int]],
+        Field(
+            None,
+            description='The range of years this media source has been published for. Impresso may not have data for all this period. Is not defined if there is no information.',
+            max_length=2,
+            min_length=2,
+        ),
+    ]
+    availableDatesRange: Annotated[
+        Optional[Sequence[AwareDatetime]],
+        Field(
+            None,
+            description='The range of dates this media source has content items for. This represents the earliest and the latest dates of the contet items.  Is not defined if there are no content items for this source.',
+            max_length=2,
+            min_length=2,
+        ),
+    ]
+    totals: Totals
+    properties: Optional[Sequence[Property]] = None
+
+
 class Newspaper(BaseModel):
     model_config = ConfigDict(
         extra='forbid',

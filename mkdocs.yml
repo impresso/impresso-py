@@ -1,7 +1,7 @@
 site_name: "Impresso"
 
 theme:
-  name: "material"
+  name: "readthedocs"
 
 plugins:
 - search

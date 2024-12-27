@@ -27,9 +27,10 @@ from .find_collections_order_by import FindCollectionsOrderBy
 from .find_entities_base_find_response import FindEntitiesBaseFindResponse
 from .find_entities_base_find_response_pagination import FindEntitiesBaseFindResponsePagination
 from .find_entities_order_by import FindEntitiesOrderBy
-from .find_newspapers_base_find_response import FindNewspapersBaseFindResponse
-from .find_newspapers_base_find_response_pagination import FindNewspapersBaseFindResponsePagination
-from .find_newspapers_order_by import FindNewspapersOrderBy
+from .find_media_sources_base_find_response import FindMediaSourcesBaseFindResponse
+from .find_media_sources_base_find_response_pagination import FindMediaSourcesBaseFindResponsePagination
+from .find_media_sources_order_by import FindMediaSourcesOrderBy
+from .find_media_sources_type import FindMediaSourcesType
 from .find_text_reuse_clusters_base_find_response import FindTextReuseClustersBaseFindResponse
 from .find_text_reuse_clusters_base_find_response_pagination import FindTextReuseClustersBaseFindResponsePagination
 from .find_text_reuse_clusters_order_by import FindTextReuseClustersOrderBy
@@ -56,6 +57,10 @@ from .impresso_named_entity_recognition_entity_wikidata import ImpressoNamedEnti
 from .impresso_named_entity_recognition_request import ImpressoNamedEntityRecognitionRequest
 from .impresso_named_entity_recognition_request_method import ImpressoNamedEntityRecognitionRequestMethod
 from .impresso_named_entity_recognition_response import ImpressoNamedEntityRecognitionResponse
+from .media_source import MediaSource
+from .media_source_properties_item import MediaSourcePropertiesItem
+from .media_source_totals import MediaSourceTotals
+from .media_source_type import MediaSourceType
 from .new_collection_request import NewCollectionRequest
 from .new_collection_request_access_level import NewCollectionRequestAccessLevel
 from .newspaper import Newspaper
@@ -112,9 +117,10 @@ __all__ = (
     "FindEntitiesBaseFindResponse",
     "FindEntitiesBaseFindResponsePagination",
     "FindEntitiesOrderBy",
-    "FindNewspapersBaseFindResponse",
-    "FindNewspapersBaseFindResponsePagination",
-    "FindNewspapersOrderBy",
+    "FindMediaSourcesBaseFindResponse",
+    "FindMediaSourcesBaseFindResponsePagination",
+    "FindMediaSourcesOrderBy",
+    "FindMediaSourcesType",
     "FindTextReuseClustersBaseFindResponse",
     "FindTextReuseClustersBaseFindResponsePagination",
     "FindTextReuseClustersOrderBy",
@@ -141,6 +147,10 @@ __all__ = (
     "ImpressoNamedEntityRecognitionRequest",
     "ImpressoNamedEntityRecognitionRequestMethod",
     "ImpressoNamedEntityRecognitionResponse",
+    "MediaSource",
+    "MediaSourcePropertiesItem",
+    "MediaSourceTotals",
+    "MediaSourceType",
     "NewCollectionRequest",
     "NewCollectionRequestAccessLevel",
     "Newspaper",

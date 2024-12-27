@@ -26,21 +26,21 @@ impresso.entities.find(term="Douglas Adams")
 ::: impresso.resources.entities.EntityType
 ::: impresso.api_client.models.find_entities_order_by.FindEntitiesOrderByLiteral
 
-## Newspapers
+## Media sources
 
-Search newspapers available in the Impresso corpus.
+Search media sources available in the Impresso corpus.
 
 ```python
-impresso.newspapers.find(
+impresso.media_sources.find(
     term="wort",
     order_by="lastIssue",
 )
 ```
 
-::: impresso.resources.newspapers.NewspapersResource
+::: impresso.resources.media_sources.MediaSourcesResource
 
-::: impresso.api_client.models.find_newspapers_order_by.FindNewspapersOrderByLiteral
-::: impresso.resources.newspapers.FindNewspapersContainer
+::: impresso.api_client.models.find_media_sources_order_by.FindMediaSourcesOrderByLiteral
+::: impresso.resources.media_sources.FindMediaSourcesContainer
 
 ## Content Items
 
