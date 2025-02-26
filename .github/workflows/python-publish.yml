@@ -44,4 +44,4 @@ jobs:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
       - name: Publish docs
-        run: mkdocs gh-deploy
+        run: poetry run mkdocs gh-deploy
