@@ -207,7 +207,7 @@ class TextReusePassagesResource(Resource):
 
         Examples:
             Get the top 10 newspapers associated with passages containing 'war':
-            >>> facet_results = textReusePassages.facet(facet='newspaper', term='war', limit=10, order_by='count') # doctest: +SKIP
+            >>> facet_results = textReusePassages.facet(facet='newspaper', term='war', limit=10) # doctest: +SKIP
             >>> print(facet_results.df) # doctest: +SKIP
 
             Get the language distribution for passages published between 1914 and 1918:
