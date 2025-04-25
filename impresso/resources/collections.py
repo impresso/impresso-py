@@ -66,6 +66,28 @@ class GetCollectionContainer(DataContainer):
 class CollectionsResource(Resource):
     """
     Work with collections.
+
+    Examples:
+        Find collections containing the term "war":
+        >>> results = collections.find(term="war") # doctest: +SKIP
+        >>> print(results.df) # doctest: +SKIP
+
+        Get a specific collection by its ID:
+        >>> collection_id = "some-collection-id" # Replace with a real ID
+        >>> collection = collections.get(collection_id) # doctest: +SKIP
+        >>> print(collection.df) # doctest: +SKIP
+
+        List items in a collection:
+        >>> items = collections.items(collection_id) # doctest: +SKIP
+        >>> print(items.df) # doctest: +SKIP
+
+        Add items to a collection:
+        >>> item_ids_to_add = ["item-id-1", "item-id-2"] # Replace with real item IDs
+        >>> collections.add_items(collection_id, item_ids_to_add) # doctest: +SKIP
+
+        Remove items from a collection:
+        >>> item_ids_to_remove = ["item-id-1"] # Replace with real item IDs
+        >>> collections.remove_items(collection_id, item_ids_to_remove) # doctest: +SKIP
     """
 
     name = "collections"

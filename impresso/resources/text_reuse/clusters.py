@@ -51,7 +51,21 @@ Range = tuple[int, int]
 
 
 class TextReuseClustersResource(Resource):
-    """Text reuse clusters resource."""
+    """
+    Interact with the text reuse clusters endpoint of the Impresso API.
+
+    This resource allows searching for text reuse clusters based on various criteria
+    and retrieving facet information about these clusters.
+
+    Examples:
+        Find clusters with size between 10 and 20:
+        >>> results = textReuseClusters.find(cluster_size=(10, 20)) # doctest: +SKIP
+        >>> print(results.df) # doctest: +SKIP
+
+        Get the distribution of newspapers involved in clusters:
+        >>> facet_results = textReuseClusters.facet(facet='newspaper', order_by='count') # doctest: +SKIP
+        >>> print(facet_results.df) # doctest: +SKIP
+    """
 
     name = "textReuseClusters"
 
@@ -75,6 +89,40 @@ class TextReuseClustersResource(Resource):
         mention: str | AND[str] | OR[str] | None = None,
         entity_id: str | AND[str] | OR[str] | None = None,
     ) -> FindTextReuseClustersContainer:
+        """
+        Find text reuse clusters based on various criteria.
+
+        Args:
+            term: Search for clusters containing specific text.
+            title: Filter clusters by the title of the articles within them.
+            order_by: Specify the sorting order for the results.
+            cluster_size: Filter clusters by the number of items they contain.
+            lexical_overlap: Filter clusters by the lexical overlap score.
+            day_delta: Filter clusters by the time span (in days) between the first and last item.
+            date_range: Filter clusters based on the date range of their items.
+            newspaper_id: Filter clusters containing items from specific newspapers.
+            collection_id: Filter clusters containing items from specific collections.
+            limit: Maximum number of clusters to return.
+            offset: Number of clusters to skip from the beginning.
+            front_page: Filter clusters containing items published on the front page.
+            topic_id: Filter clusters associated with specific topics.
+            language: Filter clusters by the language of their items.
+            country: Filter clusters by the country of publication of their items.
+            mention: Filter clusters containing specific mentions (named entities).
+            entity_id: Filter clusters associated with specific entity IDs.
+
+        Returns:
+            FindTextReuseClustersContainer: A container holding the search results.
+
+        Examples:
+            Find clusters with size between 10 and 20:
+            >>> results = textReuseClusters.find(cluster_size=(10, 20)) # doctest: +SKIP
+            >>> print(results.df) # doctest: +SKIP
+
+            Find clusters related to 'politics' in Swiss newspapers:
+            >>> results = textReuseClusters.find(term='politics', country='CH') # doctest: +SKIP
+            >>> print(results.df) # doctest: +SKIP
+        """
 
         filters = _build_filters(
             text=term,
@@ -130,6 +178,37 @@ class TextReuseClustersResource(Resource):
         lexical_overlap: Range | AND[Range] | OR[Range] | None = None,
         day_delta: Range | AND[Range] | OR[Range] | None = None,
     ) -> FacetDataContainer:
+        """
+        Get facet information for text reuse clusters based on specified filters.
+
+        Facets provide aggregated counts for different properties of the clusters,
+        such as the distribution of cluster sizes or newspapers involved.
+
+        Args:
+            facet: The specific facet to retrieve (e.g., 'newspaper', 'cluster_size').
+            order_by: How to order the facet values (e.g., 'value', 'count').
+            limit: Maximum number of facet values to return.
+            offset: Number of facet values to skip.
+            cluster_size: Filter clusters by size before calculating facets.
+            date_range: Filter clusters by date range before calculating facets.
+            newspaper_id: Filter clusters by newspaper before calculating facets.
+            lexical_overlap: Filter clusters by lexical overlap before calculating facets.
+            day_delta: Filter clusters by day delta before calculating facets.
+
+        Returns:
+            FacetDataContainer: A container holding the facet results.
+
+        Examples:
+            Get the top 10 newspapers involved in clusters:
+            >>> facet_results = textReuseClusters.facet(facet='newspaper', limit=10, order_by='count') # doctest: +SKIP
+            >>> print(facet_results.df) # doctest: +SKIP
+
+            Get the distribution of cluster sizes for clusters within a specific date range:
+            >>> from impresso.structures import DateRange
+            >>> date_filter = DateRange(start="1900-01-01", end="1910-12-31")
+            >>> facet_results = textReuseClusters.facet(facet='cluster_size', date_range=date_filter) # doctest: +SKIP
+            >>> print(facet_results.df) # doctest: +SKIP
+        """
         facet_id = get_enum_from_literal(facet, GetTrClustersFacetId)
         if isinstance(facet_id, Unset):
             raise ValueError(f"{facet} is not a valid value")
