@@ -73,6 +73,41 @@ class TextReusePassagesResource(Resource):
         mention: str | AND[str] | OR[str] | None = None,
         entity_id: str | AND[str] | OR[str] | None = None,
     ) -> FindTextReusePassagesContainer:
+        """
+        Find text reuse passages based on various criteria.
+
+        Args:
+            term: Search for passages containing specific text.
+            limit: Maximum number of passages to return.
+            offset: Number of passages to skip from the beginning.
+            order_by: Specify the sorting order for the results.
+            cluster_id: Filter passages belonging to specific text reuse clusters.
+            cluster_size: Filter passages based on the size of the cluster they belong to.
+            title: Filter passages by the title of the articles they appear in.
+            lexical_overlap: Filter passages based on the lexical overlap score within their cluster.
+            day_delta: Filter passages based on the time span (in days) of their cluster.
+            date_range: Filter passages based on their publication date.
+            newspaper_id: Filter passages from specific newspapers.
+            collection_id: Filter passages from specific collections.
+            front_page: Filter passages appearing on the front page.
+            topic_id: Filter passages associated with specific topics.
+            language: Filter passages by their language.
+            country: Filter passages by the country of publication.
+            mention: Filter passages containing specific mentions (named entities).
+            entity_id: Filter passages associated with specific entity IDs.
+
+        Returns:
+            FindTextReusePassagesContainer: A container holding the search results.
+
+        Examples:
+            Find passages containing the term 'revolution' from French newspapers:
+            >>> results = textReusePassages.find(term='revolution', country='FR') # doctest: +SKIP
+            >>> print(results.df) # doctest: +SKIP
+
+            Find passages from clusters with a size greater than 50:
+            >>> results = textReusePassages.find(cluster_size=(51, None)) # doctest: +SKIP
+            >>> print(results.df) # doctest: +SKIP
+        """
         # reusing build filters from clusters - they are the same
         filters = _build_filters(
             cluster_id=cluster_id,
@@ -140,6 +175,47 @@ class TextReusePassagesResource(Resource):
         mention: str | AND[str] | OR[str] | None = None,
         entity_id: str | AND[str] | OR[str] | None = None,
     ) -> FacetDataContainer:
+        """
+        Get facet information for text reuse passages based on specified filters.
+
+        Facets provide aggregated counts for different properties of the passages,
+        such as the distribution of newspapers or languages.
+
+        Args:
+            facet: The specific facet to retrieve (e.g., 'newspaper', 'language').
+            term: Filter passages by text content before calculating facets.
+            limit: Maximum number of facet values to return.
+            offset: Number of facet values to skip.
+            order_by: How to order the facet values (e.g., 'value', 'count').
+            cluster_id: Filter passages by cluster ID before calculating facets.
+            cluster_size: Filter passages by cluster size before calculating facets.
+            title: Filter passages by article title before calculating facets.
+            lexical_overlap: Filter passages by lexical overlap before calculating facets.
+            day_delta: Filter passages by cluster day delta before calculating facets.
+            date_range: Filter passages by publication date before calculating facets.
+            newspaper_id: Filter passages by newspaper before calculating facets.
+            collection_id: Filter passages by collection before calculating facets.
+            front_page: Filter passages by front page status before calculating facets.
+            topic_id: Filter passages by topic ID before calculating facets.
+            language: Filter passages by language before calculating facets.
+            country: Filter passages by country before calculating facets.
+            mention: Filter passages by mention before calculating facets.
+            entity_id: Filter passages by entity ID before calculating facets.
+
+        Returns:
+            FacetDataContainer: A container holding the facet results.
+
+        Examples:
+            Get the top 10 newspapers associated with passages containing 'war':
+            >>> facet_results = textReusePassages.facet(facet='newspaper', term='war', limit=10) # doctest: +SKIP
+            >>> print(facet_results.df) # doctest: +SKIP
+
+            Get the language distribution for passages published between 1914 and 1918:
+            >>> from impresso.structures import DateRange
+            >>> date_filter = DateRange(start="1914-01-01", end="1918-12-31")
+            >>> facet_results = textReusePassages.facet(facet='language', date_range=date_filter) # doctest: +SKIP
+            >>> print(facet_results.df) # doctest: +SKIP
+        """
         facet_id = get_enum_from_literal(facet, GetTrPassagesFacetId)
         if isinstance(facet_id, Unset):
             raise ValueError(f"{facet} is not a valid value")

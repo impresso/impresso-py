@@ -180,7 +180,7 @@ class DateRange:
 
 class NumericRange:
     """
-    Date range.
+    Numeric range.
 
     Example:
 

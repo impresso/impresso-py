@@ -10,7 +10,12 @@ class DataContainer(Generic[IT, T]):
     """
     Generic container for responses from the Impresso API
     returned by resource methods (`get`, `find`).
-    Generally represents a single page of the result.
+
+    Generally represents a single page of the result. The results can be
+    paginated through by adjusting the `offset` and `limit` parameters
+    in the corresponding resource method call (e.g., `client.newspapers.find`).
+    The `total`, `limit`, `offset`, and `size` properties provide information
+    about the current page and the overall result set.
     """
 
     def __init__(
@@ -76,43 +81,47 @@ class DataContainer(Generic[IT, T]):
 
     @property
     def raw(self) -> dict[str, Any]:
-        """Returns the response data as a python dictionary."""
+        """The response data as a python dictionary."""
         return getattr(self._data, "to_dict")()
 
     @property
     def pydantic(self) -> T:
-        """Returns the response data as a pydantic model."""
+        """The response data as a pydantic model."""
         return self._pydantic_model.model_validate(self.raw)
 
     @property
     def df(self) -> DataFrame:
-        """Returns the response data as a pandas dataframe."""
+        """
+        The response data for the current page as a pandas dataframe.
+
+        Note that this DataFrame only contains the items from the current
+        page of results, not the entire result set across all pages.
+        """
         return DataFrame.from_dict(self._data)  # type: ignore
 
     @property
     def total(self) -> int:
-        """Total number of results."""
+        """Total number of results available across all pages."""
         return self.raw.get("pagination", {}).get("total", 0)
 
     @property
     def limit(self) -> int:
-        """Current page size."""
+        """Maximum number of items requested for the current page."""
         return self.raw.get("pagination", {}).get("limit", 0)
 
     @property
     def offset(self) -> int:
-        """Current page offset."""
+        """The starting index (0-based) of the items on the current page."""
         return self.raw.get("pagination", {}).get("offset", 0)
 
     @property
     def size(self) -> int:
-        """Current page size."""
+        """Number of items actually present on the current page."""
         return len(self.raw.get("data", []))
 
     @property
     def url(self) -> str | None:
         """
-        URL of an Impresso web application page
-        representing the result set from this container.
+        URL of an Impresso web application page representing the result set.
         """
         return self._web_app_search_result_url
