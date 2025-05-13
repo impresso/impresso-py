@@ -1,4 +1,4 @@
-from typing import Any, Generic, TypeVar
+from typing import Any, Callable, Generic, TypeVar, Iterator
 from pydantic import BaseModel
 from pandas import DataFrame
 
@@ -125,3 +125,71 @@ class DataContainer(Generic[IT, T]):
         URL of an Impresso web application page representing the result set.
         """
         return self._web_app_search_result_url
+
+    def pages(self) -> Iterator["DataContainer[IT, T]"]:
+        """
+        Yields the current page and all subsequent pages of results.
+
+        This method first yields the current DataContainer instance (self),
+        then attempts to fetch and yield subsequent pages by making new API
+        calls with adjusted offsets.
+
+        Returns:
+            Iterator["DataContainer[IT, T]"]: An iterator that yields
+            DataContainer instances, starting with the current one,
+            followed by subsequent pages.
+
+        Example:
+            >>> first_page = client.newspapers.find(limit=10)
+            >>> for page in first_page.pages():
+            ...     # Process items from the current page
+            ...     print(f"Page {page.offset // page.limit + 1}:")
+            ...     print(page.df)
+            ...     # The loop will continue with the next page, if any
+        """
+        # Implementation Note:
+        # To fully implement this method, it should first `yield self`.
+        # Then, it would need access to the original function/client method
+        # that fetched the current page, along with its parameters, to make
+        # new calls for subsequent pages in a loop, yielding each new
+        # DataContainer. This might involve modifying the __init__
+        # method to store this information. The loop would continue as long
+        # as `self.offset + self.size < self.total`.
+
+        # Default implementation is suitable for `Get*` containers that
+        # contain 0 or 1 items and no further pages.
+        yield self  # Return the current page
+        raise StopIteration
+
+
+DC = TypeVar("DC", bound=DataContainer)
+
+
+def iterate_pages(
+    fetch_method: Callable[..., DC],
+    fetch_method_args: dict[str, Any],
+    initial_offset: int,
+    limit: int,
+    total: int,
+) -> Iterator[DC]:
+    """
+    Iterate over the pages of results from the media sources API, starting from the
+    next page.
+
+    Args:
+        fetch_method (Callable[..., DC]): The method to call to fetch each page of results.
+        fetch_method_args (dict[str, Any]): The arguments to pass to the fetch method.
+        initial_offset (int): The initial offset for the first page.
+        limit (int): The maximum number of items to fetch per page.
+
+    Returns:
+        Iterator[DC]: An iterator over the pages of results.
+    """
+    offset = initial_offset + limit
+    while offset < total:
+        page = fetch_method(
+            **fetch_method_args,
+            **{"offset": offset, "limit": limit},
+        )
+        yield page
+        offset += limit

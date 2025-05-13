@@ -1,8 +1,12 @@
+from typing import Any, Callable, Iterator, cast
 from pandas import DataFrame, json_normalize
 from impresso.api_client.api.collections import (
     find_collections,
     get_collection,
     patch_collections_collection_id_items,
+)
+from impresso.api_client.models.find_collections_base_find_response import (
+    FindCollectionsBaseFindResponse,
 )
 from impresso.api_client.models.find_collections_order_by import (
     FindCollectionsOrderBy,
@@ -13,7 +17,7 @@ from impresso.api_client.models.update_collectable_items_request import (
 )
 from impresso.api_client.types import UNSET
 from impresso.api_models import BaseFind, Collection
-from impresso.data_container import DataContainer
+from impresso.data_container import DataContainer, iterate_pages
 from impresso.resources.base import Resource
 from impresso.resources.search import SearchDataContainer, SearchResource
 from impresso.util.error import raise_for_error
@@ -29,6 +33,18 @@ class FindCollectionsSchema(BaseFind):
 class FindCollectionsContainer(DataContainer):
     """Response of a find call."""
 
+    def __init__(
+        self,
+        data: FindCollectionsBaseFindResponse,
+        pydantic_model: type[FindCollectionsSchema],
+        fetch_method: Callable[..., "FindCollectionsContainer"],
+        fetch_method_args: dict[str, Any],
+        web_app_search_result_url: str | None = None,
+    ):
+        super().__init__(data, pydantic_model, web_app_search_result_url)
+        self._fetch_method = fetch_method
+        self._fetch_method_args = fetch_method_args
+
     @property
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
@@ -36,6 +52,16 @@ class FindCollectionsContainer(DataContainer):
         if len(data):
             return json_normalize(self._data.to_dict()["data"]).set_index("uid")
         return DataFrame()
+
+    def pages(self) -> Iterator["FindCollectionsContainer"]:
+        yield self
+        yield from iterate_pages(
+            self._fetch_method,
+            self._fetch_method_args,
+            self.offset,
+            self.limit,
+            self.total,
+        )
 
 
 class GetCollectionContainer(DataContainer):
@@ -125,8 +151,14 @@ class CollectionsResource(Resource):
         )
         raise_for_error(result)
         return FindCollectionsContainer(
-            result,
+            # assuming it's not an error because we raised for error above
+            cast(FindCollectionsBaseFindResponse, result),
             FindCollectionsSchema,
+            fetch_method=self.find,
+            fetch_method_args={
+                "term": term,
+                "order_by": order_by,
+            },
             web_app_search_result_url=_build_web_app_find_collections_url(
                 base_url=self._get_web_app_base_url(),
                 term=term,
