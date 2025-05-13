@@ -27,6 +27,9 @@ from .find_collections_order_by import FindCollectionsOrderBy
 from .find_entities_base_find_response import FindEntitiesBaseFindResponse
 from .find_entities_base_find_response_pagination import FindEntitiesBaseFindResponsePagination
 from .find_entities_order_by import FindEntitiesOrderBy
+from .find_images_base_find_response import FindImagesBaseFindResponse
+from .find_images_base_find_response_pagination import FindImagesBaseFindResponsePagination
+from .find_images_order_by import FindImagesOrderBy
 from .find_media_sources_base_find_response import FindMediaSourcesBaseFindResponse
 from .find_media_sources_base_find_response_pagination import FindMediaSourcesBaseFindResponsePagination
 from .find_media_sources_order_by import FindMediaSourcesOrderBy
@@ -37,6 +40,11 @@ from .find_text_reuse_clusters_order_by import FindTextReuseClustersOrderBy
 from .find_text_reuse_passages_base_find_response import FindTextReusePassagesBaseFindResponse
 from .find_text_reuse_passages_base_find_response_pagination import FindTextReusePassagesBaseFindResponsePagination
 from .find_text_reuse_passages_order_by import FindTextReusePassagesOrderBy
+from .freeform import Freeform
+from .get_images_facet_base_find_response import GetImagesFacetBaseFindResponse
+from .get_images_facet_base_find_response_pagination import GetImagesFacetBaseFindResponsePagination
+from .get_images_facet_id import GetImagesFacetId
+from .get_images_facet_order_by import GetImagesFacetOrderBy
 from .get_search_facet_base_find_response import GetSearchFacetBaseFindResponse
 from .get_search_facet_base_find_response_pagination import GetSearchFacetBaseFindResponsePagination
 from .get_search_facet_id import GetSearchFacetId
@@ -49,6 +57,9 @@ from .get_tr_passages_facet_base_find_response import GetTrPassagesFacetBaseFind
 from .get_tr_passages_facet_base_find_response_pagination import GetTrPassagesFacetBaseFindResponsePagination
 from .get_tr_passages_facet_id import GetTrPassagesFacetId
 from .get_tr_passages_facet_order_by import GetTrPassagesFacetOrderBy
+from .image import Image
+from .image_media_source_ref import ImageMediaSourceRef
+from .image_media_source_ref_type import ImageMediaSourceRefType
 from .impresso_named_entity_recognition_entity import ImpressoNamedEntityRecognitionEntity
 from .impresso_named_entity_recognition_entity_confidence import ImpressoNamedEntityRecognitionEntityConfidence
 from .impresso_named_entity_recognition_entity_offset import ImpressoNamedEntityRecognitionEntityOffset
@@ -88,6 +99,7 @@ from .wikidata_person import WikidataPerson
 from .wikidata_person_descriptions import WikidataPersonDescriptions
 from .wikidata_person_labels import WikidataPersonLabels
 from .wikidata_person_type import WikidataPersonType
+from .word_match import WordMatch
 
 __all__ = (
     "AuthenticationCreateRequest",
@@ -117,6 +129,9 @@ __all__ = (
     "FindEntitiesBaseFindResponse",
     "FindEntitiesBaseFindResponsePagination",
     "FindEntitiesOrderBy",
+    "FindImagesBaseFindResponse",
+    "FindImagesBaseFindResponsePagination",
+    "FindImagesOrderBy",
     "FindMediaSourcesBaseFindResponse",
     "FindMediaSourcesBaseFindResponsePagination",
     "FindMediaSourcesOrderBy",
@@ -127,6 +142,11 @@ __all__ = (
     "FindTextReusePassagesBaseFindResponse",
     "FindTextReusePassagesBaseFindResponsePagination",
     "FindTextReusePassagesOrderBy",
+    "Freeform",
+    "GetImagesFacetBaseFindResponse",
+    "GetImagesFacetBaseFindResponsePagination",
+    "GetImagesFacetId",
+    "GetImagesFacetOrderBy",
     "GetSearchFacetBaseFindResponse",
     "GetSearchFacetBaseFindResponsePagination",
     "GetSearchFacetId",
@@ -139,6 +159,9 @@ __all__ = (
     "GetTrPassagesFacetBaseFindResponsePagination",
     "GetTrPassagesFacetId",
     "GetTrPassagesFacetOrderBy",
+    "Image",
+    "ImageMediaSourceRef",
+    "ImageMediaSourceRefType",
     "ImpressoNamedEntityRecognitionEntity",
     "ImpressoNamedEntityRecognitionEntityConfidence",
     "ImpressoNamedEntityRecognitionEntityOffset",
@@ -178,4 +201,5 @@ __all__ = (
     "WikidataPersonDescriptions",
     "WikidataPersonLabels",
     "WikidataPersonType",
+    "WordMatch",
 )

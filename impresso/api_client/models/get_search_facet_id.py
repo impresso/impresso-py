@@ -6,7 +6,9 @@ class GetSearchFacetId(str, Enum):
     ACCESSRIGHT = "accessRight"
     COLLECTION = "collection"
     CONTENTLENGTH = "contentLength"
+    COPYRIGHT = "copyright"
     COUNTRY = "country"
+    DATADOMAIN = "dataDomain"
     DATERANGE = "daterange"
     LANGUAGE = "language"
     LOCATION = "location"
@@ -27,7 +29,9 @@ GetSearchFacetIdLiteral = Literal[
     "accessRight",
     "collection",
     "contentLength",
+    "copyright",
     "country",
+    "dataDomain",
     "daterange",
     "language",
     "location",
