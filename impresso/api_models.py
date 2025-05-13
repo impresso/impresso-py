@@ -382,6 +382,62 @@ class EntityMention(BaseModel):
     ]
 
 
+class Freeform(BaseModel):
+    pass
+    model_config = ConfigDict(
+        extra='allow',
+    )
+
+
+class MediaSourceRef(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='The unique identifier of the media source')]
+    name: Annotated[str, Field(description='The name of the media source')]
+    type: Annotated[
+        Optional[Literal['newspaper']],
+        Field(None, description='The type of the media source'),
+    ]
+
+
+class Image(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='The unique identifier of the image')]
+    caption: Annotated[Optional[str], Field(None, description='Image caption')]
+    issueUid: Annotated[
+        str,
+        Field(
+            description='The unique identifier of the issue that the image belongs to.'
+        ),
+    ]
+    contentItemUid: Annotated[
+        Optional[str],
+        Field(
+            None,
+            description='The unique identifier of the content item that the image belongs to.',
+        ),
+    ]
+    previewUrl: Annotated[AnyUrl, Field(description='The URL of the image preview')]
+    pageNumbers: Annotated[
+        Optional[Sequence[int]],
+        Field(
+            None, description='The page numbers of the issue that the image belongs to.'
+        ),
+    ]
+    mediaSourceRef: Annotated[
+        MediaSourceRef, Field(description='The media source of the image')
+    ]
+    date: Annotated[
+        date,
+        Field(
+            description='The date of the image or the date of the issue that the image belongs to.'
+        ),
+    ]
+
+
 class Totals(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -637,6 +693,15 @@ class WikidataLocation(BaseModel):
     coordinates: Optional[Coordinates] = None
 
 
+class WordMatch(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='Unique identifier for the word')]
+    languageCode: Annotated[str, Field(description='The language code of the word')]
+    word: Annotated[str, Field(description='The word')]
+
+
 class ContentItem(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -754,7 +819,7 @@ class EntityDetails(BaseModel):
     )
     uid: Annotated[str, Field(description='Unique identifier of the entity')]
     label: Annotated[Optional[str], Field(None, description='Entity label')]
-    type: Optional[Literal['person', 'location']] = None
+    type: Optional[Literal['person', 'location', 'organisation', 'newsagency']] = None
     wikidataId: Annotated[
         Optional[str], Field(None, description='Wikidata identifier of the entity.')
     ]

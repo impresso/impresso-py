@@ -1,6 +1,10 @@
+from typing import Any, Callable, Iterator, cast
 from pandas import DataFrame, json_normalize
 
 from impresso.api_client.api.media_sources import find_media_sources
+from impresso.api_client.models.find_media_sources_base_find_response import (
+    FindMediaSourcesBaseFindResponse,
+)
 from impresso.api_client.models.find_media_sources_order_by import (
     FindMediaSourcesOrderBy,
     FindMediaSourcesOrderByLiteral,
@@ -11,7 +15,7 @@ from impresso.api_client.models.find_media_sources_type import (
 )
 from impresso.api_client.types import UNSET
 from impresso.api_models import BaseFind, MediaSource
-from impresso.data_container import DataContainer
+from impresso.data_container import DataContainer, iterate_pages
 from impresso.resources.base import Resource
 from impresso.util.error import raise_for_error
 from impresso.util.py import get_enum_from_literal
@@ -26,6 +30,18 @@ class FindMediaSourcesSchema(BaseFind):
 class FindMediaSourcesContainer(DataContainer):
     """Response of a search call."""
 
+    def __init__(
+        self,
+        data: FindMediaSourcesBaseFindResponse,
+        pydantic_model: type[FindMediaSourcesSchema],
+        fetch_method: Callable[..., "FindMediaSourcesContainer"],
+        fetch_method_args: dict[str, Any],
+        web_app_search_result_url: str | None = None,
+    ):
+        super().__init__(data, pydantic_model, web_app_search_result_url)
+        self._fetch_method = fetch_method
+        self._fetch_method_args = fetch_method_args
+
     @property
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
@@ -33,6 +49,16 @@ class FindMediaSourcesContainer(DataContainer):
         if len(data):
             return json_normalize(self._data.to_dict()["data"]).set_index("uid")
         return DataFrame()
+
+    def pages(self) -> Iterator["FindMediaSourcesContainer"]:
+        yield self
+        yield from iterate_pages(
+            self._fetch_method,
+            self._fetch_method_args,
+            self.offset,
+            self.limit,
+            self.total,
+        )
 
 
 class MediaSourcesResource(Resource):
@@ -82,8 +108,15 @@ class MediaSourcesResource(Resource):
         )
         raise_for_error(result)
         return FindMediaSourcesContainer(
-            result,
+            cast(FindMediaSourcesBaseFindResponse, result),
             FindMediaSourcesSchema,
+            fetch_method=self.find,
+            fetch_method_args={
+                "term": term,
+                "type": type,
+                "order_by": order_by,
+                "with_properties": with_properties,
+            },
             web_app_search_result_url=_build_web_app_media_sources_url(
                 base_url=self._get_web_app_base_url(),
                 term=term,

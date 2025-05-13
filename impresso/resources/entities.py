@@ -1,15 +1,18 @@
-from typing import Literal
+from typing import Literal, Any, Callable, Iterator, cast
 
 from pandas import DataFrame, json_normalize
 
 from impresso.api_client.api.entities import find_entities, get_entity
+from impresso.api_client.models.find_entities_base_find_response import (
+    FindEntitiesBaseFindResponse,
+)
 from impresso.api_client.models.find_entities_order_by import (
     FindEntitiesOrderBy,
     FindEntitiesOrderByLiteral,
 )
 from impresso.api_client.types import UNSET
 from impresso.api_models import BaseFind, EntityDetails, Filter
-from impresso.data_container import DataContainer
+from impresso.data_container import DataContainer, iterate_pages
 from impresso.resources.base import Resource
 from impresso.structures import AND, OR
 from impresso.util.error import raise_for_error
@@ -26,6 +29,18 @@ class FindEntitiesSchema(BaseFind):
 class FindEntitiesContainer(DataContainer):
     """Response of a find call."""
 
+    def __init__(
+        self,
+        data: FindEntitiesBaseFindResponse,
+        pydantic_model: type[FindEntitiesSchema],
+        fetch_method: Callable[..., "FindEntitiesContainer"],
+        fetch_method_args: dict[str, Any],
+        web_app_search_result_url: str | None = None,
+    ):
+        super().__init__(data, pydantic_model, web_app_search_result_url)
+        self._fetch_method = fetch_method
+        self._fetch_method_args = fetch_method_args
+
     @property
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
@@ -33,6 +48,17 @@ class FindEntitiesContainer(DataContainer):
         if len(data):
             return json_normalize(self._data.to_dict()["data"]).set_index("uid")
         return DataFrame()
+
+    def pages(self) -> Iterator["FindEntitiesContainer"]:
+        """Iterate over all pages of results."""
+        yield self
+        yield from iterate_pages(
+            self._fetch_method,
+            self._fetch_method_args,
+            self.offset,
+            self.limit,
+            self.total,
+        )
 
 
 class GetEntityContainer(DataContainer):
@@ -108,8 +134,17 @@ class EntitiesResource(Resource):
         )
         raise_for_error(result)
         return FindEntitiesContainer(
-            result,
+            cast(FindEntitiesBaseFindResponse, result),
             FindEntitiesSchema,
+            fetch_method=self.find,
+            fetch_method_args={
+                "term": term,
+                "wikidata_id": wikidata_id,
+                "entity_id": entity_id,
+                "entity_type": entity_type,
+                "order_by": order_by,
+                "resolve": resolve,
+            },
             web_app_search_result_url=(
                 _build_web_app_find_entities_url(
                     base_url=self._get_web_app_base_url(),

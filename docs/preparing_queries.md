@@ -8,7 +8,7 @@ from impresso import AND
 impresso.search.find(term=AND("Titanic", "ship"))
 ```
 
-We can refine this condition and search for all content items that mention `Titanic` and `ship` together **OR** mention `Titanic` and `iceberg` together **AND** do not mention `Di Caprio`. 
+We can refine this condition and search for all content items that mention `Titanic` and `ship` together **OR** mention `Titanic` and `iceberg` together **AND** do not mention `Di Caprio`.
 
 
 ```python

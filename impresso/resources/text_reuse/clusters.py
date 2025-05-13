@@ -1,3 +1,5 @@
+from typing import Any, Callable, Iterator, cast
+
 from pandas import DataFrame, json_normalize
 
 from impresso.api_client.api.search_facets import get_tr_clusters_facet
@@ -15,16 +17,24 @@ from impresso.api_client.models.get_tr_clusters_facet_order_by import (
     GetTrClustersFacetOrderByLiteral,
 )
 from impresso.api_client.types import UNSET, Unset
+from impresso.api_client.models.get_search_facet_base_find_response import (
+    GetSearchFacetBaseFindResponse,
+)
+from impresso.api_client.models.find_text_reuse_clusters_base_find_response import (
+    FindTextReuseClustersBaseFindResponse,
+)
 from impresso.api_models import (
     BaseFind,
     Filter,
     Q,
-    SearchFacetBucket,
     TextReuseCluster,
 )
-from impresso.data_container import DataContainer
+from impresso.data_container import DataContainer, iterate_pages
 from impresso.resources.base import Resource
-from impresso.resources.search import FacetDataContainer
+from impresso.resources.search import (
+    FacetDataContainer,
+    FacetResponseSchema,
+)
 from impresso.structures import AND, OR, DateRange
 from impresso.util.error import raise_for_error
 from impresso.util.filters import and_or_filter, filters_as_protobuf
@@ -38,6 +48,18 @@ class FindTextReuseClusterResponseSchema(BaseFind):
 
 
 class FindTextReuseClustersContainer(DataContainer):
+    def __init__(
+        self,
+        data: FindTextReuseClustersBaseFindResponse,
+        pydantic_model: type[FindTextReuseClusterResponseSchema],
+        fetch_method: Callable[..., "FindTextReuseClustersContainer"],
+        fetch_method_args: dict[str, Any],
+        web_app_search_result_url: str | None = None,
+    ):
+        super().__init__(data, pydantic_model, web_app_search_result_url)
+        self._fetch_method = fetch_method
+        self._fetch_method_args = fetch_method_args
+
     @property
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
@@ -45,6 +67,17 @@ class FindTextReuseClustersContainer(DataContainer):
         if len(data):
             return json_normalize(data).set_index("uid")
         return DataFrame()
+
+    def pages(self) -> Iterator["FindTextReuseClustersContainer"]:
+        """Iterate over all pages of results."""
+        yield self
+        yield from iterate_pages(
+            self._fetch_method,
+            self._fetch_method_args,
+            self.offset,
+            self.limit,
+            self.total,
+        )
 
 
 Range = tuple[int, int]
@@ -155,8 +188,26 @@ class TextReuseClustersResource(Resource):
         )
         raise_for_error(result)
         return FindTextReuseClustersContainer(
-            result,
-            FindTextReuseClusterResponseSchema,
+            data=cast(FindTextReuseClustersBaseFindResponse, result),
+            pydantic_model=FindTextReuseClusterResponseSchema,
+            fetch_method=self.find,
+            fetch_method_args={
+                "term": term,
+                "title": title,
+                "order_by": order_by,
+                "cluster_size": cluster_size,
+                "lexical_overlap": lexical_overlap,
+                "day_delta": day_delta,
+                "date_range": date_range,
+                "newspaper_id": newspaper_id,
+                "collection_id": collection_id,
+                "front_page": front_page,
+                "topic_id": topic_id,
+                "language": language,
+                "country": country,
+                "mention": mention,
+                "entity_id": entity_id,
+            },
             web_app_search_result_url=_build_web_app_find_clusters_url(
                 base_url=self._get_web_app_base_url(),
                 filters=filters_pb,
@@ -237,8 +288,18 @@ class TextReuseClustersResource(Resource):
         )
         raise_for_error(result)
         return FacetDataContainer(
-            result,
-            SearchFacetBucket,
+            data=cast(GetSearchFacetBaseFindResponse, result),  # Cast result
+            pydantic_model=FacetResponseSchema,  # Use FacetResponseSchema
+            fetch_method=self.facet,
+            fetch_method_args={
+                "facet": facet,
+                "order_by": order_by,
+                "cluster_size": cluster_size,
+                "date_range": date_range,
+                "newspaper_id": newspaper_id,
+                "lexical_overlap": lexical_overlap,
+                "day_delta": day_delta,
+            },
             web_app_search_result_url=_build_web_app_find_clusters_url(
                 base_url=self._get_web_app_base_url(),
                 filters=filters_pb,
