@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import io
 import base64
+from typing import Any, Callable, Iterator, cast
 
 from pandas import DataFrame, json_normalize
 
@@ -14,13 +15,19 @@ from impresso.api_client.models.get_search_facet_order_by import (
     GetSearchFacetOrderBy,
     GetSearchFacetOrderByLiteral,
 )
+from impresso.api_client.models.get_search_facet_base_find_response import (
+    GetSearchFacetBaseFindResponse,
+)
 from impresso.api_client.models.search_order_by import (
     SearchOrderBy,
     SearchOrderByLiteral,
 )
+from impresso.api_client.models.search_base_find_response import (
+    SearchBaseFindResponse,
+)
 from impresso.api_client.types import UNSET, Unset
 from impresso.api_models import ContentItem, BaseFind, Filter, Q, SearchFacetBucket
-from impresso.data_container import DataContainer
+from impresso.data_container import DataContainer, iterate_pages
 from impresso.resources.base import DEFAULT_PAGE_SIZE, Resource
 from impresso.structures import AND, OR, DateRange
 from impresso.util.error import raise_for_error
@@ -43,6 +50,18 @@ class FacetResponseSchema(BaseFind):
 class SearchDataContainer(DataContainer):
     """Response of a search call."""
 
+    def __init__(
+        self,
+        data: SearchBaseFindResponse,
+        pydantic_model: type[SearchResponseSchema],
+        fetch_method: Callable[..., "SearchDataContainer"],
+        fetch_method_args: dict[str, Any],
+        web_app_search_result_url: str | None = None,
+    ):
+        super().__init__(data, pydantic_model, web_app_search_result_url)
+        self._fetch_method = fetch_method
+        self._fetch_method_args = fetch_method_args
+
     @property
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
@@ -51,9 +70,32 @@ class SearchDataContainer(DataContainer):
             return json_normalize(self._data.to_dict()["data"]).set_index("uid")
         return DataFrame()
 
+    def pages(self) -> Iterator["SearchDataContainer"]:
+        """Iterate over all pages of results."""
+        yield self
+        yield from iterate_pages(
+            self._fetch_method,
+            self._fetch_method_args,
+            self.offset,
+            self.limit,
+            self.total,
+        )
+
 
 class FacetDataContainer(DataContainer):
     """Response of a get facet call."""
+
+    def __init__(
+        self,
+        data: GetSearchFacetBaseFindResponse,
+        pydantic_model: type[FacetResponseSchema],
+        fetch_method: Callable[..., "FacetDataContainer"],
+        fetch_method_args: dict[str, Any],
+        web_app_search_result_url: str | None = None,
+    ):
+        super().__init__(data, pydantic_model, web_app_search_result_url)
+        self._fetch_method = fetch_method
+        self._fetch_method_args = fetch_method_args
 
     @property
     def df(self) -> DataFrame:
@@ -68,6 +110,17 @@ class FacetDataContainer(DataContainer):
             return None
         return render_dataframe_chart_base64(
             self.df.index[:].values, self.df["count"].values
+        )
+
+    def pages(self) -> Iterator["FacetDataContainer"]:
+        """Iterate over all pages of results."""
+        yield self
+        yield from iterate_pages(
+            self._fetch_method,
+            self._fetch_method_args,
+            self.offset,
+            self.limit,
+            self.total,
         )
 
 
@@ -159,9 +212,27 @@ class SearchResource(Resource):
         )
         raise_for_error(result)
         return SearchDataContainer(
-            result,
+            cast(SearchBaseFindResponse, result),
             SearchResponseSchema,
-            _build_web_app_search_url(
+            fetch_method=self.find,
+            fetch_method_args={
+                "term": term,
+                "order_by": order_by,
+                "with_text_contents": with_text_contents,
+                "title": title,
+                "front_page": front_page,
+                "entity_id": entity_id,
+                "newspaper_id": newspaper_id,
+                "date_range": date_range,
+                "language": language,
+                "mention": mention,
+                "topic_id": topic_id,
+                "collection_id": collection_id,
+                "country": country,
+                "partner_id": partner_id,
+                "text_reuse_cluster_id": text_reuse_cluster_id,
+            },
+            web_app_search_result_url=_build_web_app_search_url(
                 f"{self._get_web_app_base_url()}/search",
                 order_by=order_by,
                 filters=filters_pb,
@@ -267,9 +338,28 @@ class SearchResource(Resource):
         )
         raise_for_error(result)
         return FacetDataContainer(
-            result,
+            cast(GetSearchFacetBaseFindResponse, result),
             FacetResponseSchema,
-            _build_web_app_facet_url(
+            fetch_method=self.facet,
+            fetch_method_args={
+                "facet": facet,
+                "term": term,
+                "order_by": order_by,
+                "with_text_contents": with_text_contents,
+                "title": title,
+                "front_page": front_page,
+                "entity_id": entity_id,
+                "newspaper_id": newspaper_id,
+                "date_range": date_range,
+                "language": language,
+                "mention": mention,
+                "topic_id": topic_id,
+                "collection_id": collection_id,
+                "country": country,
+                "partner_id": partner_id,
+                "text_reuse_cluster_id": text_reuse_cluster_id,
+            },
+            web_app_search_result_url=_build_web_app_facet_url(
                 f"{self._get_web_app_base_url()}/search",
                 facet=facet,
                 filters=filters_pb,
