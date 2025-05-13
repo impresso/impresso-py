@@ -140,12 +140,16 @@ class DataContainer(Generic[IT, T]):
             followed by subsequent pages.
 
         Example:
-            >>> first_page = client.newspapers.find(limit=10)
-            >>> for page in first_page.pages():
-            ...     # Process items from the current page
-            ...     print(f"Page {page.offset // page.limit + 1}:")
-            ...     print(page.df)
-            ...     # The loop will continue with the next page, if any
+
+            # Get the first page with 10 items per page
+            first_page = client.newspapers.find(limit=10)
+
+            # Iterate through all pages
+            for page in first_page.pages():
+                # Process items from the current page
+                print(f"Page {page.offset // page.limit + 1}:")
+                print(page.df)
+                # The loop will continue with the next page, if any
         """
         # Implementation Note:
         # To fully implement this method, it should first `yield self`.
