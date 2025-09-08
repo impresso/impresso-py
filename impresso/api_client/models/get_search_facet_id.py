@@ -15,8 +15,11 @@ class GetSearchFacetId(str, Enum):
     MONTH = "month"
     NAG = "nag"
     NEWSPAPER = "newspaper"
+    ORGANISATION = "organisation"
     PARTNER = "partner"
     PERSON = "person"
+    SOURCEMEDIUM = "sourceMedium"
+    SOURCETYPE = "sourceType"
     TOPIC = "topic"
     TYPE = "type"
     YEAR = "year"
@@ -38,8 +41,11 @@ GetSearchFacetIdLiteral = Literal[
     "month",
     "nag",
     "newspaper",
+    "organisation",
     "partner",
     "person",
+    "sourceMedium",
+    "sourceType",
     "topic",
     "type",
     "year",

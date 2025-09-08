@@ -19,7 +19,6 @@ class GetTrPassagesFacetId(str, Enum):
     TOPIC = "topic"
     TYPE = "type"
     YEAR = "year"
-    YEARMONTH = "yearmonth"
 
     def __str__(self) -> str:
         return str(self.value)
@@ -42,5 +41,4 @@ GetTrPassagesFacetIdLiteral = Literal[
     "topic",
     "type",
     "year",
-    "yearmonth",
 ]

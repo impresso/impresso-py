@@ -12,7 +12,9 @@ from .collectable_items_updated_response import CollectableItemsUpdatedResponse
 from .collection import Collection
 from .collection_access_level import CollectionAccessLevel
 from .content_item import ContentItem
+from .content_item_copyright_status import ContentItemCopyrightStatus
 from .content_item_media_type import ContentItemMediaType
+from .content_item_source_medium import ContentItemSourceMedium
 from .entity_details import EntityDetails
 from .entity_details_type import EntityDetailsType
 from .entity_mention import EntityMention
@@ -72,6 +74,7 @@ from .media_source import MediaSource
 from .media_source_properties_item import MediaSourcePropertiesItem
 from .media_source_totals import MediaSourceTotals
 from .media_source_type import MediaSourceType
+from .named_entity import NamedEntity
 from .new_collection_request import NewCollectionRequest
 from .new_collection_request_access_level import NewCollectionRequestAccessLevel
 from .newspaper import Newspaper
@@ -114,7 +117,9 @@ __all__ = (
     "Collection",
     "CollectionAccessLevel",
     "ContentItem",
+    "ContentItemCopyrightStatus",
     "ContentItemMediaType",
+    "ContentItemSourceMedium",
     "EntityDetails",
     "EntityDetailsType",
     "EntityMention",
@@ -174,6 +179,7 @@ __all__ = (
     "MediaSourcePropertiesItem",
     "MediaSourceTotals",
     "MediaSourceType",
+    "NamedEntity",
     "NewCollectionRequest",
     "NewCollectionRequestAccessLevel",
     "Newspaper",

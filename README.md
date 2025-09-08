@@ -3,7 +3,6 @@
 [![PyPI version](https://badge.fury.io/py/impresso.svg)](https://badge.fury.io/py/impresso)
 ![PyPI - License](https://img.shields.io/pypi/l/impresso)
 
-
 Impresso is a library designed to facilitate interaction with the [Impresso](https://impresso-project.ch/app) dataset. It offers a comprehensive set of classes for API interaction and a variety of tools to streamline data manipulation and analysis.
 
 You can find the full documentation at [https://impresso.github.io/impresso-py/](https://impresso.github.io/impresso-py/).
@@ -46,7 +45,7 @@ poetry run mypy impresso tests
 
 ### OpenAPI client generation
 
-The OpenAPI client is generated using the OpenAPI Generator. Pydantic models from the OpenAPI spec are generated too. The following command generates both the client code and the pydantic models:
+The OpenAPI client is generated using the OpenAPI Generator. Pydantic models from the OpenAPI spec are generated too. The following command generates both the client code and the pydantic models. Make sure the Public API is running on `localhost`.:
 
 ```shell
 poetry run generate-client
