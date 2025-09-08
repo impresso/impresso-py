@@ -17,12 +17,10 @@ description = "A Library to interact with the Impresso API"
 homepage = "https://github.com/impresso/impresso-py"
 license = "AGPL-3.0-or-later"
 name = "impresso"
-packages = [
-  {include = "impresso", from = "."},
-]
+packages = [{ include = "impresso", from = "." }]
 readme = "README.md"
 repository = "https://github.com/impresso/impresso-py"
-version = "0.9.12"
+version = "0.9.13"
 
 [tool.poetry.urls]
 Endpoint = "https://impresso-project.ch/public-api/v1"
@@ -57,13 +55,13 @@ flake8 = "7.0.0"
 mypy = "1.9.0"
 # openapi-python-client = "0.19.1"
 # Waiting for a PR to be accepted. Meanwhile update with:
-openapi-python-client = {git = "https://github.com/theorm/openapi-python-client.git#name=openapi-python-client", branch = "develop"}
+openapi-python-client = { git = "https://github.com/theorm/openapi-python-client.git#name=openapi-python-client", branch = "develop" }
 pytest = "8.1.1"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "1.6.1"
 mkdocs-material = "9.5.45"
-mkdocstrings = {version = "0.27.0", extras = ["python"]}
+mkdocstrings = { version = "0.27.0", extras = ["python"] }
 
 [tool.mypy]
 exclude = ["impresso/api_client", "impresso/protobuf"]
