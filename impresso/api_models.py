@@ -500,6 +500,17 @@ class MediaSource(BaseModel):
     properties: Optional[Sequence[Property]] = None
 
 
+class NamedEntity(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='Unique identifier of the entity')]
+    count: Annotated[
+        Optional[float],
+        Field(None, description='How many times it is mentioned in the text'),
+    ]
+
+
 class Newspaper(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -710,11 +721,22 @@ class ContentItem(BaseModel):
         str,
         Field(description='The unique identifier of the content item.', min_length=1),
     ]
+    copyrightStatus: Annotated[
+        Optional[Literal['pbl', 'und', 'nkn', 'euo', 'unk', 'in_cpy']],
+        Field(None, description='Copyright status.'),
+    ]
     type: Annotated[
         Optional[str],
         Field(
             None,
             description='The type of the content item, as present in the OLR provided by the data provider. All content items are not characterised by the same set of types.',
+        ),
+    ]
+    sourceMedium: Annotated[
+        Optional[Literal['audio', 'print', 'typescript']],
+        Field(
+            None,
+            description='Medium of the source (audio for audio radio broadcasts, print for newspapers, typescript for digitised radio bulletin typescripts).',
         ),
     ]
     title: Annotated[
@@ -723,13 +745,31 @@ class ContentItem(BaseModel):
     transcript: Annotated[
         Optional[str], Field(None, description='Transcript of the content item.')
     ]
-    locations: Annotated[
-        Optional[Sequence[EntityMention]],
-        Field(None, description='Locations mentioned in the content item.'),
+    locationEntities: Annotated[
+        Optional[Sequence[NamedEntity]],
+        Field(
+            None, description='Linked location entities mentioned in the content item.'
+        ),
     ]
-    persons: Annotated[
-        Optional[Sequence[EntityMention]],
-        Field(None, description='Persions mentioned in the content item.'),
+    personEntities: Annotated[
+        Optional[Sequence[NamedEntity]],
+        Field(
+            None, description='Linked person entities mentioned in the content item.'
+        ),
+    ]
+    organisationEntities: Annotated[
+        Optional[Sequence[NamedEntity]],
+        Field(
+            None,
+            description='Linked organisation entities mentioned in the content item.',
+        ),
+    ]
+    newsAgenciesEntities: Annotated[
+        Optional[Sequence[NamedEntity]],
+        Field(
+            None,
+            description='Linked news agency entities mentioned in the content item.',
+        ),
     ]
     topics: Annotated[
         Optional[Sequence[TopicMention]],
@@ -758,22 +798,34 @@ class ContentItem(BaseModel):
         Optional[AwareDatetime],
         Field(None, description='The publication date of the content item.'),
     ]
+    issueUid: Annotated[
+        Optional[str], Field(None, description='Unique issue identifier')
+    ]
     countryCode: Annotated[
         Optional[str],
         Field(None, description='ISO 3166-1 alpha-2 country code of the content item.'),
     ]
-    dataProviderCode: Annotated[
+    providerCode: Annotated[
         Optional[str], Field(None, description='The code of the data provider.')
     ]
-    mediaCode: Annotated[
+    mediaUid: Annotated[
         Optional[str],
         Field(
             None,
-            description='Code of the newspaper or the other media the content item belongs to.',
+            description='Media title alias. Usually a 3 letter code of the media title (newspaper, radio station, etc.).',
         ),
     ]
     mediaType: Annotated[
-        Optional[Literal['newspaper']],
+        Optional[
+            Literal[
+                'newspaper',
+                'radio_broadcast',
+                'radio_magazine',
+                'radio_schedule',
+                'monograph',
+                'encyclopedia',
+            ]
+        ],
         Field(None, description='The type of the media the content item belongs to.'),
     ]
 
