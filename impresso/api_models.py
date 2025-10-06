@@ -140,6 +140,33 @@ class Filter(BaseModel):
     uid: Optional[str] = None
 
 
+class ImpressoEmbeddingResponse(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    embedding: Annotated[
+        str,
+        Field(
+            description='Embedding vector, base64-encoded with the model prefix. E.g. <model>:<base64-encoded vector>'
+        ),
+    ]
+
+
+class ImpressoImageEmbeddingRequest(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    searchTarget: Annotated[
+        Literal['image'], Field(description='Where the embedding is going to be used')
+    ]
+    bytes: Annotated[
+        str,
+        Field(
+            description='Base64-encoded image bytes. JPG and PNG formats are supported.'
+        ),
+    ]
+
+
 class Offset(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -295,6 +322,17 @@ class ImpressoNerResponse(BaseModel):
     entities: Sequence[ImpressoNerEntity]
 
 
+class ImpressoTextEmbeddingRequest(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    searchTarget: Annotated[
+        Literal['image', 'text'],
+        Field(description='Where the embedding is going to be used'),
+    ]
+    text: Annotated[str, Field(description='Text to be embedded')]
+
+
 class NewCollectionRequest(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -368,6 +406,10 @@ class Collection(BaseModel):
     totalItems: Annotated[
         Optional[int],
         Field(None, description='Total number of items in the collection.'),
+    ]
+    creatorId: Annotated[
+        Optional[str],
+        Field(None, description='Identifier of the user who created the collection.'),
     ]
 
 
@@ -711,6 +753,24 @@ class WordMatch(BaseModel):
     id: Annotated[str, Field(description='Unique identifier for the word')]
     languageCode: Annotated[str, Field(description='The language code of the word')]
     word: Annotated[str, Field(description='The word')]
+
+
+class AddCollectableItemsFromFilters(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    filters: Annotated[
+        Sequence[Filter],
+        Field(
+            description='Filters to apply when selecting items to add to the collection'
+        ),
+    ]
+    namespace: Annotated[
+        Literal['search', 'tr_passages'],
+        Field(
+            description='Namespace to use when selecting items to add to the collection'
+        ),
+    ]
 
 
 class ContentItem(BaseModel):

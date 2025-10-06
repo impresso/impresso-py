@@ -11,6 +11,7 @@ class GetTrPassagesFacetId(str, Enum):
     LOCATION = "location"
     NAG = "nag"
     NEWSPAPER = "newspaper"
+    ORGANISATION = "organisation"
     PERSON = "person"
     TEXTREUSECLUSTER = "textReuseCluster"
     TEXTREUSECLUSTERDAYDELTA = "textReuseClusterDayDelta"
@@ -33,6 +34,7 @@ GetTrPassagesFacetIdLiteral = Literal[
     "location",
     "nag",
     "newspaper",
+    "organisation",
     "person",
     "textReuseCluster",
     "textReuseClusterDayDelta",

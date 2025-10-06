@@ -1,5 +1,7 @@
 """Contains all the data models used in inputs/outputs"""
 
+from .add_collectable_items_from_filters import AddCollectableItemsFromFilters
+from .add_collectable_items_from_filters_namespace import AddCollectableItemsFromFiltersNamespace
 from .authentication_create_request import AuthenticationCreateRequest
 from .authentication_create_request_strategy import AuthenticationCreateRequestStrategy
 from .authentication_response import AuthenticationResponse
@@ -62,6 +64,9 @@ from .get_tr_passages_facet_order_by import GetTrPassagesFacetOrderBy
 from .image import Image
 from .image_media_source_ref import ImageMediaSourceRef
 from .image_media_source_ref_type import ImageMediaSourceRefType
+from .impresso_embedding_response import ImpressoEmbeddingResponse
+from .impresso_image_embedding_request import ImpressoImageEmbeddingRequest
+from .impresso_image_embedding_request_search_target import ImpressoImageEmbeddingRequestSearchTarget
 from .impresso_named_entity_recognition_entity import ImpressoNamedEntityRecognitionEntity
 from .impresso_named_entity_recognition_entity_confidence import ImpressoNamedEntityRecognitionEntityConfidence
 from .impresso_named_entity_recognition_entity_offset import ImpressoNamedEntityRecognitionEntityOffset
@@ -70,6 +75,8 @@ from .impresso_named_entity_recognition_entity_wikidata import ImpressoNamedEnti
 from .impresso_named_entity_recognition_request import ImpressoNamedEntityRecognitionRequest
 from .impresso_named_entity_recognition_request_method import ImpressoNamedEntityRecognitionRequestMethod
 from .impresso_named_entity_recognition_response import ImpressoNamedEntityRecognitionResponse
+from .impresso_text_embedding_request import ImpressoTextEmbeddingRequest
+from .impresso_text_embedding_request_search_target import ImpressoTextEmbeddingRequestSearchTarget
 from .media_source import MediaSource
 from .media_source_properties_item import MediaSourcePropertiesItem
 from .media_source_totals import MediaSourceTotals
@@ -105,6 +112,8 @@ from .wikidata_person_type import WikidataPersonType
 from .word_match import WordMatch
 
 __all__ = (
+    "AddCollectableItemsFromFilters",
+    "AddCollectableItemsFromFiltersNamespace",
     "AuthenticationCreateRequest",
     "AuthenticationCreateRequestStrategy",
     "AuthenticationResponse",
@@ -167,6 +176,9 @@ __all__ = (
     "Image",
     "ImageMediaSourceRef",
     "ImageMediaSourceRefType",
+    "ImpressoEmbeddingResponse",
+    "ImpressoImageEmbeddingRequest",
+    "ImpressoImageEmbeddingRequestSearchTarget",
     "ImpressoNamedEntityRecognitionEntity",
     "ImpressoNamedEntityRecognitionEntityConfidence",
     "ImpressoNamedEntityRecognitionEntityOffset",
@@ -175,6 +187,8 @@ __all__ = (
     "ImpressoNamedEntityRecognitionRequest",
     "ImpressoNamedEntityRecognitionRequestMethod",
     "ImpressoNamedEntityRecognitionResponse",
+    "ImpressoTextEmbeddingRequest",
+    "ImpressoTextEmbeddingRequestSearchTarget",
     "MediaSource",
     "MediaSourcePropertiesItem",
     "MediaSourceTotals",
