@@ -2,7 +2,8 @@ from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Mapping, Optional as _Optional, Union as _Union
+from collections.abc import Iterable as _Iterable, Mapping as _Mapping
+from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -53,6 +54,12 @@ class FilterType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     TYPE_MENTION_FUNCTION: _ClassVar[FilterType]
     TYPE_NAG: _ClassVar[FilterType]
     TYPE_WIKIDATA_ID: _ClassVar[FilterType]
+    TYPE_DATA_DOMAIN: _ClassVar[FilterType]
+    TYPE_COPYRIGHT: _ClassVar[FilterType]
+    TYPE_SOURCE_TYPE: _ClassVar[FilterType]
+    TYPE_SOURCE_MEDIUM: _ClassVar[FilterType]
+    TYPE_ORGANISATION: _ClassVar[FilterType]
+    TYPE_EMBEDDING: _ClassVar[FilterType]
 
 class FilterPrecision(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -105,6 +112,12 @@ TYPE_TEXT_REUSE_CLUSTER: FilterType
 TYPE_MENTION_FUNCTION: FilterType
 TYPE_NAG: FilterType
 TYPE_WIKIDATA_ID: FilterType
+TYPE_DATA_DOMAIN: FilterType
+TYPE_COPYRIGHT: FilterType
+TYPE_SOURCE_TYPE: FilterType
+TYPE_SOURCE_MEDIUM: FilterType
+TYPE_ORGANISATION: FilterType
+TYPE_EMBEDDING: FilterType
 PRECISION_UNSPECIFIED: FilterPrecision
 PRECISION_EXACT: FilterPrecision
 PRECISION_PARTIAL: FilterPrecision
@@ -174,7 +187,7 @@ class CollectionRecommenderParameter(_message.Message):
     string_value: str
     number_value: int
     bool_value: bool
-    def __init__(self, key: _Optional[_Union[CollectionRecommenderParameter.RecommenderParameterId, str]] = ..., string_value: _Optional[str] = ..., number_value: _Optional[int] = ..., bool_value: bool = ...) -> None: ...
+    def __init__(self, key: _Optional[_Union[CollectionRecommenderParameter.RecommenderParameterId, str]] = ..., string_value: _Optional[str] = ..., number_value: _Optional[int] = ..., bool_value: _Optional[bool] = ...) -> None: ...
 
 class CollectionRecommender(_message.Message):
     __slots__ = ("type", "weight", "parameters", "enabled")
@@ -198,7 +211,7 @@ class CollectionRecommender(_message.Message):
     weight: int
     parameters: _containers.RepeatedCompositeFieldContainer[CollectionRecommenderParameter]
     enabled: bool
-    def __init__(self, type: _Optional[_Union[CollectionRecommender.RecommenderType, str]] = ..., weight: _Optional[int] = ..., parameters: _Optional[_Iterable[_Union[CollectionRecommenderParameter, _Mapping]]] = ..., enabled: bool = ...) -> None: ...
+    def __init__(self, type: _Optional[_Union[CollectionRecommender.RecommenderType, str]] = ..., weight: _Optional[int] = ..., parameters: _Optional[_Iterable[_Union[CollectionRecommenderParameter, _Mapping]]] = ..., enabled: _Optional[bool] = ...) -> None: ...
 
 class CollectionRecommendersSettings(_message.Message):
     __slots__ = ("recommenders",)

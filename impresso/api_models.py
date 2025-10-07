@@ -108,11 +108,11 @@ class Error(BaseModel):
 
 
 class Q(RootModel[str]):
-    root: Annotated[str, Field(max_length=500, min_length=2)]
+    root: Annotated[str, Field(max_length=5000, min_length=2)]
 
 
 class QItem(RootModel[str]):
-    root: Annotated[str, Field(max_length=500, min_length=2)]
+    root: Annotated[str, Field(max_length=5000, min_length=2)]
 
 
 class Filter(BaseModel):

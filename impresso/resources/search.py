@@ -29,6 +29,7 @@ from impresso.api_client.types import UNSET, Unset
 from impresso.api_models import ContentItem, BaseFind, Filter, Q, SearchFacetBucket
 from impresso.data_container import DataContainer, iterate_pages
 from impresso.resources.base import DEFAULT_PAGE_SIZE, Resource
+from impresso.resources.tools import Embedding
 from impresso.structures import AND, OR, DateRange
 from impresso.util.error import raise_for_error
 from impresso.util.filters import and_or_filter, filters_as_protobuf
@@ -148,6 +149,7 @@ class SearchResource(Resource):
         country: str | AND[str] | OR[str] | None = None,
         partner_id: str | AND[str] | OR[str] | None = None,
         text_reuse_cluster_id: str | AND[str] | OR[str] | None = None,
+        embedding: Embedding | None = None,
     ) -> SearchDataContainer:
         """
         Search for content items in Impresso.
@@ -194,6 +196,7 @@ class SearchResource(Resource):
             country=country,
             partner_id=partner_id,
             text_reuse_cluster_id=text_reuse_cluster_id,
+            embedding=embedding,
         )
 
         filters_pb = filters_as_protobuf(filters or [])
@@ -397,6 +400,7 @@ class SearchResource(Resource):
         country: str | AND[str] | OR[str] | None = None,
         partner_id: str | AND[str] | OR[str] | None = None,
         text_reuse_cluster_id: str | AND[str] | OR[str] | None = None,
+        embedding: Embedding | None = None,
     ) -> list[Filter]:
         filters: list[Filter] = []
         if string:
@@ -434,6 +438,8 @@ class SearchResource(Resource):
             filters.extend(and_or_filter(partner_id, "partner"))
         if text_reuse_cluster_id is not None:
             filters.extend(and_or_filter(text_reuse_cluster_id, "text_reuse_cluster"))
+        if embedding is not None:
+            filters.extend(and_or_filter(embedding, "embedding"))
 
         return filters
 
