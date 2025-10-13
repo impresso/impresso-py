@@ -407,10 +407,6 @@ class Collection(BaseModel):
         Optional[int],
         Field(None, description='Total number of items in the collection.'),
     ]
-    creatorId: Annotated[
-        Optional[str],
-        Field(None, description='Identifier of the user who created the collection.'),
-    ]
 
 
 class EntityMention(BaseModel):
