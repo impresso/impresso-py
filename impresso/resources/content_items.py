@@ -85,8 +85,24 @@ class ContentItemsResource(Resource):
 
     name = "content_items"
 
-    def get(self, id: str):
-        result = get_content_item.sync(client=self._api_client, id=id)
+    def get(
+        self, id: str, include_embeddings: bool = False
+    ) -> ContentItemDataContainer:
+        """
+        Get a content item by its id.
+
+        Args:
+            id (str): The id of the content item.
+            include_embeddings (bool): Whether to include embeddings in the response.
+
+        Returns:
+            ContentItemDataContainer: The content item data container.
+        """
+        result = get_content_item.sync(
+            client=self._api_client,
+            id=id,
+            include_embeddings=include_embeddings,
+        )
         raise_for_error(result)
 
         id_parts = id.split("-")
@@ -98,3 +114,15 @@ class ContentItemsResource(Resource):
             ContentItem,
             f"{self._get_web_app_base_url()}/issue/{issue_id}/view?articleId={article_id}",
         )
+
+    def get_embeddings(self, id: str) -> list[str]:
+        """
+        Get the embeddings of a content item by its id.
+        Args:
+            id (str): The id of the content item.
+        Returns:
+            list[str]: The embeddings of the content item if present (every embedding is returned
+            in the canonical form: <model>:<base64_embedding>).
+        """
+        item = self.get(id, include_embeddings=True)
+        return item.raw.get("embeddings", []) if item else []

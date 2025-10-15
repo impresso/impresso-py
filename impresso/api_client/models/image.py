@@ -26,6 +26,8 @@ class Image:
         caption (Union[Unset, str]): Image caption
         content_item_uid (Union[Unset, str]): The unique identifier of the content item that the image belongs to.
         page_numbers (Union[Unset, List[int]]): The page numbers of the issue that the image belongs to.
+        embeddings (Union[Unset, List[str]]): Precomputed embeddings for the image in the format:
+            <model_type>:<base64_embedding_vector>.
     """
 
     uid: str
@@ -36,6 +38,7 @@ class Image:
     caption: Union[Unset, str] = UNSET
     content_item_uid: Union[Unset, str] = UNSET
     page_numbers: Union[Unset, List[int]] = UNSET
+    embeddings: Union[Unset, List[str]] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
         uid = self.uid
@@ -56,6 +59,10 @@ class Image:
         if not isinstance(self.page_numbers, Unset):
             page_numbers = self.page_numbers
 
+        embeddings: Union[Unset, List[str]] = UNSET
+        if not isinstance(self.embeddings, Unset):
+            embeddings = self.embeddings
+
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
@@ -72,6 +79,8 @@ class Image:
             field_dict["contentItemUid"] = content_item_uid
         if page_numbers is not UNSET:
             field_dict["pageNumbers"] = page_numbers
+        if embeddings is not UNSET:
+            field_dict["embeddings"] = embeddings
 
         return field_dict
 
@@ -96,6 +105,8 @@ class Image:
 
         page_numbers = cast(List[int], d.pop("pageNumbers", UNSET))
 
+        embeddings = cast(List[str], d.pop("embeddings", UNSET))
+
         image = cls(
             uid=uid,
             issue_uid=issue_uid,
@@ -105,6 +116,7 @@ class Image:
             caption=caption,
             content_item_uid=content_item_uid,
             page_numbers=page_numbers,
+            embeddings=embeddings,
         )
 
         return image

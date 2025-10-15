@@ -1,5 +1,5 @@
 import datetime
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
 
 from attrs import define as _attrs_define
 from dateutil.parser import isoparse
@@ -37,6 +37,8 @@ class ContentItem:
         news_agencies_entities (Union[Unset, List['NamedEntity']]): Linked news agency entities mentioned in the content
             item.
         topics (Union[Unset, List['TopicMention']]): Topics mentioned in the content item.
+        embeddings (Union[Unset, List[str]]): Precomputed embeddings for the content item in the format:
+            <model_type>:<base64_embedding_vector>.
         transcript_length (Union[Unset, float]): The length of the transcript in characters.
         total_pages (Union[Unset, float]): Total number of pages the item covers.
         language_code (Union[Unset, str]): ISO 639-1 language code of the content item.
@@ -61,6 +63,7 @@ class ContentItem:
     organisation_entities: Union[Unset, List["NamedEntity"]] = UNSET
     news_agencies_entities: Union[Unset, List["NamedEntity"]] = UNSET
     topics: Union[Unset, List["TopicMention"]] = UNSET
+    embeddings: Union[Unset, List[str]] = UNSET
     transcript_length: Union[Unset, float] = UNSET
     total_pages: Union[Unset, float] = UNSET
     language_code: Union[Unset, str] = UNSET
@@ -124,6 +127,10 @@ class ContentItem:
                 topics_item = topics_item_data.to_dict()
                 topics.append(topics_item)
 
+        embeddings: Union[Unset, List[str]] = UNSET
+        if not isinstance(self.embeddings, Unset):
+            embeddings = self.embeddings
+
         transcript_length = self.transcript_length
 
         total_pages = self.total_pages
@@ -174,6 +181,8 @@ class ContentItem:
             field_dict["newsAgenciesEntities"] = news_agencies_entities
         if topics is not UNSET:
             field_dict["topics"] = topics
+        if embeddings is not UNSET:
+            field_dict["embeddings"] = embeddings
         if transcript_length is not UNSET:
             field_dict["transcriptLength"] = transcript_length
         if total_pages is not UNSET:
@@ -260,6 +269,8 @@ class ContentItem:
 
             topics.append(topics_item)
 
+        embeddings = cast(List[str], d.pop("embeddings", UNSET))
+
         transcript_length = d.pop("transcriptLength", UNSET)
 
         total_pages = d.pop("totalPages", UNSET)
@@ -302,6 +313,7 @@ class ContentItem:
             organisation_entities=organisation_entities,
             news_agencies_entities=news_agencies_entities,
             topics=topics,
+            embeddings=embeddings,
             transcript_length=transcript_length,
             total_pages=total_pages,
             language_code=language_code,

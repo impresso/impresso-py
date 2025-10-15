@@ -181,6 +181,9 @@ class SearchResource(Resource):
             SearchDataContainer: Data container with a page of results of the search.
         """
 
+        page_limit = limit if limit is not None else DEFAULT_PAGE_SIZE
+        embedding_with_limit = f"{embedding}:{page_limit}" if embedding else None
+
         filters = self._build_filters(
             string=term,
             with_text_contents=with_text_contents,
@@ -196,7 +199,7 @@ class SearchResource(Resource):
             country=country,
             partner_id=partner_id,
             text_reuse_cluster_id=text_reuse_cluster_id,
-            embedding=embedding,
+            embedding=embedding_with_limit,
         )
 
         filters_pb = filters_as_protobuf(filters or [])
@@ -210,7 +213,7 @@ class SearchResource(Resource):
                 else UNSET
             ),
             filters=filters_pb if filters_pb else UNSET,
-            limit=limit if limit is not None else DEFAULT_PAGE_SIZE,
+            limit=page_limit,
             offset=offset if offset is not None else UNSET,
         )
         raise_for_error(result)
@@ -234,6 +237,7 @@ class SearchResource(Resource):
                 "country": country,
                 "partner_id": partner_id,
                 "text_reuse_cluster_id": text_reuse_cluster_id,
+                "embedding": embedding_with_limit,
             },
             web_app_search_result_url=_build_web_app_search_url(
                 f"{self._get_web_app_base_url()}/search",

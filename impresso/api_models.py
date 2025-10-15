@@ -474,6 +474,13 @@ class Image(BaseModel):
             description='The date of the image or the date of the issue that the image belongs to.'
         ),
     ]
+    embeddings: Annotated[
+        Optional[Sequence[str]],
+        Field(
+            None,
+            description='Precomputed embeddings for the image in the format: <model_type>:<base64_embedding_vector>.',
+        ),
+    ]
 
 
 class Totals(BaseModel):
@@ -830,6 +837,13 @@ class ContentItem(BaseModel):
     topics: Annotated[
         Optional[Sequence[TopicMention]],
         Field(None, description='Topics mentioned in the content item.'),
+    ]
+    embeddings: Annotated[
+        Optional[Sequence[str]],
+        Field(
+            None,
+            description='Precomputed embeddings for the content item in the format: <model_type>:<base64_embedding_vector>.',
+        ),
     ]
     transcriptLength: Annotated[
         Optional[float],

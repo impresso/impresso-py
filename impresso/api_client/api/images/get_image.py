@@ -7,15 +7,24 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
 from ...models.image import Image
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     id: str,
+    *,
+    include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Dict[str, Any]:
+    params: Dict[str, Any] = {}
+
+    params["include_embeddings"] = include_embeddings
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+
     _kwargs: Dict[str, Any] = {
         "method": "get",
         "url": f"/images/{id}",
+        "params": params,
     }
 
     return _kwargs
@@ -73,11 +82,13 @@ def sync_detailed(
     id: str,
     *,
     client: AuthenticatedClient,
+    include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Response[Union[Error, Image]]:
     """Get image by ID
 
     Args:
         id (str):
+        include_embeddings (Union[Unset, bool]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -89,6 +100,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         id=id,
+        include_embeddings=include_embeddings,
     )
 
     response = client.get_httpx_client().request(
@@ -102,11 +114,13 @@ def sync(
     id: str,
     *,
     client: AuthenticatedClient,
+    include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Optional[Union[Error, Image]]:
     """Get image by ID
 
     Args:
         id (str):
+        include_embeddings (Union[Unset, bool]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -119,6 +133,7 @@ def sync(
     return sync_detailed(
         id=id,
         client=client,
+        include_embeddings=include_embeddings,
     ).parsed
 
 
@@ -126,11 +141,13 @@ async def asyncio_detailed(
     id: str,
     *,
     client: AuthenticatedClient,
+    include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Response[Union[Error, Image]]:
     """Get image by ID
 
     Args:
         id (str):
+        include_embeddings (Union[Unset, bool]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -142,6 +159,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         id=id,
+        include_embeddings=include_embeddings,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -153,11 +171,13 @@ async def asyncio(
     id: str,
     *,
     client: AuthenticatedClient,
+    include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Optional[Union[Error, Image]]:
     """Get image by ID
 
     Args:
         id (str):
+        include_embeddings (Union[Unset, bool]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -171,5 +191,6 @@ async def asyncio(
         await asyncio_detailed(
             id=id,
             client=client,
+            include_embeddings=include_embeddings,
         )
     ).parsed
