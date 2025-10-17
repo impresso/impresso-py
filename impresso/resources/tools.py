@@ -1,4 +1,5 @@
 import base64
+from pathlib import Path
 from typing import Annotated, cast
 from urllib.parse import urlparse
 
@@ -49,6 +50,15 @@ def is_url(string: str) -> bool:
     try:
         parsed = urlparse(string)
         return parsed.scheme in ("http", "https", "ftp", "ftps") and bool(parsed.netloc)
+    except Exception:
+        return False
+
+
+def is_file(string: str) -> bool:
+    """Check if a string is a valid file path."""
+    try:
+        path = Path(string)
+        return path.exists() and path.is_file()
     except Exception:
         return False
 
@@ -179,15 +189,18 @@ class ToolsResource(Resource):
         """Embed an image into a vector space.
 
         Args:
-            image (bytes | Base64Str | str): Image to embed. Can be raw bytes, a base64-encoded string, or a URL to an image.
+            image (bytes | Base64Str | str): Image to embed. Can be raw bytes, a base64-encoded string, a URL of an image or a path of a file.
             target (ImpressoImageEmbeddingRequestSearchTargetLiteral): Target collection to embed the image into. Currently, only "image" is supported.
 
         Returns:
-            list[float]: The image embedding as a list of floats.
+            Embedding: The text embedding as a base64 string prefixed with model tag.
         """
         image_as_base64: str
         if isinstance(image, bytes):
             image_as_base64 = base64.b64encode(image).decode("utf-8")
+        elif is_file(image):
+            with open(image, "rb") as file:
+                image_as_base64 = base64.b64encode(file.read()).decode("utf-8")
         elif is_url(image):
             response = httpx.get(image)
             response.raise_for_status()
@@ -228,7 +241,7 @@ class ToolsResource(Resource):
             target (ImpressoTextEmbeddingRequestSearchTargetLiteral): Target collection to embed the text into.
 
         Returns:
-            list[float]: The text embedding as a list of floats.
+            Embedding: The text embedding as a base64 string prefixed with model tag.
         """
         search_target = get_enum_from_literal(
             target,
@@ -248,5 +261,5 @@ class ToolsResource(Resource):
         )
         raise_for_error(result)
         if isinstance(result, ImpressoEmbeddingResponse):
-            return cast(str, result.embedding)
+            return cast(Embedding, result.embedding)
         raise ValueError("Unexpected response format")
