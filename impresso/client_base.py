@@ -1,7 +1,8 @@
 from impresso.api_client.client import AuthenticatedClient
-from impresso.resources.content_items import ContentItemsResource
 from impresso.resources.collections import CollectionsResource
+from impresso.resources.content_items import ContentItemsResource
 from impresso.resources.entities import EntitiesResource
+from impresso.resources.images import ImagesResource
 from impresso.resources.media_sources import MediaSourcesResource
 from impresso.resources.search import SearchResource
 from impresso.resources.text_reuse import TextReuseDomain
@@ -37,6 +38,10 @@ class ImpressoApiResourcesBase:
     @property
     def entities(self) -> EntitiesResource:
         return EntitiesResource(self._api_client)
+
+    @property
+    def images(self) -> ImagesResource:
+        return ImagesResource(self._api_client)
 
     @property
     def tools(self) -> ToolsResource:

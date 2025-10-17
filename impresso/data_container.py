@@ -31,7 +31,7 @@ class DataContainer(Generic[IT, T]):
         self._web_app_search_result_url = web_app_search_result_url
 
     def _repr_html_(self):
-        df_repr = self.df.head(3).to_html(notebook=True)
+        df_repr = self.df.head(3)._repr_html_()
         response_type = self.__class__.__name__.replace("DataContainer", "").replace(
             "Container", ""
         )
