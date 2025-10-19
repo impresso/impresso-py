@@ -21,6 +21,7 @@ from .entity_details import EntityDetails
 from .entity_details_type import EntityDetailsType
 from .entity_mention import EntityMention
 from .error import Error
+from .experiment_info import ExperimentInfo
 from .filter_ import Filter
 from .filter_context import FilterContext
 from .filter_op import FilterOp
@@ -31,6 +32,8 @@ from .find_collections_order_by import FindCollectionsOrderBy
 from .find_entities_base_find_response import FindEntitiesBaseFindResponse
 from .find_entities_base_find_response_pagination import FindEntitiesBaseFindResponsePagination
 from .find_entities_order_by import FindEntitiesOrderBy
+from .find_experiments_base_find_response import FindExperimentsBaseFindResponse
+from .find_experiments_base_find_response_pagination import FindExperimentsBaseFindResponsePagination
 from .find_images_base_find_response import FindImagesBaseFindResponse
 from .find_images_base_find_response_pagination import FindImagesBaseFindResponsePagination
 from .find_images_order_by import FindImagesOrderBy
@@ -77,6 +80,7 @@ from .impresso_named_entity_recognition_request_method import ImpressoNamedEntit
 from .impresso_named_entity_recognition_response import ImpressoNamedEntityRecognitionResponse
 from .impresso_text_embedding_request import ImpressoTextEmbeddingRequest
 from .impresso_text_embedding_request_search_target import ImpressoTextEmbeddingRequestSearchTarget
+from .interact_with_experiment_body import InteractWithExperimentBody
 from .media_source import MediaSource
 from .media_source_properties_item import MediaSourcePropertiesItem
 from .media_source_totals import MediaSourceTotals
@@ -133,6 +137,7 @@ __all__ = (
     "EntityDetailsType",
     "EntityMention",
     "Error",
+    "ExperimentInfo",
     "Filter",
     "FilterContext",
     "FilterOp",
@@ -143,6 +148,8 @@ __all__ = (
     "FindEntitiesBaseFindResponse",
     "FindEntitiesBaseFindResponsePagination",
     "FindEntitiesOrderBy",
+    "FindExperimentsBaseFindResponse",
+    "FindExperimentsBaseFindResponsePagination",
     "FindImagesBaseFindResponse",
     "FindImagesBaseFindResponsePagination",
     "FindImagesOrderBy",
@@ -189,6 +196,7 @@ __all__ = (
     "ImpressoNamedEntityRecognitionResponse",
     "ImpressoTextEmbeddingRequest",
     "ImpressoTextEmbeddingRequestSearchTarget",
+    "InteractWithExperimentBody",
     "MediaSource",
     "MediaSourcePropertiesItem",
     "MediaSourceTotals",

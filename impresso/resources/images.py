@@ -4,7 +4,6 @@ from pandas import DataFrame, json_normalize
 
 from impresso.api_client.api.images import find_images
 from impresso.api_client.api.images import get_image
-from impresso.api_client.models.image import Image as ApiImage
 from impresso.api_client.models.find_images_base_find_response import (
     FindImagesBaseFindResponse,
 )

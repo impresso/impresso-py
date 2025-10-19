@@ -420,6 +420,18 @@ class EntityMention(BaseModel):
     ]
 
 
+class ExperimentInfo(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='The unique identifier of the experiment.')]
+    name: Annotated[str, Field(description='The display name of the experiment.')]
+    description: Annotated[
+        Optional[str],
+        Field(None, description='A description of what the experiment does.'),
+    ]
+
+
 class Freeform(BaseModel):
     pass
     model_config = ConfigDict(

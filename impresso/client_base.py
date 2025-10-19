@@ -2,6 +2,7 @@ from impresso.api_client.client import AuthenticatedClient
 from impresso.resources.collections import CollectionsResource
 from impresso.resources.content_items import ContentItemsResource
 from impresso.resources.entities import EntitiesResource
+from impresso.resources.experiments import ExperimentsResource
 from impresso.resources.images import ImagesResource
 from impresso.resources.media_sources import MediaSourcesResource
 from impresso.resources.search import SearchResource
@@ -46,3 +47,7 @@ class ImpressoApiResourcesBase:
     @property
     def tools(self) -> ToolsResource:
         return ToolsResource(self._api_client)
+
+    @property
+    def experiments(self) -> ExperimentsResource:
+        return ExperimentsResource(self._api_client)
