@@ -74,7 +74,7 @@ class ExperimentsResource(Resource):
         )
 
     def execute(self, experiment_id: str, body: dict) -> dict:
-        """Execute an experiment the given ID.
+        """Execute an experiment with the given ID.
 
         Args:
             experiment_id (str): ID of the experiment to execute.
