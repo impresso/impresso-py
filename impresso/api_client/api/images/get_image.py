@@ -49,6 +49,10 @@ def _parse_response(
         response_404 = Error.from_dict(response.json())
 
         return response_404
+    if response.status_code == HTTPStatus.IM_A_TEAPOT:
+        response_418 = Error.from_dict(response.json())
+
+        return response_418
     if response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT:
         response_422 = Error.from_dict(response.json())
 

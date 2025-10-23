@@ -330,7 +330,7 @@ class ImpressoTextEmbeddingRequest(BaseModel):
         Literal['image', 'text'],
         Field(description='Where the embedding is going to be used'),
     ]
-    text: Annotated[str, Field(description='Text to be embedded')]
+    text: Annotated[str, Field(description='Text to be embedded', max_length=8000)]
 
 
 class NewCollectionRequest(BaseModel):
