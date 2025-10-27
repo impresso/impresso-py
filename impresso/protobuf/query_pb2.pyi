@@ -60,6 +60,10 @@ class FilterType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     TYPE_SOURCE_MEDIUM: _ClassVar[FilterType]
     TYPE_ORGANISATION: _ClassVar[FilterType]
     TYPE_EMBEDDING: _ClassVar[FilterType]
+    TYPE_IMAGE_VISUAL_CONTENT: _ClassVar[FilterType]
+    TYPE_IMAGE_TECHNIQUE: _ClassVar[FilterType]
+    TYPE_IMAGE_COMMUNICATION_GOAL: _ClassVar[FilterType]
+    TYPE_IMAGE_CONTENT_TYPE: _ClassVar[FilterType]
 
 class FilterPrecision(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -118,6 +122,10 @@ TYPE_SOURCE_TYPE: FilterType
 TYPE_SOURCE_MEDIUM: FilterType
 TYPE_ORGANISATION: FilterType
 TYPE_EMBEDDING: FilterType
+TYPE_IMAGE_VISUAL_CONTENT: FilterType
+TYPE_IMAGE_TECHNIQUE: FilterType
+TYPE_IMAGE_COMMUNICATION_GOAL: FilterType
+TYPE_IMAGE_CONTENT_TYPE: FilterType
 PRECISION_UNSPECIFIED: FilterPrecision
 PRECISION_EXACT: FilterPrecision
 PRECISION_PARTIAL: FilterPrecision

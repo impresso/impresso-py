@@ -22,6 +22,7 @@ from .entity_details_type import EntityDetailsType
 from .entity_mention import EntityMention
 from .error import Error
 from .experiment_info import ExperimentInfo
+from .facet_with_label import FacetWithLabel
 from .filter_ import Filter
 from .filter_context import FilterContext
 from .filter_op import FilterOp
@@ -65,6 +66,7 @@ from .get_tr_passages_facet_base_find_response_pagination import GetTrPassagesFa
 from .get_tr_passages_facet_id import GetTrPassagesFacetId
 from .get_tr_passages_facet_order_by import GetTrPassagesFacetOrderBy
 from .image import Image
+from .image_image_types import ImageImageTypes
 from .image_media_source_ref import ImageMediaSourceRef
 from .image_media_source_ref_type import ImageMediaSourceRefType
 from .impresso_embedding_response import ImpressoEmbeddingResponse
@@ -138,6 +140,7 @@ __all__ = (
     "EntityMention",
     "Error",
     "ExperimentInfo",
+    "FacetWithLabel",
     "Filter",
     "FilterContext",
     "FilterOp",
@@ -181,6 +184,7 @@ __all__ = (
     "GetTrPassagesFacetId",
     "GetTrPassagesFacetOrderBy",
     "Image",
+    "ImageImageTypes",
     "ImageMediaSourceRef",
     "ImageMediaSourceRefType",
     "ImpressoEmbeddingResponse",

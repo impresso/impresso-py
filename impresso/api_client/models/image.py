@@ -7,6 +7,7 @@ from dateutil.parser import isoparse
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
+    from ..models.image_image_types import ImageImageTypes
     from ..models.image_media_source_ref import ImageMediaSourceRef
 
 
@@ -26,6 +27,7 @@ class Image:
         caption (Union[Unset, str]): Image caption
         content_item_uid (Union[Unset, str]): The unique identifier of the content item that the image belongs to.
         page_numbers (Union[Unset, List[int]]): The page numbers of the issue that the image belongs to.
+        image_types (Union[Unset, ImageImageTypes]):
         embeddings (Union[Unset, List[str]]): Precomputed embeddings for the image in the format:
             <model_type>:<base64_embedding_vector>.
     """
@@ -38,6 +40,7 @@ class Image:
     caption: Union[Unset, str] = UNSET
     content_item_uid: Union[Unset, str] = UNSET
     page_numbers: Union[Unset, List[int]] = UNSET
+    image_types: Union[Unset, "ImageImageTypes"] = UNSET
     embeddings: Union[Unset, List[str]] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
@@ -59,6 +62,10 @@ class Image:
         if not isinstance(self.page_numbers, Unset):
             page_numbers = self.page_numbers
 
+        image_types: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.image_types, Unset):
+            image_types = self.image_types.to_dict()
+
         embeddings: Union[Unset, List[str]] = UNSET
         if not isinstance(self.embeddings, Unset):
             embeddings = self.embeddings
@@ -79,6 +86,8 @@ class Image:
             field_dict["contentItemUid"] = content_item_uid
         if page_numbers is not UNSET:
             field_dict["pageNumbers"] = page_numbers
+        if image_types is not UNSET:
+            field_dict["imageTypes"] = image_types
         if embeddings is not UNSET:
             field_dict["embeddings"] = embeddings
 
@@ -86,6 +95,7 @@ class Image:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
+        from ..models.image_image_types import ImageImageTypes
         from ..models.image_media_source_ref import ImageMediaSourceRef
 
         d = src_dict.copy()
@@ -105,6 +115,13 @@ class Image:
 
         page_numbers = cast(List[int], d.pop("pageNumbers", UNSET))
 
+        _image_types = d.pop("imageTypes", UNSET)
+        image_types: Union[Unset, ImageImageTypes]
+        if isinstance(_image_types, Unset):
+            image_types = UNSET
+        else:
+            image_types = ImageImageTypes.from_dict(_image_types)
+
         embeddings = cast(List[str], d.pop("embeddings", UNSET))
 
         image = cls(
@@ -116,6 +133,7 @@ class Image:
             caption=caption,
             content_item_uid=content_item_uid,
             page_numbers=page_numbers,
+            image_types=image_types,
             embeddings=embeddings,
         )
 

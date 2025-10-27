@@ -134,6 +134,10 @@ class ImagesResource(Resource):
         issue_id: str | AND[str] | OR[str] | None = None,
         is_front: bool | None = None,
         date_range: DateRange | None = None,
+        visual_content: str | AND[str] | OR[str] | None = None,
+        technique: str | AND[str] | OR[str] | None = None,
+        communication_goal: str | AND[str] | OR[str] | None = None,
+        content_type: str | AND[str] | OR[str] | None = None,
         embedding: Embedding | None = None,
         order_by: FindImagesOrderByLiteral | None = None,
         limit: int | None = None,
@@ -166,6 +170,16 @@ class ImagesResource(Resource):
                     daterange=None,
                 )
             )
+        if visual_content is not None:
+            filters.extend(and_or_filter(visual_content, "image_visual_content"))
+        if technique is not None:
+            filters.extend(and_or_filter(technique, "image_technique"))
+        if communication_goal is not None:
+            filters.extend(
+                and_or_filter(communication_goal, "image_communication_goal")
+            )
+        if content_type is not None:
+            filters.extend(and_or_filter(content_type, "image_content_type"))
         if embedding_with_limit is not None:
             filters.extend(and_or_filter(embedding_with_limit, "embedding"))
 

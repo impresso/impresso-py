@@ -107,6 +107,14 @@ class Error(BaseModel):
     ]
 
 
+class FacetWithLabel(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='Unique identifier of the facet')]
+    label: Annotated[str, Field(description='Label of the facet')]
+
+
 class Q(RootModel[str]):
     root: Annotated[str, Field(max_length=6000, min_length=2)]
 
@@ -439,6 +447,27 @@ class Freeform(BaseModel):
     )
 
 
+class ImageTypes(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    visualContent: Annotated[
+        Optional[str],
+        Field(None, description='Whether the content is an image or not.'),
+    ]
+    technique: Annotated[
+        Optional[str],
+        Field(None, description='Determines if the image is a photograph.'),
+    ]
+    communicationGoal: Annotated[
+        Optional[str],
+        Field(None, description='Purpose or communicative function of the image.'),
+    ]
+    visualContentType: Annotated[
+        Optional[str], Field(None, description='Classification of the visual content.')
+    ]
+
+
 class MediaSourceRef(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -477,6 +506,7 @@ class Image(BaseModel):
             None, description='The page numbers of the issue that the image belongs to.'
         ),
     ]
+    imageTypes: Optional[ImageTypes] = None
     mediaSourceRef: Annotated[
         MediaSourceRef, Field(description='The media source of the image')
     ]
