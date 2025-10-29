@@ -190,12 +190,12 @@ class ToolsResource(Resource):
 
         Args:
             image (bytes | Base64Str | str): Image to embed. Can be raw bytes, a base64-encoded string,
-            a URL of an image or a path of a file.
+                a URL of an image, or a path to a file.
             target (ImpressoImageEmbeddingRequestSearchTargetLiteral): Target collection to embed the image into.
-            Currently, only "image" is supported.
+                Currently, only "image" is supported.
 
         Returns:
-            Embedding: The text embedding as a base64 string prefixed with model tag.
+            Embedding: The image embedding as a base64 string prefixed with model tag.
         """
         image_as_base64: str
         if isinstance(image, bytes):
