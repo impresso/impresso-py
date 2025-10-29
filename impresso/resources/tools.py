@@ -182,9 +182,9 @@ class ToolsResource(Resource):
         )
 
     def embed_image(
-        self,
-        image: bytes | Base64Str | str,
-        target: ImpressoImageEmbeddingRequestSearchTargetLiteral,
+            self,
+            image: bytes | Base64Str | str,
+            target: ImpressoImageEmbeddingRequestSearchTargetLiteral,
     ) -> Embedding:
         """Embed an image into a vector space.
 
@@ -230,9 +230,9 @@ class ToolsResource(Resource):
         raise ValueError("Unexpected response format")
 
     def embed_text(
-        self,
-        text: str,
-        target: ImpressoTextEmbeddingRequestSearchTargetLiteral,
+            self,
+            text: str,
+            target: ImpressoTextEmbeddingRequestSearchTargetLiteral,
     ) -> Embedding:
         """Embed text into a vector space.
 
