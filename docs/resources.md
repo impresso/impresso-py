@@ -5,7 +5,7 @@
 Search content items in the Impresso corpus.
 
 ```python
-impresso.search.find(term='Titanic', limit=10)
+client.search.find(term='Titanic', limit=10)
 ```
 
 ::: impresso.resources.search.SearchResource
@@ -18,7 +18,7 @@ impresso.search.find(term='Titanic', limit=10)
 Search entities in the Impresso corpus.
 
 ```python
-impresso.entities.find(term="Douglas Adams")
+client.entities.find(term="Douglas Adams")
 ```
 
 ::: impresso.resources.entities.EntitiesResource
@@ -31,7 +31,7 @@ impresso.entities.find(term="Douglas Adams")
 Search media sources available in the Impresso corpus.
 
 ```python
-impresso.media_sources.find(
+client.media_sources.find(
     term="wort",
     order_by="lastIssue",
 )
@@ -47,7 +47,7 @@ impresso.media_sources.find(
 Get a single content item by ID.
 
 ```python
-impresso.content_items.get("NZZ-1794-08-09-a-i0002")
+client.content_items.get("NZZ-1794-08-09-a-i0002")
 ```
 
 ## Collections
@@ -86,7 +86,7 @@ When a `find` or `facet` method is called, the response object contains data for
 For example, if you want to get all the content items that mention "Titanic" with 20 items per page, you can use the following code:
 
 ```python
-result = impresso.search.find(
+result = client.search.find(
     term="titanic",
     limit=20,
 )
