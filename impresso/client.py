@@ -85,7 +85,7 @@ def connect(
     ```python
     from impresso import connect
 
-    impresso = connect()
+    client = connect()
     ```
 
     Args:
