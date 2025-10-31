@@ -165,7 +165,8 @@ class ImpressoImageEmbeddingRequest(BaseModel):
         extra='forbid',
     )
     searchTarget: Annotated[
-        Literal['image'], Field(description='Where the embedding is going to be used')
+        Literal['image', 'multimodal'],
+        Field(description='Where the embedding is going to be used'),
     ]
     bytes: Annotated[
         str,

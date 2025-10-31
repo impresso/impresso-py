@@ -4,9 +4,13 @@ from typing import Literal
 
 class ImpressoImageEmbeddingRequestSearchTarget(str, Enum):
     IMAGE = "image"
+    MULTIMODAL = "multimodal"
 
     def __str__(self) -> str:
         return str(self.value)
 
 
-ImpressoImageEmbeddingRequestSearchTargetLiteral = Literal["image",]
+ImpressoImageEmbeddingRequestSearchTargetLiteral = Literal[
+    "image",
+    "multimodal",
+]
