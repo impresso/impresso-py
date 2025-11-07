@@ -8,6 +8,7 @@ from impresso.resources.media_sources import MediaSourcesResource
 from impresso.resources.search import SearchResource
 from impresso.resources.text_reuse import TextReuseDomain
 from impresso.resources.tools import ToolsResource
+from impresso.resources.topics import TopicsResource
 
 
 class ImpressoApiResourcesBase:
@@ -51,3 +52,7 @@ class ImpressoApiResourcesBase:
     @property
     def experiments(self) -> ExperimentsResource:
         return ExperimentsResource(self._api_client)
+
+    @property
+    def topics(self) -> TopicsResource:
+        return TopicsResource(self._api_client)

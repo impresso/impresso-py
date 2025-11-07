@@ -10,111 +10,6 @@ from pydantic import AnyUrl, AwareDatetime, BaseModel, ConfigDict, Field, RootMo
 from typing_extensions import Annotated, Literal
 
 
-class AuthenticationCreateRequest(BaseModel):
-    model_config = ConfigDict(
-        extra='allow',
-    )
-    strategy: Literal['local', 'jwt-app']
-    email: Optional[str] = None
-    password: Optional[str] = None
-    accessToken: Optional[str] = None
-
-
-class Authentication(BaseModel):
-    strategy: Optional[str] = None
-    payload: Optional[Mapping[str, Any]] = None
-
-
-class User(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    id: int
-    username: str
-    firstname: str
-    lastname: str
-    isStaff: bool
-    isActive: bool
-    isSuperuser: bool
-    uid: str
-
-
-class AuthenticationCreateResponse(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    accessToken: str
-    authentication: Authentication
-    user: Annotated[User, Field(description='User details', title='User')]
-
-
-class CollectableItemsUpdatedResponse(BaseModel):
-    totalAdded: Annotated[
-        int, Field(description='Total number of items added to the collection')
-    ]
-    totalRemoved: Annotated[
-        int, Field(description='Total number of items removed from the collection')
-    ]
-
-
-class Params(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    id: Annotated[Optional[str], Field(None, description='The collection id')]
-    status: Annotated[
-        Optional[Literal['DEL']], Field(None, description='The status of the operation')
-    ]
-
-
-class Task(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    task_id: Annotated[Optional[str], Field(None, description='The ID of the task')]
-    creationDate: Annotated[
-        Optional[str], Field(None, description='When task was created')
-    ]
-
-
-class CollectionsRemoveResponse(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    params: Params
-    task: Annotated[Task, Field(description='Deletion task details')]
-
-
-class Error(BaseModel):
-    type: Annotated[
-        AnyUrl,
-        Field(
-            description='A URI reference [RFC3986] that identifies the problem type.'
-        ),
-    ]
-    title: Annotated[
-        str, Field(description='A short, human-readable summary of the problem type.')
-    ]
-    status: Annotated[
-        int, Field(description='The HTTP status code ([RFC7231], Section 6)')
-    ]
-    detail: Annotated[
-        Optional[str],
-        Field(
-            None,
-            description='A human-readable explanation specific to this occurrence of the problem.',
-        ),
-    ]
-
-
-class FacetWithLabel(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    id: Annotated[str, Field(description='Unique identifier of the facet')]
-    label: Annotated[str, Field(description='Label of the facet')]
-
-
 class Q(RootModel[str]):
     root: Annotated[str, Field(max_length=6000, min_length=2)]
 
@@ -148,14 +43,53 @@ class Filter(BaseModel):
     uid: Optional[str] = None
 
 
-class ImpressoEmbeddingResponse(BaseModel):
+class FacetWithLabel(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    embedding: Annotated[
+    id: Annotated[str, Field(description='Unique identifier of the facet')]
+    label: Annotated[str, Field(description='Label of the facet')]
+
+
+class Error(BaseModel):
+    type: Annotated[
+        AnyUrl,
+        Field(
+            description='A URI reference [RFC3986] that identifies the problem type.'
+        ),
+    ]
+    title: Annotated[
+        str, Field(description='A short, human-readable summary of the problem type.')
+    ]
+    status: Annotated[
+        int, Field(description='The HTTP status code ([RFC7231], Section 6)')
+    ]
+    detail: Annotated[
+        Optional[str],
+        Field(
+            None,
+            description='A human-readable explanation specific to this occurrence of the problem.',
+        ),
+    ]
+
+
+class ImpressoNerRequest(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    text: Annotated[
         str,
         Field(
-            description='Embedding vector, base64-encoded with the model prefix. E.g. <model>:<base64-encoded vector>'
+            description='Text to be processed for named entity recognition',
+            max_length=3999,
+            min_length=1,
+        ),
+    ]
+    method: Annotated[
+        Optional[Literal['ner', 'ner-nel', 'nel']],
+        Field(
+            'ner',
+            description='NER method to be used: `ner` (default), `ner-nel` (named entity recognition with named entity linking) and `nel` (linking only - enclose entities in [START] [END] tags).',
         ),
     ]
 
@@ -174,6 +108,95 @@ class ImpressoImageEmbeddingRequest(BaseModel):
             description='Base64-encoded image bytes. JPG and PNG formats are supported.'
         ),
     ]
+
+
+class ImpressoEmbeddingResponse(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    embedding: Annotated[
+        str,
+        Field(
+            description='Embedding vector, base64-encoded with the model prefix. E.g. <model>:<base64-encoded vector>'
+        ),
+    ]
+
+
+class AddCollectableItemsFromFilters(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    filters: Annotated[
+        Sequence[Filter],
+        Field(
+            description='Filters to apply when selecting items to add to the collection'
+        ),
+    ]
+    namespace: Annotated[
+        Literal['search', 'tr_passages'],
+        Field(
+            description='Namespace to use when selecting items to add to the collection'
+        ),
+    ]
+
+
+class CollectableItemsUpdatedResponse(BaseModel):
+    totalAdded: Annotated[
+        int, Field(description='Total number of items added to the collection')
+    ]
+    totalRemoved: Annotated[
+        int, Field(description='Total number of items removed from the collection')
+    ]
+
+
+class NewCollectionRequest(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    name: Annotated[str, Field(max_length=50, min_length=2)]
+    description: Annotated[Optional[str], Field(None, max_length=500)]
+    accessLevel: Annotated[
+        Optional[Literal['public', 'private']],
+        Field(None, description='Access level of the collection.'),
+    ]
+
+
+class Authentication(BaseModel):
+    strategy: Optional[str] = None
+    payload: Optional[Mapping[str, Any]] = None
+
+
+class User(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: int
+    username: str
+    firstname: str
+    lastname: str
+    isStaff: bool
+    isActive: bool
+    isSuperuser: bool
+    uid: str
+
+
+class AuthenticationCreateResponse(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    accessToken: str
+    authentication: Authentication
+    user: Annotated[User, Field(description='User details', title='User')]
+
+
+class AuthenticationCreateRequest(BaseModel):
+    model_config = ConfigDict(
+        extra='allow',
+    )
+    strategy: Literal['local', 'jwt-app']
+    email: Optional[str] = None
+    password: Optional[str] = None
+    accessToken: Optional[str] = None
 
 
 class Offset(BaseModel):
@@ -293,65 +316,32 @@ class ImpressoNerEntity(BaseModel):
     name: Annotated[Optional[str], Field(None, description='Name of the entity')]
 
 
-class ImpressoNerRequest(BaseModel):
+class Params(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    text: Annotated[
-        str,
-        Field(
-            description='Text to be processed for named entity recognition',
-            max_length=3999,
-            min_length=1,
-        ),
-    ]
-    method: Annotated[
-        Optional[Literal['ner', 'ner-nel', 'nel']],
-        Field(
-            'ner',
-            description='NER method to be used: `ner` (default), `ner-nel` (named entity recognition with named entity linking) and `nel` (linking only - enclose entities in [START] [END] tags).',
-        ),
+    id: Annotated[Optional[str], Field(None, description='The collection id')]
+    status: Annotated[
+        Optional[Literal['DEL']], Field(None, description='The status of the operation')
     ]
 
 
-class ImpressoNerResponse(BaseModel):
+class Task(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    modelId: Annotated[
-        str, Field(description='ID of the model used for the named entity recognition')
+    task_id: Annotated[Optional[str], Field(None, description='The ID of the task')]
+    creationDate: Annotated[
+        Optional[str], Field(None, description='When task was created')
     ]
-    text: Annotated[
-        str, Field(description='Text processed for named entity recognition')
-    ]
-    timestamp: Annotated[
-        AwareDatetime,
-        Field(description='Timestamp of when named entity recognition was performed'),
-    ]
-    entities: Sequence[ImpressoNerEntity]
 
 
-class ImpressoTextEmbeddingRequest(BaseModel):
+class CollectionsRemoveResponse(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    searchTarget: Annotated[
-        Literal['image', 'text'],
-        Field(description='Where the embedding is going to be used'),
-    ]
-    text: Annotated[str, Field(description='Text to be embedded', max_length=8000)]
-
-
-class NewCollectionRequest(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    name: Annotated[str, Field(max_length=50, min_length=2)]
-    description: Annotated[Optional[str], Field(None, max_length=500)]
-    accessLevel: Annotated[
-        Optional[Literal['public', 'private']],
-        Field(None, description='Access level of the collection.'),
-    ]
+    params: Params
+    task: Annotated[Task, Field(description='Deletion task details')]
 
 
 class UpdateCollectableItemsRequest(BaseModel):
@@ -365,30 +355,302 @@ class UpdateCollectableItemsRequest(BaseModel):
     ]
 
 
-class Pagination(BaseModel):
+class ImpressoTextEmbeddingRequest(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    total: Annotated[
-        int, Field(description='The total number of items matching the query')
+    searchTarget: Annotated[
+        Literal['image', 'text'],
+        Field(description='Where the embedding is going to be used'),
     ]
-    limit: Annotated[
-        int, Field(description='The number of items returned in this response')
+    text: Annotated[str, Field(description='Text to be embedded', max_length=8000)]
+
+
+class NamedEntity(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='Unique identifier of the entity')]
+    count: Annotated[
+        Optional[float],
+        Field(None, description='How many times it is mentioned in the text'),
     ]
-    offset: Annotated[
-        int,
+
+
+class Newspaper(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='The unique identifier of the newspaper.')]
+    title: Annotated[
+        Optional[str], Field(None, description='The title of the newspaper.')
+    ]
+    startYear: Annotated[
+        Optional[float],
         Field(
-            description='Starting index of the items subset returned in this response'
+            None,
+            description='The year of the first available article in the newspaper.',
+            ge=0.0,
+        ),
+    ]
+    endYear: Annotated[
+        Optional[float],
+        Field(
+            None,
+            description='The year of the last available article in the newspaper.',
+            ge=0.0,
+        ),
+    ]
+    languageCodes: Annotated[
+        Optional[Sequence[str]],
+        Field(None, description='ISO 639-1 codes of languages used in the newspaper.'),
+    ]
+    totalArticles: Annotated[
+        Optional[float],
+        Field(None, description='Total number of articles in the newspaper.', ge=0.0),
+    ]
+    totalIssues: Annotated[
+        Optional[float],
+        Field(None, description='Total number of issues in the newspaper.', ge=0.0),
+    ]
+    totalPages: Annotated[
+        Optional[float],
+        Field(None, description='Total number of pages in the newspaper.', ge=0.0),
+    ]
+
+
+class Freeform(BaseModel):
+    pass
+    model_config = ConfigDict(
+        extra='allow',
+    )
+
+
+class NamedEntities(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    locations: Annotated[
+        Optional[Sequence[NamedEntity]],
+        Field(
+            None, description='Linked location entities mentioned in the content item.'
+        ),
+    ]
+    persons: Annotated[
+        Optional[Sequence[NamedEntity]],
+        Field(
+            None, description='Linked person entities mentioned in the content item.'
+        ),
+    ]
+    organisations: Annotated[
+        Optional[Sequence[NamedEntity]],
+        Field(
+            None,
+            description='Linked organisation entities mentioned in the content item.',
+        ),
+    ]
+    newsAgencies: Annotated[
+        Optional[Sequence[NamedEntity]],
+        Field(
+            None,
+            description='Linked news agency entities mentioned in the content item.',
         ),
     ]
 
 
-class BaseFind(BaseModel):
+class ExperimentInfo(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    data: Sequence
-    pagination: Pagination
+    id: Annotated[str, Field(description='The unique identifier of the experiment.')]
+    name: Annotated[str, Field(description='The display name of the experiment.')]
+    description: Annotated[
+        Optional[str],
+        Field(None, description='A description of what the experiment does.'),
+    ]
+
+
+class Offset1(BaseModel):
+    start: Annotated[
+        int, Field(description='Start offset of the passage in the content item.')
+    ]
+    end: Annotated[
+        int, Field(description='End offset of the passage in the content item.')
+    ]
+
+
+class TextReusePassage(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='Unique ID of the text reuse passage.')]
+    content: Annotated[
+        Optional[str], Field(None, description='Textual content of the passage.')
+    ]
+    contentItemId: Annotated[
+        Optional[str],
+        Field(
+            None,
+            description='ID of the content item that the text reuse passage belongs to.',
+        ),
+    ]
+    offset: Annotated[
+        Optional[Offset1],
+        Field(
+            None,
+            description='Start and end offsets of the passage in the content item.',
+        ),
+    ]
+
+
+class SearchFacetBucket(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    count: Annotated[int, Field(description='Number of items in the bucket', ge=0)]
+    value: Annotated[
+        Union[str, float, int], Field(description='Value that represents the bucket.')
+    ]
+    label: Annotated[
+        Optional[str], Field(None, description='Label of the value, if relevant.')
+    ]
+
+
+class VersionDetails(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    version: Annotated[str, Field(description='Version of the API.')]
+
+
+class TimeCoverage(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    startDate: Annotated[
+        date,
+        Field(
+            description='Publication date of the earliest content item in the cluster.'
+        ),
+    ]
+    endDate: Annotated[
+        date,
+        Field(
+            description='Publication date of the latest content item in the cluster.'
+        ),
+    ]
+
+
+class TextReuseCluster(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='Unique ID of the text reuse cluster.')]
+    lexicalOverlap: Annotated[
+        Optional[float],
+        Field(
+            None,
+            description='Overlap in percents between the passages in the cluster.',
+            ge=0.0,
+            le=100.0,
+        ),
+    ]
+    clusterSize: Annotated[
+        Optional[int],
+        Field(None, description='Number of passages in the cluster.', ge=0),
+    ]
+    textSample: Annotated[
+        Optional[str],
+        Field(
+            None,
+            description='Sample of a text from one of the passages in the cluster.',
+        ),
+    ]
+    timeCoverage: Annotated[
+        Optional[TimeCoverage], Field(None, description='Time coverage of the cluster.')
+    ]
+
+
+class PageNumber(RootModel[float]):
+    root: Annotated[float, Field(ge=1.0)]
+
+
+class Coordinates(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    latitude: Annotated[
+        Optional[float], Field(None, description='The latitude of the location')
+    ]
+    longitude: Annotated[
+        Optional[float], Field(None, description='The longitude of the location')
+    ]
+
+
+class WikidataLocation(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[
+        str,
+        Field(
+            description='The Q Wikidata ID of the location (https://www.wikidata.org/wiki/Wikidata:Identifiers)'
+        ),
+    ]
+    type: Annotated[Literal['location'], Field(description='The type of the entity')]
+    labels: Annotated[
+        Optional[Mapping[str, Sequence[str]]],
+        Field(None, description='Labels of the location in different languages'),
+    ]
+    descriptions: Annotated[
+        Optional[Mapping[str, Sequence[str]]],
+        Field(None, description='Descriptions of the location in different languages'),
+    ]
+    coordinates: Optional[Coordinates] = None
+
+
+class TopicWord(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    w: Annotated[str, Field(description='Word surface form')]
+    p: Annotated[float, Field(description='Probability of the word in topic')]
+    h: Annotated[Optional[bool], Field(None, description='If word is highlighted')]
+
+
+class WikidataHuman(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[
+        str,
+        Field(
+            description='The Q Wikidata ID of the person (https://www.wikidata.org/wiki/Wikidata:Identifiers)'
+        ),
+    ]
+    type: Annotated[Literal['human'], Field(description='The type of the entity')]
+    labels: Annotated[
+        Optional[Mapping[str, Sequence[str]]],
+        Field(None, description='Labels of the person in different languages'),
+    ]
+    descriptions: Annotated[
+        Optional[Mapping[str, Sequence[str]]],
+        Field(None, description='Descriptions of the person in different languages'),
+    ]
+    birthDate: Annotated[
+        Optional[AwareDatetime], Field(None, description='The birth date of the person')
+    ]
+    deathDate: Annotated[
+        Optional[AwareDatetime], Field(None, description='The death date of the person')
+    ]
+    birthPlace: Annotated[
+        Optional[WikidataLocation],
+        Field(None, description='The birth place of the person'),
+    ]
+    deathPlace: Annotated[
+        Optional[WikidataLocation],
+        Field(None, description='The death place of the person'),
+    ]
 
 
 class Collection(BaseModel):
@@ -418,34 +680,34 @@ class Collection(BaseModel):
     ]
 
 
-class EntityMention(BaseModel):
+class WordMatch(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    uid: Annotated[str, Field(description='Unique identifier of the entity')]
-    relevance: Annotated[
-        Optional[float],
-        Field(None, description='Relevance of the entity in the document'),
-    ]
+    id: Annotated[str, Field(description='Unique identifier for the word')]
+    languageCode: Annotated[str, Field(description='The language code of the word')]
+    word: Annotated[str, Field(description='The word')]
 
 
-class ExperimentInfo(BaseModel):
+class Name(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    id: Annotated[str, Field(description='The unique identifier of the experiment.')]
-    name: Annotated[str, Field(description='The display name of the experiment.')]
-    description: Annotated[
-        Optional[str],
-        Field(None, description='A description of what the experiment does.'),
+    langCode: Annotated[str, Field(description='ISO 639-1 language code.')]
+    name: Annotated[
+        str, Field(description='Name of the data provider in this language.')
     ]
 
 
-class Freeform(BaseModel):
-    pass
+class DataProvider(BaseModel):
     model_config = ConfigDict(
-        extra='allow',
+        extra='forbid',
     )
+    id: Annotated[str, Field(description='The unique identifier of the data provider.')]
+    names: Annotated[
+        Sequence[Name],
+        Field(description='Names of the data provider in different languages.'),
+    ]
 
 
 class ImageTypes(BaseModel):
@@ -526,6 +788,48 @@ class Image(BaseModel):
     ]
 
 
+class TopicMention(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='Unique identifier of the topic.')]
+    relevance: Annotated[
+        Optional[float],
+        Field(
+            None,
+            description='Relevance of the topic in the content item.',
+            ge=0.0,
+            le=1.0,
+        ),
+    ]
+
+
+class Pagination(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    total: Annotated[
+        int, Field(description='The total number of items matching the query')
+    ]
+    limit: Annotated[
+        int, Field(description='The number of items returned in this response')
+    ]
+    offset: Annotated[
+        int,
+        Field(
+            description='Starting index of the items subset returned in this response'
+        ),
+    ]
+
+
+class BaseFind(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    data: Sequence
+    pagination: Pagination
+
+
 class Totals(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -588,234 +892,108 @@ class MediaSource(BaseModel):
     properties: Optional[Sequence[Property]] = None
 
 
-class NamedEntity(BaseModel):
+class EntityMention(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    surfaceForm: Annotated[
+        str, Field(description='The surface form (label) of the entity mention')
+    ]
+    mentionConfidence: Annotated[
+        float, Field(description='Confidence score of the entity mention')
+    ]
+    startOffset: Annotated[
+        Optional[int],
+        Field(
+            None, description='Start offset of the entity mention in the content item'
+        ),
+    ]
+    endOffset: Annotated[
+        Optional[int],
+        Field(None, description='End offset of the entity mention in the content item'),
+    ]
+
+
+class ImpressoNerResponse(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    modelId: Annotated[
+        str, Field(description='ID of the model used for the named entity recognition')
+    ]
+    text: Annotated[
+        str, Field(description='Text processed for named entity recognition')
+    ]
+    timestamp: Annotated[
+        AwareDatetime,
+        Field(description='Timestamp of when named entity recognition was performed'),
+    ]
+    entities: Sequence[ImpressoNerEntity]
+
+
+class Topic(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    uid: Annotated[str, Field(description='The unique identifier of the topic')]
+    language: Annotated[str, Field(description='The language code of the topic')]
+    contentItemsCount: Annotated[
+        Optional[float],
+        Field(None, description='Number of content items with this topic'),
+    ]
+    words: Annotated[
+        Optional[Sequence[TopicWord]],
+        Field(None, description='Top N words associated with the topic'),
+    ]
+    model: Annotated[
+        Optional[str],
+        Field(None, description='ID of the model used to generate the topic'),
+    ]
+
+
+class EntityDetails(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
     uid: Annotated[str, Field(description='Unique identifier of the entity')]
-    count: Annotated[
-        Optional[float],
-        Field(None, description='How many times it is mentioned in the text'),
+    label: Annotated[Optional[str], Field(None, description='Entity label')]
+    type: Optional[Literal['person', 'location', 'organisation', 'newsagency']] = None
+    wikidataId: Annotated[
+        Optional[str], Field(None, description='Wikidata identifier of the entity.')
     ]
-
-
-class Newspaper(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    uid: Annotated[str, Field(description='The unique identifier of the newspaper.')]
-    title: Annotated[
-        Optional[str], Field(None, description='The title of the newspaper.')
-    ]
-    startYear: Annotated[
-        Optional[float],
-        Field(
-            None,
-            description='The year of the first available article in the newspaper.',
-            ge=0.0,
-        ),
-    ]
-    endYear: Annotated[
-        Optional[float],
-        Field(
-            None,
-            description='The year of the last available article in the newspaper.',
-            ge=0.0,
-        ),
-    ]
-    languageCodes: Annotated[
-        Optional[Sequence[str]],
-        Field(None, description='ISO 639-1 codes of languages used in the newspaper.'),
-    ]
-    totalArticles: Annotated[
-        Optional[float],
-        Field(None, description='Total number of articles in the newspaper.', ge=0.0),
-    ]
-    totalIssues: Annotated[
-        Optional[float],
-        Field(None, description='Total number of issues in the newspaper.', ge=0.0),
-    ]
-    totalPages: Annotated[
-        Optional[float],
-        Field(None, description='Total number of pages in the newspaper.', ge=0.0),
-    ]
-
-
-class SearchFacetBucket(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    count: Annotated[int, Field(description='Number of items in the bucket', ge=0)]
-    value: Annotated[
-        Union[str, float, int], Field(description='Value that represents the bucket.')
-    ]
-    label: Annotated[
-        Optional[str], Field(None, description='Label of the value, if relevant.')
-    ]
-
-
-class TimeCoverage(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    startDate: Annotated[
-        date,
-        Field(
-            description='Publication date of the earliest content item in the cluster.'
-        ),
-    ]
-    endDate: Annotated[
-        date,
-        Field(
-            description='Publication date of the latest content item in the cluster.'
-        ),
-    ]
-
-
-class TextReuseCluster(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    uid: Annotated[str, Field(description='Unique ID of the text reuse cluster.')]
-    lexicalOverlap: Annotated[
-        Optional[float],
-        Field(
-            None,
-            description='Overlap in percents between the passages in the cluster.',
-            ge=0.0,
-            le=100.0,
-        ),
-    ]
-    clusterSize: Annotated[
+    totalMentions: Annotated[
         Optional[int],
-        Field(None, description='Number of passages in the cluster.', ge=0),
+        Field(None, description='Total number of mentions of the entity.'),
     ]
-    textSample: Annotated[
-        Optional[str],
+    totalContentItems: Annotated[
+        Optional[int],
         Field(
             None,
-            description='Sample of a text from one of the passages in the cluster.',
+            description='Total number of content items the entity is mentioned in.',
         ),
     ]
-    timeCoverage: Annotated[
-        Optional[TimeCoverage], Field(None, description='Time coverage of the cluster.')
-    ]
+    wikidataDetails: Optional[Union[WikidataHuman, WikidataLocation]] = None
 
 
-class Offset1(BaseModel):
-    start: Annotated[
-        int, Field(description='Start offset of the passage in the content item.')
-    ]
-    end: Annotated[
-        int, Field(description='End offset of the passage in the content item.')
-    ]
-
-
-class TextReusePassage(BaseModel):
+class EntityMentions(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
-    uid: Annotated[str, Field(description='Unique ID of the text reuse passage.')]
-    content: Annotated[
-        Optional[str], Field(None, description='Textual content of the passage.')
+    locations: Annotated[
+        Optional[Sequence[EntityMention]],
+        Field(None, description='Locations mentioned in the content item.'),
     ]
-    contentItemId: Annotated[
-        Optional[str],
-        Field(
-            None,
-            description='ID of the content item that the text reuse passage belongs to.',
-        ),
+    persons: Annotated[
+        Optional[Sequence[EntityMention]],
+        Field(None, description='Persons mentioned in the content item.'),
     ]
-    offset: Annotated[
-        Optional[Offset1],
-        Field(
-            None,
-            description='Start and end offsets of the passage in the content item.',
-        ),
+    organisations: Annotated[
+        Optional[Sequence[EntityMention]],
+        Field(None, description='Organisations mentioned in the content item.'),
     ]
-
-
-class TopicMention(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    uid: Annotated[str, Field(description='Unique identifier of the topic.')]
-    relevance: Annotated[
-        Optional[float],
-        Field(
-            None,
-            description='Relevance of the topic in the content item.',
-            ge=0.0,
-            le=1.0,
-        ),
-    ]
-
-
-class VersionDetails(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    version: Annotated[str, Field(description='Version of the API.')]
-
-
-class Coordinates(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    latitude: Annotated[
-        Optional[float], Field(None, description='The latitude of the location')
-    ]
-    longitude: Annotated[
-        Optional[float], Field(None, description='The longitude of the location')
-    ]
-
-
-class WikidataLocation(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    id: Annotated[
-        str,
-        Field(
-            description='The Q Wikidata ID of the location (https://www.wikidata.org/wiki/Wikidata:Identifiers)'
-        ),
-    ]
-    type: Annotated[Literal['location'], Field(description='The type of the entity')]
-    labels: Annotated[
-        Optional[Mapping[str, Sequence[str]]],
-        Field(None, description='Labels of the location in different languages'),
-    ]
-    descriptions: Annotated[
-        Optional[Mapping[str, Sequence[str]]],
-        Field(None, description='Descriptions of the location in different languages'),
-    ]
-    coordinates: Optional[Coordinates] = None
-
-
-class WordMatch(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    id: Annotated[str, Field(description='Unique identifier for the word')]
-    languageCode: Annotated[str, Field(description='The language code of the word')]
-    word: Annotated[str, Field(description='The word')]
-
-
-class AddCollectableItemsFromFilters(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    filters: Annotated[
-        Sequence[Filter],
-        Field(
-            description='Filters to apply when selecting items to add to the collection'
-        ),
-    ]
-    namespace: Annotated[
-        Literal['search', 'tr_passages'],
-        Field(
-            description='Namespace to use when selecting items to add to the collection'
-        ),
+    newsAgencies: Annotated[
+        Optional[Sequence[EntityMention]],
+        Field(None, description='News agencies mentioned in the content item.'),
     ]
 
 
@@ -851,32 +1029,8 @@ class ContentItem(BaseModel):
     transcript: Annotated[
         Optional[str], Field(None, description='Transcript of the content item.')
     ]
-    locationEntities: Annotated[
-        Optional[Sequence[NamedEntity]],
-        Field(
-            None, description='Linked location entities mentioned in the content item.'
-        ),
-    ]
-    personEntities: Annotated[
-        Optional[Sequence[NamedEntity]],
-        Field(
-            None, description='Linked person entities mentioned in the content item.'
-        ),
-    ]
-    organisationEntities: Annotated[
-        Optional[Sequence[NamedEntity]],
-        Field(
-            None,
-            description='Linked organisation entities mentioned in the content item.',
-        ),
-    ]
-    newsAgenciesEntities: Annotated[
-        Optional[Sequence[NamedEntity]],
-        Field(
-            None,
-            description='Linked news agency entities mentioned in the content item.',
-        ),
-    ]
+    entities: Optional[NamedEntities] = None
+    mentions: Optional[EntityMentions] = None
     topics: Annotated[
         Optional[Sequence[TopicMention]],
         Field(None, description='Topics mentioned in the content item.'),
@@ -941,62 +1095,36 @@ class ContentItem(BaseModel):
         ],
         Field(None, description='The type of the media the content item belongs to.'),
     ]
-
-
-class WikidataHuman(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    id: Annotated[
-        str,
-        Field(
-            description='The Q Wikidata ID of the person (https://www.wikidata.org/wiki/Wikidata:Identifiers)'
-        ),
+    hasOLR: Annotated[
+        Optional[bool],
+        Field(None, description='Whether the content item has OCR/OLR data available.'),
     ]
-    type: Annotated[Literal['human'], Field(description='The type of the entity')]
-    labels: Annotated[
-        Optional[Mapping[str, Sequence[str]]],
-        Field(None, description='Labels of the person in different languages'),
-    ]
-    descriptions: Annotated[
-        Optional[Mapping[str, Sequence[str]]],
-        Field(None, description='Descriptions of the person in different languages'),
-    ]
-    birthDate: Annotated[
-        Optional[AwareDatetime], Field(None, description='The birth date of the person')
-    ]
-    deathDate: Annotated[
-        Optional[AwareDatetime], Field(None, description='The death date of the person')
-    ]
-    birthPlace: Annotated[
-        Optional[WikidataLocation],
-        Field(None, description='The birth place of the person'),
-    ]
-    deathPlace: Annotated[
-        Optional[WikidataLocation],
-        Field(None, description='The death place of the person'),
-    ]
-
-
-class EntityDetails(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    uid: Annotated[str, Field(description='Unique identifier of the entity')]
-    label: Annotated[Optional[str], Field(None, description='Entity label')]
-    type: Optional[Literal['person', 'location', 'organisation', 'newsagency']] = None
-    wikidataId: Annotated[
-        Optional[str], Field(None, description='Wikidata identifier of the entity.')
-    ]
-    totalMentions: Annotated[
-        Optional[int],
-        Field(None, description='Total number of mentions of the entity.'),
-    ]
-    totalContentItems: Annotated[
-        Optional[int],
+    ocrQualityScore: Annotated[
+        Optional[float],
         Field(
             None,
-            description='Total number of content items the entity is mentioned in.',
+            description='OCR quality score of the content item (0 - 1).',
+            ge=0.0,
+            le=1.0,
         ),
     ]
-    wikidataDetails: Optional[Union[WikidataHuman, WikidataLocation]] = None
+    relevanceScore: Annotated[
+        Optional[float],
+        Field(
+            None,
+            description='Relevance score of the content item (0 - 1).',
+            ge=0.0,
+            le=1.0,
+        ),
+    ]
+    pageNumbers: Annotated[
+        Optional[Sequence[PageNumber]],
+        Field(None, description='Page numbers the content item appears on.'),
+    ]
+    collectionUids: Annotated[
+        Optional[Sequence[str]],
+        Field(
+            None,
+            description='Unique identifiers of collections the content item belongs to.',
+        ),
+    ]

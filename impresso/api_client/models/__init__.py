@@ -15,8 +15,12 @@ from .collection import Collection
 from .collection_access_level import CollectionAccessLevel
 from .content_item import ContentItem
 from .content_item_copyright_status import ContentItemCopyrightStatus
+from .content_item_entities_mentions_information import ContentItemEntitiesMentionsInformation
 from .content_item_media_type import ContentItemMediaType
+from .content_item_named_entities_information import ContentItemNamedEntitiesInformation
 from .content_item_source_medium import ContentItemSourceMedium
+from .data_provider import DataProvider
+from .data_provider_names_item import DataProviderNamesItem
 from .entity_details import EntityDetails
 from .entity_details_type import EntityDetailsType
 from .entity_mention import EntityMention
@@ -30,6 +34,8 @@ from .filter_precision import FilterPrecision
 from .find_collections_base_find_response import FindCollectionsBaseFindResponse
 from .find_collections_base_find_response_pagination import FindCollectionsBaseFindResponsePagination
 from .find_collections_order_by import FindCollectionsOrderBy
+from .find_data_providers_base_find_response import FindDataProvidersBaseFindResponse
+from .find_data_providers_base_find_response_pagination import FindDataProvidersBaseFindResponsePagination
 from .find_entities_base_find_response import FindEntitiesBaseFindResponse
 from .find_entities_base_find_response_pagination import FindEntitiesBaseFindResponsePagination
 from .find_entities_order_by import FindEntitiesOrderBy
@@ -48,6 +54,9 @@ from .find_text_reuse_clusters_order_by import FindTextReuseClustersOrderBy
 from .find_text_reuse_passages_base_find_response import FindTextReusePassagesBaseFindResponse
 from .find_text_reuse_passages_base_find_response_pagination import FindTextReusePassagesBaseFindResponsePagination
 from .find_text_reuse_passages_order_by import FindTextReusePassagesOrderBy
+from .find_topics_base_find_response import FindTopicsBaseFindResponse
+from .find_topics_base_find_response_pagination import FindTopicsBaseFindResponsePagination
+from .find_topics_order_by import FindTopicsOrderBy
 from .freeform import Freeform
 from .get_images_facet_base_find_response import GetImagesFacetBaseFindResponse
 from .get_images_facet_base_find_response_pagination import GetImagesFacetBaseFindResponsePagination
@@ -103,7 +112,9 @@ from .text_reuse_cluster import TextReuseCluster
 from .text_reuse_cluster_time_coverage import TextReuseClusterTimeCoverage
 from .text_reuse_passage import TextReusePassage
 from .text_reuse_passage_offset import TextReusePassageOffset
+from .topic import Topic
 from .topic_mention import TopicMention
+from .topic_word import TopicWord
 from .update_collectable_items_request import UpdateCollectableItemsRequest
 from .version_details import VersionDetails
 from .wikidata_location import WikidataLocation
@@ -133,8 +144,12 @@ __all__ = (
     "CollectionAccessLevel",
     "ContentItem",
     "ContentItemCopyrightStatus",
+    "ContentItemEntitiesMentionsInformation",
     "ContentItemMediaType",
+    "ContentItemNamedEntitiesInformation",
     "ContentItemSourceMedium",
+    "DataProvider",
+    "DataProviderNamesItem",
     "EntityDetails",
     "EntityDetailsType",
     "EntityMention",
@@ -148,6 +163,8 @@ __all__ = (
     "FindCollectionsBaseFindResponse",
     "FindCollectionsBaseFindResponsePagination",
     "FindCollectionsOrderBy",
+    "FindDataProvidersBaseFindResponse",
+    "FindDataProvidersBaseFindResponsePagination",
     "FindEntitiesBaseFindResponse",
     "FindEntitiesBaseFindResponsePagination",
     "FindEntitiesOrderBy",
@@ -166,6 +183,9 @@ __all__ = (
     "FindTextReusePassagesBaseFindResponse",
     "FindTextReusePassagesBaseFindResponsePagination",
     "FindTextReusePassagesOrderBy",
+    "FindTopicsBaseFindResponse",
+    "FindTopicsBaseFindResponsePagination",
+    "FindTopicsOrderBy",
     "Freeform",
     "GetImagesFacetBaseFindResponse",
     "GetImagesFacetBaseFindResponsePagination",
@@ -221,7 +241,9 @@ __all__ = (
     "TextReuseClusterTimeCoverage",
     "TextReusePassage",
     "TextReusePassageOffset",
+    "Topic",
     "TopicMention",
+    "TopicWord",
     "UpdateCollectableItemsRequest",
     "VersionDetails",
     "WikidataLocation",

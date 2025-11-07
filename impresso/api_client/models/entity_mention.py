@@ -9,42 +9,59 @@ T = TypeVar("T", bound="EntityMention")
 
 @_attrs_define
 class EntityMention:
-    """An entity (location, persion) mention.
+    """An entity (location, person, etc.) mentioned in the content item.
 
     Attributes:
-        uid (str): Unique identifier of the entity
-        relevance (Union[Unset, float]): Relevance of the entity in the document
+        surface_form (str): The surface form (label) of the entity mention
+        mention_confidence (float): Confidence score of the entity mention
+        start_offset (Union[Unset, int]): Start offset of the entity mention in the content item
+        end_offset (Union[Unset, int]): End offset of the entity mention in the content item
     """
 
-    uid: str
-    relevance: Union[Unset, float] = UNSET
+    surface_form: str
+    mention_confidence: float
+    start_offset: Union[Unset, int] = UNSET
+    end_offset: Union[Unset, int] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
-        uid = self.uid
+        surface_form = self.surface_form
 
-        relevance = self.relevance
+        mention_confidence = self.mention_confidence
+
+        start_offset = self.start_offset
+
+        end_offset = self.end_offset
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
-                "uid": uid,
+                "surfaceForm": surface_form,
+                "mentionConfidence": mention_confidence,
             }
         )
-        if relevance is not UNSET:
-            field_dict["relevance"] = relevance
+        if start_offset is not UNSET:
+            field_dict["startOffset"] = start_offset
+        if end_offset is not UNSET:
+            field_dict["endOffset"] = end_offset
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        uid = d.pop("uid")
+        surface_form = d.pop("surfaceForm")
 
-        relevance = d.pop("relevance", UNSET)
+        mention_confidence = d.pop("mentionConfidence")
+
+        start_offset = d.pop("startOffset", UNSET)
+
+        end_offset = d.pop("endOffset", UNSET)
 
         entity_mention = cls(
-            uid=uid,
-            relevance=relevance,
+            surface_form=surface_form,
+            mention_confidence=mention_confidence,
+            start_offset=start_offset,
+            end_offset=end_offset,
         )
 
         return entity_mention
