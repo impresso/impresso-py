@@ -704,6 +704,7 @@ class DataProvider(BaseModel):
         extra='forbid',
     )
     id: Annotated[str, Field(description='The unique identifier of the data provider.')]
+    name: Annotated[str, Field(description='The default name of the data provider.')]
     names: Annotated[
         Sequence[Name],
         Field(description='Names of the data provider in different languages.'),

@@ -16,14 +16,18 @@ class DataProvider:
 
         Attributes:
             id (str): The unique identifier of the data provider.
+            name (str): The default name of the data provider.
             names (List['DataProviderNamesItem']): Names of the data provider in different languages.
     """
 
     id: str
+    name: str
     names: List["DataProviderNamesItem"]
 
     def to_dict(self) -> Dict[str, Any]:
         id = self.id
+
+        name = self.name
 
         names = []
         for names_item_data in self.names:
@@ -34,6 +38,7 @@ class DataProvider:
         field_dict.update(
             {
                 "id": id,
+                "name": name,
                 "names": names,
             }
         )
@@ -47,6 +52,8 @@ class DataProvider:
         d = src_dict.copy()
         id = d.pop("id")
 
+        name = d.pop("name")
+
         names = []
         _names = d.pop("names")
         for names_item_data in _names:
@@ -56,6 +63,7 @@ class DataProvider:
 
         data_provider = cls(
             id=id,
+            name=name,
             names=names,
         )
 
