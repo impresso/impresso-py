@@ -7,6 +7,9 @@ from pandas import DataFrame, json_normalize
 
 from impresso.api_client.api.search import search
 from impresso.api_client.api.search_facets import get_search_facet
+from impresso.api_client.models.content_item_copyright_status import (
+    ContentItemCopyrightStatusLiteral,
+)
 from impresso.api_client.models.get_search_facet_id import (
     GetSearchFacetId,
     GetSearchFacetIdLiteral,
@@ -150,6 +153,12 @@ class SearchResource(Resource):
         partner_id: str | AND[str] | OR[str] | None = None,
         text_reuse_cluster_id: str | AND[str] | OR[str] | None = None,
         embedding: Embedding | None = None,
+        copyright: (
+            ContentItemCopyrightStatusLiteral
+            | AND[ContentItemCopyrightStatusLiteral]
+            | OR[ContentItemCopyrightStatusLiteral]
+            | None
+        ) = None,
     ) -> SearchDataContainer:
         """
         Search for content items in Impresso.
@@ -176,6 +185,8 @@ class SearchResource(Resource):
             partner_id: Return only content items that are from this partner or all/any of the partners.
             text_reuse_cluster_id: Return only content items that are in this text reuse cluster
                                    or all/any of the clusters.
+            embedding: Return only content items similar to this embedding.
+            copyright: Return only content items with this copyright status.
 
         Returns:
             SearchDataContainer: Data container with a page of results of the search.
@@ -200,6 +211,7 @@ class SearchResource(Resource):
             partner_id=partner_id,
             text_reuse_cluster_id=text_reuse_cluster_id,
             embedding=embedding_with_limit,
+            copyright=copyright,
         )
 
         filters_pb = filters_as_protobuf(filters or [])
@@ -405,6 +417,12 @@ class SearchResource(Resource):
         partner_id: str | AND[str] | OR[str] | None = None,
         text_reuse_cluster_id: str | AND[str] | OR[str] | None = None,
         embedding: Embedding | None = None,
+        copyright: (
+            ContentItemCopyrightStatusLiteral
+            | AND[ContentItemCopyrightStatusLiteral]
+            | OR[ContentItemCopyrightStatusLiteral]
+            | None
+        ) = None,
     ) -> list[Filter]:
         filters: list[Filter] = []
         if string:
@@ -444,6 +462,8 @@ class SearchResource(Resource):
             filters.extend(and_or_filter(text_reuse_cluster_id, "text_reuse_cluster"))
         if embedding is not None:
             filters.extend(and_or_filter(embedding, "embedding"))
+        if copyright is not None:
+            filters.extend(and_or_filter(str(copyright), "copyright"))
 
         return filters
 
