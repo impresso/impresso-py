@@ -8,6 +8,20 @@ Search content items in the Impresso corpus.
 # Search for content items
 impresso.search.find(term='Titanic', limit=10)
 
+# Complex queries with AND/OR operators
+from impresso import AND, OR
+impresso.search.find(term=AND("hitler", "stalin") & OR("molotow", "ribbentrop"))
+
+# Search with date range
+from impresso import DateRange
+impresso.search.find(term="independence", date_range=DateRange("1921-05-21", "2001-01-02"))
+
+# Search by entity mentions
+impresso.search.find(entity_id=AND("aida-0001-54-Switzerland", "aida-0001-50-Albert_Einstein"))
+
+# Limit to specific newspapers
+impresso.search.find(term="independence", newspaper_id=OR("EXP", "GDL"))
+
 # Get facets to analyze search results
 impresso.search.facet(facet='newspaper', term='war')
 ```
@@ -24,6 +38,16 @@ Search entities in the Impresso corpus.
 ```python
 # Search for entities
 impresso.entities.find(term="Douglas Adams")
+
+# Filter by entity type
+impresso.entities.find(term="Paris", entity_type="location")
+
+# Get entities with Wikidata details
+impresso.entities.find(term="Paris", resolve=True)
+
+# Search by Wikidata IDs
+from impresso import AND
+impresso.entities.find(wikidata_id=AND("Q2", "Q4", "Q42"))
 
 # Get a specific entity by ID
 impresso.entities.get("entity-id")
@@ -68,26 +92,30 @@ embeddings = impresso.content_items.get_embeddings("NZZ-1794-08-09-a-i0002")
 
 ::: impresso.resources.content_items.ContentItemsResource
 
-::: impresso.resources.content_items.GetContentItemContainer
+::: impresso.resources.content_items.ContentItemDataContainer
 
 ## Images
 
 Search images in the Impresso corpus. Supports text search, filtering by various metadata, and visual similarity search using embeddings.
 
 ```python
-# Search for images by keyword
-impresso.images.find(term="war")
+# Search for images by keyword and content type
+impresso.images.find(term="rocket", content_type="object")
 
-# Search by visual similarity
-from impresso import DateRange
-embedding = impresso.tools.embed_image("path/to/image.jpg", target="image")
-impresso.images.find(embedding=embedding, date_range=DateRange(start="1900-01-01", end="1910-12-31"))
+# Get an image with its embeddings
+image = impresso.images.get("luxwort-1930-09-26-a-i0036", include_embeddings=True)
 
-# Get a specific image by ID
-impresso.images.get("image-id")
+# Search for similar images using an in-corpus image
+embeddings = impresso.images.get_embeddings("luxwort-1930-09-26-a-i0036")
+impresso.images.find(embedding=embeddings[0], limit=10)
 
-# Get only the embeddings of an image
-embeddings = impresso.images.get_embeddings("image-id")
+# Search for similar images using external image
+embedding = impresso.tools.embed_image("https://example.com/image.png", target="image")
+impresso.images.find(embedding=embedding, limit=10)
+
+# Multimodal search: find images using text
+text_embedding = impresso.tools.embed_text(text="portrait", target="multimodal")
+impresso.images.find(embedding=text_embedding, limit=10)
 ```
 
 ::: impresso.resources.images.ImagesResource
@@ -159,16 +187,18 @@ Work with collections
 impresso.collections.find(term="war")
 
 # Get a specific collection by ID
-impresso.collections.get("collection-id")
+collection = impresso.collections.get("collection-id")
+collection_id = collection.raw["uid"]
 
 # List items in a collection
-impresso.collections.items("collection-id")
+items = impresso.collections.items(collection_id)
 
-# Add items to a collection
-impresso.collections.add_items("collection-id", ["item-id-1", "item-id-2"])
+# Add items to a collection (asynchronous - may take a few minutes)
+content_item = impresso.content_items.get("NZZ-1794-08-09-a-i0002")
+impresso.collections.add_items(collection_id, [content_item.pydantic.uid])
 
-# Remove items from a collection
-impresso.collections.remove_items("collection-id", ["item-id-1"])
+# Remove items from a collection (asynchronous - may take a few minutes)
+impresso.collections.remove_items(collection_id, [content_item.pydantic.uid])
 ```
 
 ::: impresso.resources.collections.CollectionsResource
@@ -177,27 +207,42 @@ impresso.collections.remove_items("collection-id", ["item-id-1"])
 ::: impresso.resources.collections.FindCollectionsContainer
 ::: impresso.resources.collections.GetCollectionContainer
 
-## Named entity recognition
+## Tools: Named entity recognition and Embeddings
 
-The python library contains a set of named entity recognition methods that use the same NER model used to add entities to the Impresso database.
+The python library provides tools for text processing and semantic search:
+
+- **Named Entity Recognition (NER)**: Extract and classify named entities (people, places, organizations) from text.
+- **Named Entity Linking (NEL)**: Resolve recognized entities to Wikidata entries.
+- **Text Embeddings**: Generate semantic embeddings from text for similarity search across the corpus.
+- **Image Embeddings**: Generate embeddings from images for visual similarity search and multimodal retrieval.
 
 ```python
+text = "Jean-Baptiste Nicolas Robert Schuman (29 June 1886 – 4 September 1963) was a Luxembourg-born French statesman."
+
 # Extract named entities from text (fast)
-impresso.tools.ner("Napoleon visited Paris in 1815.")
+result = impresso.tools.ner(text)
+result.df  # View entities as DataFrame
 
 # Extract and link entities to Wikidata (slower but more detailed)
-impresso.tools.ner_nel("Napoleon visited Paris in 1815.")
+result = impresso.tools.ner_nel(text)
+result.df  # Includes Wikidata links
 
-# Link pre-tagged entities to external resources
-impresso.tools.nel("[START]Napoleon[END] visited [START]Paris[END] in 1815.")
+# Link pre-tagged entities to external resources (requires [START] and [END] markers)
+tagged_text = "[START] Jean-Baptiste Nicolas Robert Schuman [END] was a statesman."
+impresso.tools.nel(tagged_text)
 
 # Generate text embeddings for semantic search
-embedding = impresso.tools.embed_text("military conflict", target="text")
-impresso.search.find(embedding=embedding)
+text_embedding = impresso.tools.embed_text("European integration", target="text")
+results = impresso.search.find(embedding=text_embedding, limit=5)
 
-# Generate image embeddings from file or URL
-embedding = impresso.tools.embed_image("path/to/image.jpg", target="image")
-impresso.images.find(embedding=embedding)
+# Use in-corpus embedding for similar article search
+first_item_id = results.df.index[0]
+in_corpus_embedding = impresso.content_items.get_embeddings(first_item_id)[0]
+impresso.search.find(embedding=in_corpus_embedding, limit=10)
+
+# Generate image embeddings from URL
+image_embedding = impresso.tools.embed_image("https://example.com/image.png", target="image")
+impresso.images.find(embedding=image_embedding)
 ```
 
 ::: impresso.resources.tools.ToolsResource

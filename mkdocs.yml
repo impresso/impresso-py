@@ -14,6 +14,7 @@ plugins:
           show_signature: true
           show_source: false
           show_root_heading: true
+          heading_level: 3
           docstring_style: google
           docstring_section_style: table
           annotations_path: brief
