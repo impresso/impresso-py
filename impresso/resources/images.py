@@ -123,7 +123,33 @@ class GetImageContainer(DataContainer):
 
 
 class ImagesResource(Resource):
-    """Search images in the Impresso database."""
+    """Search images in Impresso.
+
+    Examples:
+        Search for images by keyword:
+        >>> results = images.find(term="war")  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Filter images by date range and newspaper:
+        >>> from impresso import DateRange
+        >>> date_range = DateRange(start="1900-01-01", end="1910-12-31")
+        >>> results = images.find(media_id="GDL", date_range=date_range)  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Search for front page images only:
+        >>> results = images.find(is_front=True)  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Search images by visual similarity using embeddings:
+        >>> embedding = tools.embed_image("path/to/image.jpg", target="image")  # doctest: +SKIP
+        >>> similar_images = images.find(embedding=embedding)  # doctest: +SKIP
+        >>> print(similar_images.df)  # doctest: +SKIP
+
+        Get a specific image by its ID:
+        >>> image_id = "some-image-id"  # Replace with a real ID
+        >>> image = images.get(image_id)  # doctest: +SKIP
+        >>> print(image.df)  # doctest: +SKIP
+    """
 
     name = "images"
 
@@ -139,6 +165,7 @@ class ImagesResource(Resource):
         communication_goal: str | AND[str] | OR[str] | None = None,
         content_type: str | AND[str] | OR[str] | None = None,
         embedding: Embedding | None = None,
+        include_embeddings: bool = False,
         order_by: FindImagesOrderByLiteral | None = None,
         limit: int | None = None,
         offset: int | None = None,
@@ -146,7 +173,21 @@ class ImagesResource(Resource):
         """Find images in Impresso.
 
         Args:
-            term (str): The search term.
+            term: The search term for text-based search.
+            media_id: Filter by newspaper media ID(s).
+            issue_id: Filter by issue ID(s).
+            is_front: Filter for front page images only.
+            date_range: Filter by date range.
+            visual_content: Filter by visual content category.
+            technique: Filter by image technique.
+            communication_goal: Filter by communication goal.
+            content_type: Filter by content type.
+            embedding: Image embedding for similarity search. Use `tools.embed_image()` or
+                `tools.embed_text()` to generate embeddings from images.
+            include_embeddings: Whether to include image embeddings in the response. Defaults to False.
+            order_by: Sort order for results.
+            limit: Maximum number of results to return per page. Defaults to 100.
+            offset: Number of results to skip.
 
         Returns:
             FindImagesContainer: Data container with the first page of the search results.
@@ -196,6 +237,7 @@ class ImagesResource(Resource):
             limit=page_limit,
             offset=offset if offset is not None else UNSET,
             filters=filters_pb if filters_pb else UNSET,
+            include_embeddings=include_embeddings if include_embeddings else UNSET,
         )
         raise_for_error(result)
 
@@ -219,11 +261,11 @@ class ImagesResource(Resource):
         Get an image by its id.
 
         Args:
-            id (str): The id of the image.
-            include_embeddings (bool): Whether to include embeddings in the response.
+            id: The id of the image.
+            include_embeddings: Whether to include embeddings in the response.
 
         Returns:
-            ImageDataContainer: The image data container.
+            GetImageContainer: The image data container.
         """
         result = get_image.sync(
             client=self._api_client,
@@ -245,11 +287,13 @@ class ImagesResource(Resource):
     def get_embeddings(self, id: str) -> list[str]:
         """
         Get the embeddings of an image by its id.
+
         Args:
-            id (str): The id of the image.
+            id: The id of the image.
+
         Returns:
             list[str]: The embeddings of the image if present (every embedding is returned
-            in the canonical form: <model>:<base64_embedding>).
+                in the canonical form: <model>:<base64_embedding>).
         """
         item = self.get(id, include_embeddings=True)
         return item.raw.get("embeddings", []) if item else []

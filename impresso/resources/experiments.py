@@ -59,7 +59,7 @@ class ExperimentsResource(Resource):
         """Find all available experiments.
 
         Returns:
-            dict: List of available experiments.
+            FindExperimentsContainer: Data container with list of available experiments.
         """
         result = find_experiments.sync(
             client=self._api_client,
@@ -77,8 +77,8 @@ class ExperimentsResource(Resource):
         """Execute an experiment with the given ID.
 
         Args:
-            experiment_id (str): ID of the experiment to execute.
-            body (dict): Body of the experiment.
+            experiment_id: ID of the experiment to execute.
+            body: Body of the experiment.
 
         Returns:
             dict: Result of the experiment.

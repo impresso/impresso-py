@@ -12,7 +12,8 @@ class ImpressoTextEmbeddingRequest:
     """Body of a request to the Impresso Text Embedding endpoint
 
     Attributes:
-        search_target (ImpressoTextEmbeddingRequestSearchTarget): Where the embedding is going to be used
+        search_target (ImpressoTextEmbeddingRequestSearchTarget): Which embedding space the embedding is going to be
+            used in
         text (str): Text to be embedded
     """
 

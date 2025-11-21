@@ -102,7 +102,29 @@ class NerContainer(DataContainer):
 
 
 class ToolsResource(Resource):
-    """Various helper tools"""
+    """Various helper tools for text processing and embedding generation.
+
+    Examples:
+        Extract named entities from text:
+        >>> entities = tools.ner("Napoleon visited Paris in 1815.")  # doctest: +SKIP
+        >>> print(entities.df)  # doctest: +SKIP
+
+        Extract and link entities to Wikidata:
+        >>> entities = tools.ner_nel("Napoleon visited Paris in 1815.")  # doctest: +SKIP
+        >>> print(entities.df)  # doctest: +SKIP
+
+        Generate text embedding for semantic search:
+        >>> embedding = tools.embed_text("military conflict", target="text")  # doctest: +SKIP
+        >>> results = search.find(embedding=embedding)  # doctest: +SKIP
+
+        Generate image embedding from file:
+        >>> embedding = tools.embed_image("path/to/image.jpg", target="image")  # doctest: +SKIP
+        >>> similar_images = images.find(embedding=embedding)  # doctest: +SKIP
+
+        Generate image embedding from URL:
+        >>> embedding = tools.embed_image("https://example.com/image.jpg", target="image")  # doctest: +SKIP
+        >>> similar_images = images.find(embedding=embedding)  # doctest: +SKIP
+    """
 
     name = "tools"
 
@@ -112,7 +134,7 @@ class ToolsResource(Resource):
         This method is faster than `ner_nel` but does not provide any linking to external resources.
 
         Args:
-            text (str): Text to process
+            text: Text to process
 
         Returns:
             NerContainer: List of named entities
@@ -137,7 +159,7 @@ class ToolsResource(Resource):
         This method is slower than `ner` but provides linking to external resources.
 
         Args:
-            text (str): Text to process
+            text: Text to process
 
         Returns:
             NerContainer: List of named entities
@@ -162,7 +184,7 @@ class ToolsResource(Resource):
         This method requires named entities to be enclosed in tags: [START]entity[END].
 
         Args:
-            text (str): Text to process
+            text: Text to process
 
         Returns:
             NerContainer: List of named entities
@@ -189,10 +211,9 @@ class ToolsResource(Resource):
         """Embed an image into a vector space.
 
         Args:
-            image (bytes | Base64Str | str): Image to embed. Can be raw bytes, a base64-encoded string,
-                a URL of an image, or a path to a file.
-            target (ImpressoImageEmbeddingRequestSearchTargetLiteral): Target collection to embed the image into.
-                Currently, only "image" is supported.
+            image: Image to embed. Can be raw bytes, a base64-encoded string, a URL of an image,
+                or a path to a file.
+            target: Target collection to embed the image into. Currently, only "image" is supported.
 
         Returns:
             Embedding: The image embedding as a base64 string prefixed with model tag.
@@ -239,8 +260,8 @@ class ToolsResource(Resource):
         """Embed text into a vector space.
 
         Args:
-            text (str): Text to embed.
-            target (ImpressoTextEmbeddingRequestSearchTargetLiteral): Target collection to embed the text into.
+            text: Text to embed.
+            target: Target collection to embed the text into.
 
         Returns:
             Embedding: The text embedding as a base64 string prefixed with model tag.

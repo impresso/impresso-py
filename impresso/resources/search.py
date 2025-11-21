@@ -129,7 +129,32 @@ class FacetDataContainer(DataContainer):
 
 
 class SearchResource(Resource):
-    """Search content items in the impresso database."""
+    """Search content items in the impresso database.
+
+    Examples:
+        Search for articles containing a term:
+        >>> results = search.find(term="war")  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Filter articles by date range and newspaper:
+        >>> from impresso import DateRange
+        >>> date_range = DateRange(start="1900-01-01", end="1910-12-31")
+        >>> results = search.find(term="revolution", newspaper_id="GDL", date_range=date_range)  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Search for front page articles mentioning an entity:
+        >>> results = search.find(entity_id="aida-0001-54-Napoleon", front_page=True)  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Search by semantic similarity using text embeddings:
+        >>> embedding = tools.embed_text("military conflict", target="text")  # doctest: +SKIP
+        >>> similar_articles = search.find(embedding=embedding)  # doctest: +SKIP
+        >>> print(similar_articles.df)  # doctest: +SKIP
+
+        Get facets to analyze search results:
+        >>> newspaper_facets = search.facet(facet="newspaper", term="war")  # doctest: +SKIP
+        >>> print(newspaper_facets.df)  # doctest: +SKIP
+    """
 
     name = "search"
 
@@ -159,37 +184,38 @@ class SearchResource(Resource):
             | OR[ContentItemCopyrightStatusLiteral]
             | None
         ) = None,
+        include_embeddings: bool = False,
     ) -> SearchDataContainer:
-        """
-        Search for content items in Impresso.
+        """Search for content items in Impresso.
 
         Args:
-            term: Search term.
-            order_by: Order by aspect.
-            limit: Number of results to return.
-            offset: Number of results to skip.
-
-            with_text_contents: Return only content items with text contents.
-            title: Return only content items that have this term or all/any of the terms in the title.
+            term: Search term or combination of search terms.
+            order_by: Sort order for results.
+            limit: Maximum number of results to return per page. Defaults to 100.
+            offset: Number of results to skip for pagination.
+            with_text_contents: Return only content items with text contents. Defaults to False.
+            title: Filter by content items having this term or all/any of the terms in the title.
             front_page: Return only content items that were on the front page.
-            entity_id: Return only content items that mention this entity or all/any of the entities.
-            date_range: Return only content items that were published in this date range.
-            language: Return only content items that are in this language or all/any of the languages.
-                      Use 2-letter ISO language codes (e.g., 'en', 'de', 'fr').
-            mention: Return only content items that mention an entity with this term or all/any
-                     of entities with the terms.
-            topic_id: Return only content items that are about this topic or all/any of the topics.
-            collection_id: Return only content items that are in this collection or all/any of the collections.
-            country: Return only content items that are from this country or all/any of the countries.
-                     Use 2-letter ISO country codes (e.g., 'ch', 'de', 'lu').
-            partner_id: Return only content items that are from this partner or all/any of the partners.
-            text_reuse_cluster_id: Return only content items that are in this text reuse cluster
-                                   or all/any of the clusters.
-            embedding: Return only content items similar to this embedding.
-            copyright: Return only content items with this copyright status.
+            entity_id: Filter by content items mentioning this entity or all/any of the entities.
+            newspaper_id: Filter by newspaper ID(s).
+            date_range: Filter by publication date range.
+            language: Filter by content language or all/any of the languages.
+                Use 2-letter ISO language codes (e.g., 'en', 'de', 'fr').
+            mention: Filter by content items mentioning entities with this term or all/any of
+                entities with the terms.
+            topic_id: Filter by topic ID(s).
+            collection_id: Filter by collection ID(s).
+            country: Filter by country of publication. Use 2-letter ISO country codes
+                (e.g., 'ch', 'de', 'lu').
+            partner_id: Filter by partner institution ID(s).
+            text_reuse_cluster_id: Filter by text reuse cluster ID(s).
+            embedding: Text embedding for similarity search. Use `tools.embed_text()` to generate
+                embeddings from text.
+            copyright: Filter by copyright status.
+            include_embeddings: Whether to include embeddings in the response. Defaults to False.
 
         Returns:
-            SearchDataContainer: Data container with a page of results of the search.
+            SearchDataContainer: Data container with the first page of search results.
         """
 
         page_limit = limit if limit is not None else DEFAULT_PAGE_SIZE
@@ -227,6 +253,7 @@ class SearchResource(Resource):
             filters=filters_pb if filters_pb else UNSET,
             limit=page_limit,
             offset=offset if offset is not None else UNSET,
+            include_embeddings=include_embeddings if include_embeddings else UNSET,
         )
         raise_for_error(result)
         return SearchDataContainer(
@@ -281,36 +308,35 @@ class SearchResource(Resource):
         partner_id: str | AND[str] | OR[str] | None = None,
         text_reuse_cluster_id: str | AND[str] | OR[str] | None = None,
     ) -> FacetDataContainer:
-        """
-        Get facets for a search query.
+        """Get facets for a search query.
 
         Facets provide aggregated information about a specific dimension of search results,
         such as counts of newspaper titles, languages, or topics.
 
         Args:
             facet: Type of facet to retrieve (e.g., 'newspaper', 'language', 'topic').
-            term: Search term to filter facets.
-            order_by: How to order facet results ('value' or 'count').
+            term: Search term or combination of terms to filter facets.
+            order_by: Sort order for facet results ('value' or 'count'). Defaults to 'value'.
             limit: Maximum number of facet buckets to return.
-            offset: Number of facet buckets to skip.
-
-            with_text_contents: Filter for content items with text contents.
+            offset: Number of facet buckets to skip for pagination.
+            with_text_contents: Filter for content items with text contents. Defaults to False.
             title: Filter by content items having this term or terms in the title.
             front_page: Filter for content items that were on the front page.
             entity_id: Filter by content items mentioning this entity or entities.
-            newspaper_id: Filter by newspaper.
+            newspaper_id: Filter by newspaper ID(s).
             date_range: Filter by publication date range.
-            language: Filter by content language. Use 2-letter ISO language codes (e.g., 'en', 'de', 'fr').
+            language: Filter by content language. Use 2-letter ISO language codes
+                (e.g., 'en', 'de', 'fr').
             mention: Filter by content items mentioning entities with these terms.
-            topic_id: Filter by content items about this topic or topics.
-            collection_id: Filter by collection.
-            country: Filter by country of publication. Use 2-letter ISO country codes (e.g., 'ch', 'de', 'lu').
-            partner_id: Filter by partner institution.
-            text_reuse_cluster_id: Filter by text reuse cluster.
+            topic_id: Filter by topic ID(s).
+            collection_id: Filter by collection ID(s).
+            country: Filter by country of publication. Use 2-letter ISO country codes
+                (e.g., 'ch', 'de', 'lu').
+            partner_id: Filter by partner institution ID(s).
+            text_reuse_cluster_id: Filter by text reuse cluster ID(s).
 
         Returns:
             FacetDataContainer: Data container with facet results, including counts for each bucket.
-            The container provides visualization capabilities through the ._get_preview_image_() method.
 
         Examples:
             >>> search = SearchResource(client)

@@ -72,7 +72,24 @@ class GetTopicContainer(DataContainer):
 
 
 class TopicsResource(Resource):
-    """Search topics in the Impresso database."""
+    """
+    Search topics in the Impresso database.
+
+    Examples:
+        Search for topics containing specific words:
+        >>> results = topics.find(term="economy") # doctest: +SKIP
+        >>> print(results.df) # doctest: +SKIP
+
+        Get a specific topic by its ID:
+        >>> topic_id = "some-topic-id" # Replace with a real ID
+        >>> topic = topics.get(topic_id) # doctest: +SKIP
+        >>> print(topic.df) # doctest: +SKIP
+
+        Iterate through all pages of topic search results:
+        >>> results = topics.find(term="war", limit=10) # doctest: +SKIP
+        >>> for page in results.pages(): # doctest: +SKIP
+        ...     print(page.df) # doctest: +SKIP
+    """
 
     name = "topics"
 
@@ -126,7 +143,14 @@ class TopicsResource(Resource):
         )
 
     def get(self, id: str) -> GetTopicContainer:
-        """Get topic by ID."""
+        """Get topic by ID.
+
+        Args:
+            id: The ID of the topic to retrieve.
+
+        Returns:
+            GetTopicContainer: Data container with the topic information.
+        """
 
         result = get_topic.sync(
             client=self._api_client,

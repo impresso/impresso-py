@@ -81,7 +81,22 @@ class ContentItemDataContainer(DataContainer):
 
 
 class ContentItemsResource(Resource):
-    """Get content items from the impresso database."""
+    """Get content items from the impresso database.
+
+    Examples:
+        Get a specific content item by its ID:
+        >>> item_id = "some-item-id"  # Replace with a real ID
+        >>> item = content_items.get(item_id)  # doctest: +SKIP
+        >>> print(item.df)  # doctest: +SKIP
+
+        Get a content item with embeddings:
+        >>> item = content_items.get(item_id, include_embeddings=True)  # doctest: +SKIP
+        >>> print(item.raw.get("embeddings"))  # doctest: +SKIP
+
+        Get only the embeddings of a content item:
+        >>> embeddings = content_items.get_embeddings(item_id)  # doctest: +SKIP
+        >>> print(embeddings)  # doctest: +SKIP
+    """
 
     name = "content_items"
 
@@ -92,8 +107,8 @@ class ContentItemsResource(Resource):
         Get a content item by its id.
 
         Args:
-            id (str): The id of the content item.
-            include_embeddings (bool): Whether to include embeddings in the response.
+            id: The id of the content item.
+            include_embeddings: Whether to include embeddings in the response.
 
         Returns:
             ContentItemDataContainer: The content item data container.
@@ -118,11 +133,13 @@ class ContentItemsResource(Resource):
     def get_embeddings(self, id: str) -> list[str]:
         """
         Get the embeddings of a content item by its id.
+
         Args:
-            id (str): The id of the content item.
+            id: The id of the content item.
+
         Returns:
             list[str]: The embeddings of the content item if present (every embedding is returned
-            in the canonical form: <model>:<base64_embedding>).
+                in the canonical form: <model>:<base64_embedding>).
         """
         item = self.get(id, include_embeddings=True)
         return item.raw.get("embeddings", []) if item else []

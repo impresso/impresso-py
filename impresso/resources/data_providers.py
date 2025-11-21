@@ -2,7 +2,10 @@ from typing import Any, Callable, Iterator, cast
 
 from pandas import DataFrame, json_normalize
 
-from impresso.api_client.api.data_providers import find_data_providers, get_data_provider
+from impresso.api_client.api.data_providers import (
+    find_data_providers,
+    get_data_provider,
+)
 from impresso.api_client.models.find_data_providers_base_find_response import (
     FindDataProvidersBaseFindResponse,
 )
@@ -69,7 +72,25 @@ class GetDataProviderContainer(DataContainer):
 
 
 class DataProvidersResource(Resource):
-    """Search data providers in the Impresso database."""
+    """Search data providers in the Impresso database.
+
+    Data providers are partner institutions that provide content to Impresso,
+    such as libraries, archives, and media organizations.
+
+    Examples:
+        Find all data providers:
+        >>> results = data_providers.find()  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Search data providers by name:
+        >>> results = data_providers.find(term="library")  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Get a specific data provider by its ID:
+        >>> provider_id = "some-provider-id"  # Replace with a real ID
+        >>> provider = data_providers.get(provider_id)  # doctest: +SKIP
+        >>> print(provider.df)  # doctest: +SKIP
+    """
 
     name = "data_providers"
 
@@ -100,7 +121,7 @@ class DataProvidersResource(Resource):
         if provider_id is not None:
             filters.extend(and_or_filter(provider_id, "id"))
 
-        filters_pb = filters_as_protobuf(filters or [])
+        # filters_pb = filters_as_protobuf(filters or [])
 
         result = find_data_providers.sync(
             client=self._api_client,
@@ -128,7 +149,14 @@ class DataProvidersResource(Resource):
         )
 
     def get(self, id: str) -> GetDataProviderContainer:
-        """Get data provider by ID."""
+        """Get data provider by ID.
+
+        Args:
+            id: The ID of the data provider to retrieve.
+
+        Returns:
+            GetDataProviderContainer: Data container with the data provider information.
+        """
 
         result = get_data_provider.sync(
             client=self._api_client,

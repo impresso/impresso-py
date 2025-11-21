@@ -100,7 +100,7 @@ class ImpressoImageEmbeddingRequest(BaseModel):
     )
     searchTarget: Annotated[
         Literal['image', 'multimodal'],
-        Field(description='Where the embedding is going to be used'),
+        Field(description='Which embedding space the embedding is going to be used in'),
     ]
     bytes: Annotated[
         str,
@@ -360,8 +360,8 @@ class ImpressoTextEmbeddingRequest(BaseModel):
         extra='forbid',
     )
     searchTarget: Annotated[
-        Literal['image', 'text'],
-        Field(description='Where the embedding is going to be used'),
+        Literal['multimodal', 'text'],
+        Field(description='Which embedding space the embedding is going to be used in'),
     ]
     text: Annotated[str, Field(description='Text to be embedded', max_length=8000)]
 

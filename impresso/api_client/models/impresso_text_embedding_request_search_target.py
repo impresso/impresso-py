@@ -3,7 +3,7 @@ from typing import Literal
 
 
 class ImpressoTextEmbeddingRequestSearchTarget(str, Enum):
-    IMAGE = "image"
+    MULTIMODAL = "multimodal"
     TEXT = "text"
 
     def __str__(self) -> str:
@@ -11,6 +11,6 @@ class ImpressoTextEmbeddingRequestSearchTarget(str, Enum):
 
 
 ImpressoTextEmbeddingRequestSearchTargetLiteral = Literal[
-    "image",
+    "multimodal",
     "text",
 ]

@@ -12,7 +12,8 @@ class ImpressoImageEmbeddingRequest:
     """Body of a request to the Impresso Image Embedding endpoint
 
     Attributes:
-        search_target (ImpressoImageEmbeddingRequestSearchTarget): Where the embedding is going to be used
+        search_target (ImpressoImageEmbeddingRequestSearchTarget): Which embedding space the embedding is going to be
+            used in
         bytes_ (str): Base64-encoded image bytes. JPG and PNG formats are supported.
     """
 
