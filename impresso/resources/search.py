@@ -176,6 +176,7 @@ class SearchResource(Resource):
         collection_id: str | AND[str] | OR[str] | None = None,
         country: str | AND[str] | OR[str] | None = None,
         partner_id: str | AND[str] | OR[str] | None = None,
+        issue_id: str | OR[str] | None = None,
         text_reuse_cluster_id: str | AND[str] | OR[str] | None = None,
         embedding: Embedding | None = None,
         copyright: (
@@ -238,6 +239,7 @@ class SearchResource(Resource):
             text_reuse_cluster_id=text_reuse_cluster_id,
             embedding=embedding_with_limit,
             copyright=copyright,
+            issue_id=issue_id,
         )
 
         filters_pb = filters_as_protobuf(filters or [])
@@ -441,6 +443,7 @@ class SearchResource(Resource):
         collection_id: str | AND[str] | OR[str] | None = None,
         country: str | AND[str] | OR[str] | None = None,
         partner_id: str | AND[str] | OR[str] | None = None,
+        issue_id: str | OR[str] | None = None,
         text_reuse_cluster_id: str | AND[str] | OR[str] | None = None,
         embedding: Embedding | None = None,
         copyright: (
@@ -490,6 +493,8 @@ class SearchResource(Resource):
             filters.extend(and_or_filter(embedding, "embedding"))
         if copyright is not None:
             filters.extend(and_or_filter(str(copyright), "copyright"))
+        if issue_id is not None:
+            filters.extend(and_or_filter(issue_id, "issue"))
 
         return filters
 
