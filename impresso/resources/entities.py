@@ -77,7 +77,26 @@ EntityType = Literal["person", "location"]
 
 
 class EntitiesResource(Resource):
-    """Search entities in the Impresso database."""
+    """Search entities in the Impresso database.
+
+    Examples:
+        Search for entities by name:
+        >>> results = entities.find(term="Napoleon")  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Filter entities by type:
+        >>> results = entities.find(term="Paris", entity_type="location")  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Get entity details with Wikidata resolution:
+        >>> results = entities.find(term="Napoleon", resolve=True)  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Get a specific entity by its ID:
+        >>> entity_id = "some-entity-id"  # Replace with a real ID
+        >>> entity = entities.get(entity_id)  # doctest: +SKIP
+        >>> print(entity.df)  # doctest: +SKIP
+    """
 
     name = "entities"
 
@@ -156,7 +175,14 @@ class EntitiesResource(Resource):
         )
 
     def get(self, id: str) -> GetEntityContainer:
-        """Get entity by ID."""
+        """Get entity by ID.
+
+        Args:
+            id: The ID of the entity to retrieve.
+
+        Returns:
+            GetEntityContainer: Data container with the entity information.
+        """
 
         result = get_entity.sync(
             client=self._api_client,

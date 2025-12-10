@@ -62,7 +62,27 @@ class FindMediaSourcesContainer(DataContainer):
 
 
 class MediaSourcesResource(Resource):
-    """Search media sources in the Impresso database."""
+    """Search media sources in the Impresso database.
+
+    Media sources are newspapers and other publications available in Impresso.
+
+    Examples:
+        Find all media sources:
+        >>> results = media_sources.find()  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Search media sources by name:
+        >>> results = media_sources.find(term="Gazette")  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Filter media sources by type:
+        >>> results = media_sources.find(type="newspaper")  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+
+        Get media sources with detailed properties:
+        >>> results = media_sources.find(with_properties=True)  # doctest: +SKIP
+        >>> print(results.df)  # doctest: +SKIP
+    """
 
     name = "media_sources"
 

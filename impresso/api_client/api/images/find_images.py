@@ -18,6 +18,7 @@ def _get_kwargs(
     similar_to_image_id: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindImagesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
+    include_embeddings: Union[Unset, bool] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Dict[str, Any]:
@@ -45,6 +46,8 @@ def _get_kwargs(
     else:
         json_filters = filters
     params["filters"] = json_filters
+
+    params["include_embeddings"] = include_embeddings
 
     params["limit"] = limit
 
@@ -80,6 +83,10 @@ def _parse_response(
         response_404 = Error.from_dict(response.json())
 
         return response_404
+    if response.status_code == HTTPStatus.IM_A_TEAPOT:
+        response_418 = Error.from_dict(response.json())
+
+        return response_418
     if response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT:
         response_422 = Error.from_dict(response.json())
 
@@ -116,6 +123,7 @@ def sync_detailed(
     similar_to_image_id: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindImagesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
+    include_embeddings: Union[Unset, bool] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, FindImagesBaseFindResponse]]:
@@ -126,6 +134,7 @@ def sync_detailed(
         similar_to_image_id (Union[Unset, str]):
         order_by (Union[Unset, FindImagesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
+        include_embeddings (Union[Unset, bool]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -142,6 +151,7 @@ def sync_detailed(
         similar_to_image_id=similar_to_image_id,
         order_by=order_by,
         filters=filters,
+        include_embeddings=include_embeddings,
         limit=limit,
         offset=offset,
     )
@@ -160,6 +170,7 @@ def sync(
     similar_to_image_id: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindImagesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
+    include_embeddings: Union[Unset, bool] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, FindImagesBaseFindResponse]]:
@@ -170,6 +181,7 @@ def sync(
         similar_to_image_id (Union[Unset, str]):
         order_by (Union[Unset, FindImagesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
+        include_embeddings (Union[Unset, bool]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -187,6 +199,7 @@ def sync(
         similar_to_image_id=similar_to_image_id,
         order_by=order_by,
         filters=filters,
+        include_embeddings=include_embeddings,
         limit=limit,
         offset=offset,
     ).parsed
@@ -199,6 +212,7 @@ async def asyncio_detailed(
     similar_to_image_id: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindImagesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
+    include_embeddings: Union[Unset, bool] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, FindImagesBaseFindResponse]]:
@@ -209,6 +223,7 @@ async def asyncio_detailed(
         similar_to_image_id (Union[Unset, str]):
         order_by (Union[Unset, FindImagesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
+        include_embeddings (Union[Unset, bool]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -225,6 +240,7 @@ async def asyncio_detailed(
         similar_to_image_id=similar_to_image_id,
         order_by=order_by,
         filters=filters,
+        include_embeddings=include_embeddings,
         limit=limit,
         offset=offset,
     )
@@ -241,6 +257,7 @@ async def asyncio(
     similar_to_image_id: Union[Unset, str] = UNSET,
     order_by: Union[Unset, FindImagesOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
+    include_embeddings: Union[Unset, bool] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, FindImagesBaseFindResponse]]:
@@ -251,6 +268,7 @@ async def asyncio(
         similar_to_image_id (Union[Unset, str]):
         order_by (Union[Unset, FindImagesOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
+        include_embeddings (Union[Unset, bool]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -269,6 +287,7 @@ async def asyncio(
             similar_to_image_id=similar_to_image_id,
             order_by=order_by,
             filters=filters,
+            include_embeddings=include_embeddings,
             limit=limit,
             offset=offset,
         )

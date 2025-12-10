@@ -1,15 +1,66 @@
+import base64
+from pathlib import Path
+from typing import Annotated, cast
+from urllib.parse import urlparse
+
+import httpx
 from pandas import DataFrame, json_normalize
-from impresso.api_client.api.tools import perform_ner
+
+from impresso.api_client.api.tools import (
+    perform_image_embedding,
+    perform_ner,
+    perform_text_embedding,
+)
+from impresso.api_client.models.impresso_embedding_response import (
+    ImpressoEmbeddingResponse,
+)
+from impresso.api_client.models.impresso_image_embedding_request import (
+    ImpressoImageEmbeddingRequest,
+)
+from impresso.api_client.models.impresso_image_embedding_request_search_target import (
+    ImpressoImageEmbeddingRequestSearchTarget,
+    ImpressoImageEmbeddingRequestSearchTargetLiteral,
+)
 from impresso.api_client.models.impresso_named_entity_recognition_request import (
     ImpressoNamedEntityRecognitionRequest,
 )
 from impresso.api_client.models.impresso_named_entity_recognition_request_method import (
     ImpressoNamedEntityRecognitionRequestMethod,
 )
+from impresso.api_client.models.impresso_text_embedding_request import (
+    ImpressoTextEmbeddingRequest,
+)
+from impresso.api_client.models.impresso_text_embedding_request_search_target import (
+    ImpressoTextEmbeddingRequestSearchTarget,
+    ImpressoTextEmbeddingRequestSearchTargetLiteral,
+)
+from impresso.api_client.types import UNSET
 from impresso.api_models import ImpressoNerResponse
 from impresso.data_container import DataContainer
 from impresso.resources.base import Resource
 from impresso.util.error import raise_for_error
+from impresso.util.py import get_enum_from_literal
+
+Base64Str = Annotated[str, "base64-encoded string"]
+Embedding = Annotated[str, "base64-encoded string with model prefix"]
+
+
+def is_url(string: str) -> bool:
+    """Check if a string is a valid URL."""
+    try:
+        parsed = urlparse(string)
+        return parsed.scheme in ("http", "https", "ftp", "ftps") and bool(parsed.netloc)
+    except Exception:
+        return False
+
+
+def is_file(string: str) -> bool:
+    """Check if a string is a valid file path."""
+    try:
+        path = Path(string)
+        return path.exists() and path.is_file()
+    except Exception:
+        return False
 
 
 class ImpressoNerSchema(ImpressoNerResponse):
@@ -51,7 +102,29 @@ class NerContainer(DataContainer):
 
 
 class ToolsResource(Resource):
-    """Various helper tools"""
+    """Various helper tools for text processing and embedding generation.
+
+    Examples:
+        Extract named entities from text:
+        >>> entities = tools.ner("Napoleon visited Paris in 1815.")  # doctest: +SKIP
+        >>> print(entities.df)  # doctest: +SKIP
+
+        Extract and link entities to Wikidata:
+        >>> entities = tools.ner_nel("Napoleon visited Paris in 1815.")  # doctest: +SKIP
+        >>> print(entities.df)  # doctest: +SKIP
+
+        Generate text embedding for semantic search:
+        >>> embedding = tools.embed_text("military conflict", target="text")  # doctest: +SKIP
+        >>> results = search.find(embedding=embedding)  # doctest: +SKIP
+
+        Generate image embedding from file:
+        >>> embedding = tools.embed_image("path/to/image.jpg", target="image")  # doctest: +SKIP
+        >>> similar_images = images.find(embedding=embedding)  # doctest: +SKIP
+
+        Generate image embedding from URL:
+        >>> embedding = tools.embed_image("https://example.com/image.jpg", target="image")  # doctest: +SKIP
+        >>> similar_images = images.find(embedding=embedding)  # doctest: +SKIP
+    """
 
     name = "tools"
 
@@ -61,7 +134,7 @@ class ToolsResource(Resource):
         This method is faster than `ner_nel` but does not provide any linking to external resources.
 
         Args:
-            text (str): Text to process
+            text: Text to process
 
         Returns:
             NerContainer: List of named entities
@@ -86,7 +159,7 @@ class ToolsResource(Resource):
         This method is slower than `ner` but provides linking to external resources.
 
         Args:
-            text (str): Text to process
+            text: Text to process
 
         Returns:
             NerContainer: List of named entities
@@ -111,7 +184,7 @@ class ToolsResource(Resource):
         This method requires named entities to be enclosed in tags: [START]entity[END].
 
         Args:
-            text (str): Text to process
+            text: Text to process
 
         Returns:
             NerContainer: List of named entities
@@ -129,3 +202,87 @@ class ToolsResource(Resource):
             ImpressoNerSchema,
             web_app_search_result_url=None,
         )
+
+    def embed_image(
+        self,
+        image: bytes | Base64Str | str,
+        target: ImpressoImageEmbeddingRequestSearchTargetLiteral,
+    ) -> Embedding:
+        """Embed an image into a vector space.
+
+        Args:
+            image: Image to embed. Can be raw bytes, a base64-encoded string, a URL of an image,
+                or a path to a file.
+            target: Target collection to embed the image into. Currently, only "image" is supported.
+
+        Returns:
+            Embedding: The image embedding as a base64 string prefixed with model tag.
+        """
+        image_as_base64: str
+        if isinstance(image, bytes):
+            image_as_base64 = base64.b64encode(image).decode("utf-8")
+        elif is_file(image):
+            with open(image, "rb") as file:
+                image_as_base64 = base64.b64encode(file.read()).decode("utf-8")
+        elif is_url(image):
+            response = httpx.get(image)
+            response.raise_for_status()
+            image_as_base64 = base64.b64encode(response.content).decode("utf-8")
+        else:
+            image_as_base64 = image  # assume it's already a base64-encoded string
+
+        search_target = get_enum_from_literal(
+            target,
+            ImpressoImageEmbeddingRequestSearchTarget,
+        )
+        if search_target == UNSET:
+            raise ValueError(f"Invalid search target: {target}")
+
+        result = perform_image_embedding.sync(
+            client=self._api_client,
+            body=ImpressoImageEmbeddingRequest(
+                bytes_=image_as_base64,
+                search_target=cast(
+                    ImpressoImageEmbeddingRequestSearchTarget, search_target
+                ),
+            ),
+        )
+        raise_for_error(result)
+        if isinstance(result, ImpressoEmbeddingResponse):
+            return cast(str, result.embedding)
+        raise ValueError("Unexpected response format")
+
+    def embed_text(
+        self,
+        text: str,
+        target: ImpressoTextEmbeddingRequestSearchTargetLiteral,
+    ) -> Embedding:
+        """Embed text into a vector space.
+
+        Args:
+            text: Text to embed.
+            target: Target collection to embed the text into.
+
+        Returns:
+            Embedding: The text embedding as a base64 string prefixed with model tag.
+        """
+        search_target = get_enum_from_literal(
+            target,
+            ImpressoTextEmbeddingRequestSearchTarget,
+        )
+        if search_target == UNSET:
+            raise ValueError(f"Invalid search target: {target}")
+
+        result = perform_text_embedding.sync(
+            client=self._api_client,
+            body=ImpressoTextEmbeddingRequest(
+                text=text,
+                search_target=cast(
+                    ImpressoTextEmbeddingRequestSearchTarget, search_target
+                ),
+            ),
+        )
+        raise_for_error(result)
+        if isinstance(result, ImpressoEmbeddingResponse):
+            return cast(Embedding, result.embedding)
+        raise ValueError("Unexpected response format")

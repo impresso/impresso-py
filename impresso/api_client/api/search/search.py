@@ -17,6 +17,7 @@ def _get_kwargs(
     term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
+    include_embeddings: Union[Unset, bool] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Dict[str, Any]:
@@ -42,6 +43,8 @@ def _get_kwargs(
     else:
         json_filters = filters
     params["filters"] = json_filters
+
+    params["include_embeddings"] = include_embeddings
 
     params["limit"] = limit
 
@@ -77,6 +80,10 @@ def _parse_response(
         response_404 = Error.from_dict(response.json())
 
         return response_404
+    if response.status_code == HTTPStatus.IM_A_TEAPOT:
+        response_418 = Error.from_dict(response.json())
+
+        return response_418
     if response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT:
         response_422 = Error.from_dict(response.json())
 
@@ -112,6 +119,7 @@ def sync_detailed(
     term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
+    include_embeddings: Union[Unset, bool] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, SearchBaseFindResponse]]:
@@ -121,6 +129,7 @@ def sync_detailed(
         term (Union[Unset, str]):
         order_by (Union[Unset, SearchOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
+        include_embeddings (Union[Unset, bool]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -136,6 +145,7 @@ def sync_detailed(
         term=term,
         order_by=order_by,
         filters=filters,
+        include_embeddings=include_embeddings,
         limit=limit,
         offset=offset,
     )
@@ -153,6 +163,7 @@ def sync(
     term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
+    include_embeddings: Union[Unset, bool] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, SearchBaseFindResponse]]:
@@ -162,6 +173,7 @@ def sync(
         term (Union[Unset, str]):
         order_by (Union[Unset, SearchOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
+        include_embeddings (Union[Unset, bool]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -178,6 +190,7 @@ def sync(
         term=term,
         order_by=order_by,
         filters=filters,
+        include_embeddings=include_embeddings,
         limit=limit,
         offset=offset,
     ).parsed
@@ -189,6 +202,7 @@ async def asyncio_detailed(
     term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
+    include_embeddings: Union[Unset, bool] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, SearchBaseFindResponse]]:
@@ -198,6 +212,7 @@ async def asyncio_detailed(
         term (Union[Unset, str]):
         order_by (Union[Unset, SearchOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
+        include_embeddings (Union[Unset, bool]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -213,6 +228,7 @@ async def asyncio_detailed(
         term=term,
         order_by=order_by,
         filters=filters,
+        include_embeddings=include_embeddings,
         limit=limit,
         offset=offset,
     )
@@ -228,6 +244,7 @@ async def asyncio(
     term: Union[Unset, str] = UNSET,
     order_by: Union[Unset, SearchOrderBy] = UNSET,
     filters: Union[List["Filter"], Unset, str] = UNSET,
+    include_embeddings: Union[Unset, bool] = UNSET,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, SearchBaseFindResponse]]:
@@ -237,6 +254,7 @@ async def asyncio(
         term (Union[Unset, str]):
         order_by (Union[Unset, SearchOrderBy]):
         filters (Union[List['Filter'], Unset, str]):
+        include_embeddings (Union[Unset, bool]):
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -254,6 +272,7 @@ async def asyncio(
             term=term,
             order_by=order_by,
             filters=filters,
+            include_embeddings=include_embeddings,
             limit=limit,
             offset=offset,
         )

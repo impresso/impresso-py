@@ -3,6 +3,11 @@ from typing import Literal
 
 
 class GetImagesFacetId(str, Enum):
+    COLLECTION = "collection"
+    IMAGECOMMUNICATIONGOAL = "imageCommunicationGoal"
+    IMAGECONTENTTYPE = "imageContentType"
+    IMAGETECHNIQUE = "imageTechnique"
+    IMAGEVISUALCONTENT = "imageVisualContent"
     NEWSPAPER = "newspaper"
     YEAR = "year"
 
@@ -11,6 +16,11 @@ class GetImagesFacetId(str, Enum):
 
 
 GetImagesFacetIdLiteral = Literal[
+    "collection",
+    "imageCommunicationGoal",
+    "imageContentType",
+    "imageTechnique",
+    "imageVisualContent",
     "newspaper",
     "year",
 ]

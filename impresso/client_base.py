@@ -1,11 +1,15 @@
 from impresso.api_client.client import AuthenticatedClient
-from impresso.resources.content_items import ContentItemsResource
 from impresso.resources.collections import CollectionsResource
+from impresso.resources.content_items import ContentItemsResource
+from impresso.resources.data_providers import DataProvidersResource
 from impresso.resources.entities import EntitiesResource
+from impresso.resources.experiments import ExperimentsResource
+from impresso.resources.images import ImagesResource
 from impresso.resources.media_sources import MediaSourcesResource
 from impresso.resources.search import SearchResource
 from impresso.resources.text_reuse import TextReuseDomain
 from impresso.resources.tools import ToolsResource
+from impresso.resources.topics import TopicsResource
 
 
 class ImpressoApiResourcesBase:
@@ -39,5 +43,21 @@ class ImpressoApiResourcesBase:
         return EntitiesResource(self._api_client)
 
     @property
+    def images(self) -> ImagesResource:
+        return ImagesResource(self._api_client)
+
+    @property
     def tools(self) -> ToolsResource:
         return ToolsResource(self._api_client)
+
+    @property
+    def experiments(self) -> ExperimentsResource:
+        return ExperimentsResource(self._api_client)
+
+    @property
+    def topics(self) -> TopicsResource:
+        return TopicsResource(self._api_client)
+
+    @property
+    def data_providers(self) -> DataProvidersResource:
+        return DataProvidersResource(self._api_client)

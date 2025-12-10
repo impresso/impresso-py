@@ -56,6 +56,12 @@ class ImpressoClient(ImpressoApiResourcesBase):
                         "response": [_log_non_2xx],
                     }
                 },
+                timeout=httpx.Timeout(
+                    connect=20.0,
+                    read=300.0,
+                    write=10.0,
+                    pool=5.0,
+                ),
             )
         )
 

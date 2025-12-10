@@ -167,7 +167,14 @@ class CollectionsResource(Resource):
         )
 
     def get(self, id: str) -> GetCollectionContainer:
-        """Get collection by ID."""
+        """Get collection by ID.
+
+        Args:
+            id: The ID of the collection to retrieve.
+
+        Returns:
+            GetCollectionContainer: Data container with the collection information.
+        """
 
         result = get_collection.sync(
             client=self._api_client,
@@ -230,7 +237,7 @@ class CollectionsResource(Resource):
 
     def remove_items(self, collection_id: str, item_ids: list[str]) -> None:
         """
-        Add items to a collection by their IDs.
+        Remove items from a collection by their IDs.
 
         **NOTE**: Items are not removed immediately.
         This operation may take up to a few minutes
@@ -238,7 +245,7 @@ class CollectionsResource(Resource):
 
         Args:
             collection_id: ID of the collection.
-            item_ids: IDs of the content items to add.
+            item_ids: IDs of the content items to remove.
         """
         result = patch_collections_collection_id_items.sync(
             client=self._api_client,

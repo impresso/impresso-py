@@ -7,15 +7,24 @@ from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.content_item import ContentItem
 from ...models.error import Error
-from ...types import Response
+from ...types import UNSET, Response, Unset
 
 
 def _get_kwargs(
     id: str,
+    *,
+    include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Dict[str, Any]:
+    params: Dict[str, Any] = {}
+
+    params["include_embeddings"] = include_embeddings
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+
     _kwargs: Dict[str, Any] = {
         "method": "get",
         "url": f"/content-items/{id}",
+        "params": params,
     }
 
     return _kwargs
@@ -40,6 +49,10 @@ def _parse_response(
         response_404 = Error.from_dict(response.json())
 
         return response_404
+    if response.status_code == HTTPStatus.IM_A_TEAPOT:
+        response_418 = Error.from_dict(response.json())
+
+        return response_418
     if response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT:
         response_422 = Error.from_dict(response.json())
 
@@ -73,11 +86,13 @@ def sync_detailed(
     id: str,
     *,
     client: AuthenticatedClient,
+    include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Response[Union[ContentItem, Error]]:
     """Get a content item by its UID
 
     Args:
         id (str):
+        include_embeddings (Union[Unset, bool]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -89,6 +104,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         id=id,
+        include_embeddings=include_embeddings,
     )
 
     response = client.get_httpx_client().request(
@@ -102,11 +118,13 @@ def sync(
     id: str,
     *,
     client: AuthenticatedClient,
+    include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Optional[Union[ContentItem, Error]]:
     """Get a content item by its UID
 
     Args:
         id (str):
+        include_embeddings (Union[Unset, bool]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -119,6 +137,7 @@ def sync(
     return sync_detailed(
         id=id,
         client=client,
+        include_embeddings=include_embeddings,
     ).parsed
 
 
@@ -126,11 +145,13 @@ async def asyncio_detailed(
     id: str,
     *,
     client: AuthenticatedClient,
+    include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Response[Union[ContentItem, Error]]:
     """Get a content item by its UID
 
     Args:
         id (str):
+        include_embeddings (Union[Unset, bool]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -142,6 +163,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         id=id,
+        include_embeddings=include_embeddings,
     )
 
     response = await client.get_async_httpx_client().request(**kwargs)
@@ -153,11 +175,13 @@ async def asyncio(
     id: str,
     *,
     client: AuthenticatedClient,
+    include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Optional[Union[ContentItem, Error]]:
     """Get a content item by its UID
 
     Args:
         id (str):
+        include_embeddings (Union[Unset, bool]):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -171,5 +195,6 @@ async def asyncio(
         await asyncio_detailed(
             id=id,
             client=client,
+            include_embeddings=include_embeddings,
         )
     ).parsed
