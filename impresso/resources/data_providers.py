@@ -15,7 +15,7 @@ from impresso.data_container import DataContainer, iterate_pages
 from impresso.resources.base import Resource
 from impresso.structures import AND, OR
 from impresso.util.error import raise_for_error
-from impresso.util.filters import and_or_filter, filters_as_protobuf
+from impresso.util.filters import and_or_filter
 
 
 class FindDataProvidersSchema(BaseFind):
