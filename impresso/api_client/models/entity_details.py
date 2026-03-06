@@ -18,7 +18,7 @@ class EntityDetails:
     """An entity: location or person.
 
     Attributes:
-        uid (str): Unique identifier of the entity
+        id (str): Unique identifier of the entity
         label (Union[Unset, str]): Entity label
         type (Union[Unset, EntityDetailsType]):
         wikidata_id (Union[Unset, str]): Wikidata identifier of the entity.
@@ -27,7 +27,7 @@ class EntityDetails:
         wikidata_details (Union['WikidataLocation', 'WikidataPerson', Unset]):
     """
 
-    uid: str
+    id: str
     label: Union[Unset, str] = UNSET
     type: Union[Unset, EntityDetailsType] = UNSET
     wikidata_id: Union[Unset, str] = UNSET
@@ -38,7 +38,7 @@ class EntityDetails:
     def to_dict(self) -> Dict[str, Any]:
         from ..models.wikidata_person import WikidataPerson
 
-        uid = self.uid
+        id = self.id
 
         label = self.label
 
@@ -63,7 +63,7 @@ class EntityDetails:
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
-                "uid": uid,
+                "id": id,
             }
         )
         if label is not UNSET:
@@ -87,7 +87,7 @@ class EntityDetails:
         from ..models.wikidata_person import WikidataPerson
 
         d = src_dict.copy()
-        uid = d.pop("uid")
+        id = d.pop("id")
 
         label = d.pop("label", UNSET)
 
@@ -124,7 +124,7 @@ class EntityDetails:
         wikidata_details = _parse_wikidata_details(d.pop("wikidataDetails", UNSET))
 
         entity_details = cls(
-            uid=uid,
+            id=id,
             label=label,
             type=type,
             wikidata_id=wikidata_id,

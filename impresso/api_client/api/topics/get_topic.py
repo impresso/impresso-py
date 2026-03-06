@@ -78,7 +78,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient,
 ) -> Response[Union[Error, Topic]]:
-    """Get a topic by its UID
+    """Get a topic by its ID
 
     Args:
         id (str):
@@ -107,7 +107,7 @@ def sync(
     *,
     client: AuthenticatedClient,
 ) -> Optional[Union[Error, Topic]]:
-    """Get a topic by its UID
+    """Get a topic by its ID
 
     Args:
         id (str):
@@ -131,7 +131,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
 ) -> Response[Union[Error, Topic]]:
-    """Get a topic by its UID
+    """Get a topic by its ID
 
     Args:
         id (str):
@@ -158,7 +158,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient,
 ) -> Optional[Union[Error, Topic]]:
-    """Get a topic by its UID
+    """Get a topic by its ID
 
     Args:
         id (str):

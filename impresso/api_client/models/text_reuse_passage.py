@@ -16,19 +16,19 @@ class TextReusePassage:
     """Represents a passage of text that was identified as a part of a text reuse cluster
 
     Attributes:
-        uid (str): Unique ID of the text reuse passage.
+        id (str): Unique ID of the text reuse passage.
         content (Union[Unset, str]): Textual content of the passage.
         content_item_id (Union[Unset, str]): ID of the content item that the text reuse passage belongs to.
         offset (Union[Unset, TextReusePassageOffset]): Start and end offsets of the passage in the content item.
     """
 
-    uid: str
+    id: str
     content: Union[Unset, str] = UNSET
     content_item_id: Union[Unset, str] = UNSET
     offset: Union[Unset, "TextReusePassageOffset"] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
-        uid = self.uid
+        id = self.id
 
         content = self.content
 
@@ -41,7 +41,7 @@ class TextReusePassage:
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
-                "uid": uid,
+                "id": id,
             }
         )
         if content is not UNSET:
@@ -58,7 +58,7 @@ class TextReusePassage:
         from ..models.text_reuse_passage_offset import TextReusePassageOffset
 
         d = src_dict.copy()
-        uid = d.pop("uid")
+        id = d.pop("id")
 
         content = d.pop("content", UNSET)
 
@@ -72,7 +72,7 @@ class TextReusePassage:
             offset = TextReusePassageOffset.from_dict(_offset)
 
         text_reuse_passage = cls(
-            uid=uid,
+            id=id,
             content=content,
             content_item_id=content_item_id,
             offset=offset,

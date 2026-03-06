@@ -13,17 +13,17 @@ class ImageMediaSourceRef:
     """The media source of the image
 
     Attributes:
-        uid (str): The unique identifier of the media source
+        id (str): The unique identifier of the media source
         name (str): The name of the media source
         type (Union[Unset, ImageMediaSourceRefType]): The type of the media source
     """
 
-    uid: str
+    id: str
     name: str
     type: Union[Unset, ImageMediaSourceRefType] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
-        uid = self.uid
+        id = self.id
 
         name = self.name
 
@@ -34,7 +34,7 @@ class ImageMediaSourceRef:
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
-                "uid": uid,
+                "id": id,
                 "name": name,
             }
         )
@@ -46,7 +46,7 @@ class ImageMediaSourceRef:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        uid = d.pop("uid")
+        id = d.pop("id")
 
         name = d.pop("name")
 
@@ -58,7 +58,7 @@ class ImageMediaSourceRef:
             type = ImageMediaSourceRefType(_type)
 
         image_media_source_ref = cls(
-            uid=uid,
+            id=id,
             name=name,
             type=type,
         )

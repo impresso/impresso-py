@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Literal
 
 
-class ContentItemSourceMedium(str, Enum):
+class ContentItemMetaSourceMedium(str, Enum):
     AUDIO = "audio"
     PRINT = "print"
     TYPESCRIPT = "typescript"
@@ -11,7 +11,7 @@ class ContentItemSourceMedium(str, Enum):
         return str(self.value)
 
 
-ContentItemSourceMediumLiteral = Literal[
+ContentItemMetaSourceMediumLiteral = Literal[
     "audio",
     "print",
     "typescript",

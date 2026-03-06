@@ -88,7 +88,7 @@ def sync_detailed(
     client: AuthenticatedClient,
     include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Response[Union[ContentItem, Error]]:
-    """Get a content item by its UID
+    """Get a content item by its ID
 
     Args:
         id (str):
@@ -120,7 +120,7 @@ def sync(
     client: AuthenticatedClient,
     include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Optional[Union[ContentItem, Error]]:
-    """Get a content item by its UID
+    """Get a content item by its ID
 
     Args:
         id (str):
@@ -147,7 +147,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient,
     include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Response[Union[ContentItem, Error]]:
-    """Get a content item by its UID
+    """Get a content item by its ID
 
     Args:
         id (str):
@@ -177,7 +177,7 @@ async def asyncio(
     client: AuthenticatedClient,
     include_embeddings: Union[Unset, bool] = UNSET,
 ) -> Optional[Union[ContentItem, Error]]:
-    """Get a content item by its UID
+    """Get a content item by its ID
 
     Args:
         id (str):

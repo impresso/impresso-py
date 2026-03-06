@@ -5,39 +5,25 @@ import httpx
 
 from ... import errors
 from ...client import AuthenticatedClient, Client
-from ...models.collectable_items_updated_response import CollectableItemsUpdatedResponse
+from ...models.admin_get_response import AdminGETResponse
 from ...models.error import Error
-from ...models.update_collectable_items_request import UpdateCollectableItemsRequest
 from ...types import Response
 
 
-def _get_kwargs(
-    collection_id: str,
-    id: int,
-    *,
-    body: UpdateCollectableItemsRequest,
-) -> Dict[str, Any]:
-    headers: Dict[str, Any] = {}
-
+def _get_kwargs() -> Dict[str, Any]:
     _kwargs: Dict[str, Any] = {
-        "method": "patch",
-        "url": f"/collections/{collection_id}/items/{id}",
+        "method": "get",
+        "url": "/admin",
     }
 
-    _body = body.to_dict()
-
-    _kwargs["json"] = _body
-    headers["Content-Type"] = "application/json"
-
-    _kwargs["headers"] = headers
     return _kwargs
 
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[CollectableItemsUpdatedResponse, Error]]:
+) -> Optional[Union[AdminGETResponse, Error]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = CollectableItemsUpdatedResponse.from_dict(response.json())
+        response_200 = AdminGETResponse.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -76,7 +62,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[CollectableItemsUpdatedResponse, Error]]:
+) -> Response[Union[AdminGETResponse, Error]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -86,32 +72,20 @@ def _build_response(
 
 
 def sync_detailed(
-    collection_id: str,
-    id: int,
     *,
-    client: Union[AuthenticatedClient, Client],
-    body: UpdateCollectableItemsRequest,
-) -> Response[Union[CollectableItemsUpdatedResponse, Error]]:
-    """Updates the resource identified by id using data.
-
-    Args:
-        collection_id (str):
-        id (int):
-        body (UpdateCollectableItemsRequest): Request to update collectible items in a collection
+    client: AuthenticatedClient,
+) -> Response[Union[AdminGETResponse, Error]]:
+    """Admin Get Response
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[CollectableItemsUpdatedResponse, Error]]
+        Response[Union[AdminGETResponse, Error]]
     """
 
-    kwargs = _get_kwargs(
-        collection_id=collection_id,
-        id=id,
-        body=body,
-    )
+    kwargs = _get_kwargs()
 
     response = client.get_httpx_client().request(
         **kwargs,
@@ -121,62 +95,39 @@ def sync_detailed(
 
 
 def sync(
-    collection_id: str,
-    id: int,
     *,
-    client: Union[AuthenticatedClient, Client],
-    body: UpdateCollectableItemsRequest,
-) -> Optional[Union[CollectableItemsUpdatedResponse, Error]]:
-    """Updates the resource identified by id using data.
-
-    Args:
-        collection_id (str):
-        id (int):
-        body (UpdateCollectableItemsRequest): Request to update collectible items in a collection
+    client: AuthenticatedClient,
+) -> Optional[Union[AdminGETResponse, Error]]:
+    """Admin Get Response
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[CollectableItemsUpdatedResponse, Error]
+        Union[AdminGETResponse, Error]
     """
 
     return sync_detailed(
-        collection_id=collection_id,
-        id=id,
         client=client,
-        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
-    collection_id: str,
-    id: int,
     *,
-    client: Union[AuthenticatedClient, Client],
-    body: UpdateCollectableItemsRequest,
-) -> Response[Union[CollectableItemsUpdatedResponse, Error]]:
-    """Updates the resource identified by id using data.
-
-    Args:
-        collection_id (str):
-        id (int):
-        body (UpdateCollectableItemsRequest): Request to update collectible items in a collection
+    client: AuthenticatedClient,
+) -> Response[Union[AdminGETResponse, Error]]:
+    """Admin Get Response
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[CollectableItemsUpdatedResponse, Error]]
+        Response[Union[AdminGETResponse, Error]]
     """
 
-    kwargs = _get_kwargs(
-        collection_id=collection_id,
-        id=id,
-        body=body,
-    )
+    kwargs = _get_kwargs()
 
     response = await client.get_async_httpx_client().request(**kwargs)
 
@@ -184,32 +135,21 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    collection_id: str,
-    id: int,
     *,
-    client: Union[AuthenticatedClient, Client],
-    body: UpdateCollectableItemsRequest,
-) -> Optional[Union[CollectableItemsUpdatedResponse, Error]]:
-    """Updates the resource identified by id using data.
-
-    Args:
-        collection_id (str):
-        id (int):
-        body (UpdateCollectableItemsRequest): Request to update collectible items in a collection
+    client: AuthenticatedClient,
+) -> Optional[Union[AdminGETResponse, Error]]:
+    """Admin Get Response
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[CollectableItemsUpdatedResponse, Error]
+        Union[AdminGETResponse, Error]
     """
 
     return (
         await asyncio_detailed(
-            collection_id=collection_id,
-            id=id,
             client=client,
-            body=body,
         )
     ).parsed
