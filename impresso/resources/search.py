@@ -7,8 +7,8 @@ from pandas import DataFrame, json_normalize
 
 from impresso.api_client.api.search import search
 from impresso.api_client.api.search_facets import get_search_facet
-from impresso.api_client.models.content_item_copyright_status import (
-    ContentItemCopyrightStatusLiteral,
+from impresso.api_client.models.content_item_access_rights_copyright import (
+    ContentItemAccessRightsCopyrightLiteral as ContentItemCopyrightStatusLiteral,
 )
 from impresso.api_client.models.get_search_facet_id import (
     GetSearchFacetId,
@@ -71,7 +71,7 @@ class SearchDataContainer(DataContainer):
         """Return the data as a pandas dataframe."""
         data = self._data.to_dict()["data"]
         if len(data):
-            return json_normalize(self._data.to_dict()["data"]).set_index("uid")
+            return json_normalize(self._data.to_dict()["data"]).set_index("id")
         return DataFrame()
 
     def pages(self) -> Iterator["SearchDataContainer"]:

@@ -5,6 +5,7 @@ from typing import Literal
 class ContentItemTextItemType(str, Enum):
     AD = "ad"
     AR = "ar"
+    CH = "ch"
     CHAPTER = "chapter"
     CHRONICLE = "chronicle"
     OB = "ob"
@@ -22,6 +23,7 @@ class ContentItemTextItemType(str, Enum):
 ContentItemTextItemTypeLiteral = Literal[
     "ad",
     "ar",
+    "ch",
     "chapter",
     "chronicle",
     "ob",

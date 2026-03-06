@@ -34,7 +34,7 @@ class ContentItemsDataContainer(DataContainer):
     @property
     def df(self) -> DataFrame:
         """Return the data as a pandas dataframe."""
-        return json_normalize(self._data.to_dict()["data"]).set_index("uid")
+        return json_normalize(self._data.to_dict()["data"]).set_index("id")
 
     def pages(self) -> Iterator["ContentItemsDataContainer"]:
         """Iterate over all pages of results."""
@@ -142,4 +142,8 @@ class ContentItemsResource(Resource):
                 in the canonical form: <model>:<base64_embedding>).
         """
         item = self.get(id, include_embeddings=True)
-        return item.raw.get("embeddings", []) if item else []
+        return (
+            item.raw.get("semanticEnrichments", {}).get("embeddings", [])
+            if item
+            else []
+        )

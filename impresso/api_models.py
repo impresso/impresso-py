@@ -753,13 +753,17 @@ class ContentItemMeta(BaseModel):
     countryCode: Annotated[
         Optional[str],
         Field(
-            None, description='Country code of the content item.', pattern='^[A-Z]{2}$'
+            None,
+            description='Country code of the content item.',
+            pattern='^[A-Za-z]{2}$',
         ),
     ]
     provinceCode: Annotated[
         Optional[str],
         Field(
-            None, description='Province code of the content item.', pattern='^[A-Z]{2}$'
+            None,
+            description='Province code of the content item.',
+            pattern='^[A-Za-z]{2}$',
         ),
     ]
 
@@ -1520,6 +1524,7 @@ class ContentItemText(BaseModel):
                 'tb',
                 'ob',
                 'w',
+                'ch',
                 'chapter',
                 'chronicle',
                 'unsegmented',
