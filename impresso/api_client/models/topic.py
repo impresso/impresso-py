@@ -16,21 +16,21 @@ class Topic:
     """A topic
 
     Attributes:
-        uid (str): The unique identifier of the topic
+        id (str): The unique identifier of the topic
         language (str): The language code of the topic
         content_items_count (Union[Unset, float]): Number of content items with this topic
         words (Union[Unset, List['TopicWord']]): Top N words associated with the topic
         model (Union[Unset, str]): ID of the model used to generate the topic
     """
 
-    uid: str
+    id: str
     language: str
     content_items_count: Union[Unset, float] = UNSET
     words: Union[Unset, List["TopicWord"]] = UNSET
     model: Union[Unset, str] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
-        uid = self.uid
+        id = self.id
 
         language = self.language
 
@@ -48,7 +48,7 @@ class Topic:
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
-                "uid": uid,
+                "id": id,
                 "language": language,
             }
         )
@@ -66,7 +66,7 @@ class Topic:
         from ..models.topic_word import TopicWord
 
         d = src_dict.copy()
-        uid = d.pop("uid")
+        id = d.pop("id")
 
         language = d.pop("language")
 
@@ -82,7 +82,7 @@ class Topic:
         model = d.pop("model", UNSET)
 
         topic = cls(
-            uid=uid,
+            id=id,
             language=language,
             content_items_count=content_items_count,
             words=words,

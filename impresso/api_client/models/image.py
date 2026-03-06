@@ -19,34 +19,34 @@ class Image:
     """An image from a content item
 
     Attributes:
-        uid (str): The unique identifier of the image
-        issue_uid (str): The unique identifier of the issue that the image belongs to.
+        id (str): The unique identifier of the image
+        issue_id (str): The unique identifier of the issue that the image belongs to.
         preview_url (str): The URL of the image preview
         media_source_ref (ImageMediaSourceRef): The media source of the image
         date (datetime.date): The date of the image or the date of the issue that the image belongs to.
         caption (Union[Unset, str]): Image caption
-        content_item_uid (Union[Unset, str]): The unique identifier of the content item that the image belongs to.
+        content_item_id (Union[Unset, str]): The unique identifier of the content item that the image belongs to.
         page_numbers (Union[Unset, List[int]]): The page numbers of the issue that the image belongs to.
         image_types (Union[Unset, ImageImageTypes]):
         embeddings (Union[Unset, List[str]]): Precomputed embeddings for the image in the format:
             <model_type>:<base64_embedding_vector>.
     """
 
-    uid: str
-    issue_uid: str
+    id: str
+    issue_id: str
     preview_url: str
     media_source_ref: "ImageMediaSourceRef"
     date: datetime.date
     caption: Union[Unset, str] = UNSET
-    content_item_uid: Union[Unset, str] = UNSET
+    content_item_id: Union[Unset, str] = UNSET
     page_numbers: Union[Unset, List[int]] = UNSET
     image_types: Union[Unset, "ImageImageTypes"] = UNSET
     embeddings: Union[Unset, List[str]] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
-        uid = self.uid
+        id = self.id
 
-        issue_uid = self.issue_uid
+        issue_id = self.issue_id
 
         preview_url = self.preview_url
 
@@ -56,7 +56,7 @@ class Image:
 
         caption = self.caption
 
-        content_item_uid = self.content_item_uid
+        content_item_id = self.content_item_id
 
         page_numbers: Union[Unset, List[int]] = UNSET
         if not isinstance(self.page_numbers, Unset):
@@ -73,8 +73,8 @@ class Image:
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
-                "uid": uid,
-                "issueUid": issue_uid,
+                "id": id,
+                "issueId": issue_id,
                 "previewUrl": preview_url,
                 "mediaSourceRef": media_source_ref,
                 "date": date,
@@ -82,8 +82,8 @@ class Image:
         )
         if caption is not UNSET:
             field_dict["caption"] = caption
-        if content_item_uid is not UNSET:
-            field_dict["contentItemUid"] = content_item_uid
+        if content_item_id is not UNSET:
+            field_dict["contentItemId"] = content_item_id
         if page_numbers is not UNSET:
             field_dict["pageNumbers"] = page_numbers
         if image_types is not UNSET:
@@ -99,9 +99,9 @@ class Image:
         from ..models.image_media_source_ref import ImageMediaSourceRef
 
         d = src_dict.copy()
-        uid = d.pop("uid")
+        id = d.pop("id")
 
-        issue_uid = d.pop("issueUid")
+        issue_id = d.pop("issueId")
 
         preview_url = d.pop("previewUrl")
 
@@ -111,7 +111,7 @@ class Image:
 
         caption = d.pop("caption", UNSET)
 
-        content_item_uid = d.pop("contentItemUid", UNSET)
+        content_item_id = d.pop("contentItemId", UNSET)
 
         page_numbers = cast(List[int], d.pop("pageNumbers", UNSET))
 
@@ -125,13 +125,13 @@ class Image:
         embeddings = cast(List[str], d.pop("embeddings", UNSET))
 
         image = cls(
-            uid=uid,
-            issue_uid=issue_uid,
+            id=id,
+            issue_id=issue_id,
             preview_url=preview_url,
             media_source_ref=media_source_ref,
             date=date,
             caption=caption,
-            content_item_uid=content_item_uid,
+            content_item_id=content_item_id,
             page_numbers=page_numbers,
             image_types=image_types,
             embeddings=embeddings,

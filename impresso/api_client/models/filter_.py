@@ -12,17 +12,16 @@ T = TypeVar("T", bound="Filter")
 
 @_attrs_define
 class Filter:
-    """A single filter criteria
+    """A single search filter criteria
 
     Attributes:
-        type (str): Possible values are in 'search.validators:eachFilterValidator.type.choices'
+        type (str): Possible values are in 'impresso-jscomons Filter.type'
         context (Union[Unset, FilterContext]):  Default: FilterContext.INCLUDE.
         op (Union[Unset, FilterOp]):  Default: FilterOp.OR.
         precision (Union[Unset, FilterPrecision]):  Default: FilterPrecision.EXACT.
         q (Union[List[str], Unset, str]):
-        daterange (Union[Unset, str]):
-        uids (Union[Unset, str]):
-        uid (Union[Unset, str]):
+        daterange (Union[Unset, str]): DEPRECATED: Use `q`.
+        uids (Union[Unset, str]): DEPRECATED: Use `q`.
     """
 
     type: str
@@ -32,7 +31,6 @@ class Filter:
     q: Union[List[str], Unset, str] = UNSET
     daterange: Union[Unset, str] = UNSET
     uids: Union[Unset, str] = UNSET
-    uid: Union[Unset, str] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
         type = self.type
@@ -62,8 +60,6 @@ class Filter:
 
         uids = self.uids
 
-        uid = self.uid
-
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
@@ -82,8 +78,6 @@ class Filter:
             field_dict["daterange"] = daterange
         if uids is not UNSET:
             field_dict["uids"] = uids
-        if uid is not UNSET:
-            field_dict["uid"] = uid
 
         return field_dict
 
@@ -132,8 +126,6 @@ class Filter:
 
         uids = d.pop("uids", UNSET)
 
-        uid = d.pop("uid", UNSET)
-
         filter_ = cls(
             type=type,
             context=context,
@@ -142,7 +134,6 @@ class Filter:
             q=q,
             daterange=daterange,
             uids=uids,
-            uid=uid,
         )
 
         return filter_

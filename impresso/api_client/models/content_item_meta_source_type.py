@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Literal
 
 
-class ContentItemMediaType(str, Enum):
+class ContentItemMetaSourceType(str, Enum):
     ENCYCLOPEDIA = "encyclopedia"
     MONOGRAPH = "monograph"
     NEWSPAPER = "newspaper"
@@ -14,7 +14,7 @@ class ContentItemMediaType(str, Enum):
         return str(self.value)
 
 
-ContentItemMediaTypeLiteral = Literal[
+ContentItemMetaSourceTypeLiteral = Literal[
     "encyclopedia",
     "monograph",
     "newspaper",

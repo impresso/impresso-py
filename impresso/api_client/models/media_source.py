@@ -20,7 +20,7 @@ class MediaSource:
     """A media source is what a content item belongs to. This can be a newspaper, a TV or a radio station, etc.
 
     Attributes:
-        uid (str): The unique identifier of the media source.
+        id (str): The unique identifier of the media source.
         type (MediaSourceType): The type of the media source.
         name (str): A display name of the media source.
         language_codes (List[str]): ISO 639-2 language codes this media source has content in.
@@ -33,7 +33,7 @@ class MediaSource:
         properties (Union[Unset, List['MediaSourcePropertiesItem']]):
     """
 
-    uid: str
+    id: str
     type: MediaSourceType
     name: str
     language_codes: List[str]
@@ -43,7 +43,7 @@ class MediaSource:
     properties: Union[Unset, List["MediaSourcePropertiesItem"]] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
-        uid = self.uid
+        id = self.id
 
         type = self.type.value
 
@@ -74,7 +74,7 @@ class MediaSource:
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
-                "uid": uid,
+                "id": id,
                 "type": type,
                 "name": name,
                 "languageCodes": language_codes,
@@ -96,7 +96,7 @@ class MediaSource:
         from ..models.media_source_totals import MediaSourceTotals
 
         d = src_dict.copy()
-        uid = d.pop("uid")
+        id = d.pop("id")
 
         type = MediaSourceType(d.pop("type"))
 
@@ -123,7 +123,7 @@ class MediaSource:
             properties.append(properties_item)
 
         media_source = cls(
-            uid=uid,
+            id=id,
             type=type,
             name=name,
             language_codes=language_codes,

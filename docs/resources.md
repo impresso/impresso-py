@@ -188,7 +188,7 @@ impresso.collections.find(term="war")
 
 # Get a specific collection by ID
 collection = impresso.collections.get("collection-id")
-collection_id = collection.raw["uid"]
+collection_id = collection.raw["id"]
 
 # List items in a collection
 items = impresso.collections.items(collection_id)

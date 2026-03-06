@@ -1,6 +1,8 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar
+from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
+
+from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
     from ..models.data_provider_names_item import DataProviderNamesItem
@@ -18,11 +20,13 @@ class DataProvider:
             id (str): The unique identifier of the data provider.
             name (str): The default name of the data provider.
             names (List['DataProviderNamesItem']): Names of the data provider in different languages.
+            bitmap_index (Union[Unset, int]): Bitmap index used for efficient data provider filtering.
     """
 
     id: str
     name: str
     names: List["DataProviderNamesItem"]
+    bitmap_index: Union[Unset, int] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
         id = self.id
@@ -34,6 +38,8 @@ class DataProvider:
             names_item = names_item_data.to_dict()
             names.append(names_item)
 
+        bitmap_index = self.bitmap_index
+
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
@@ -42,6 +48,8 @@ class DataProvider:
                 "names": names,
             }
         )
+        if bitmap_index is not UNSET:
+            field_dict["bitmapIndex"] = bitmap_index
 
         return field_dict
 
@@ -61,10 +69,13 @@ class DataProvider:
 
             names.append(names_item)
 
+        bitmap_index = d.pop("bitmapIndex", UNSET)
+
         data_provider = cls(
             id=id,
             name=name,
             names=names,
+            bitmap_index=bitmap_index,
         )
 
         return data_provider

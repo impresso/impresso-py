@@ -92,7 +92,7 @@ class FindImagesContainer(DataContainer):
         """Return the data as a pandas dataframe."""
         data = self._data.to_dict()["data"]
         if len(data):
-            df = json_normalize(self._data.to_dict()["data"]).set_index("uid")
+            df = json_normalize(self._data.to_dict()["data"]).set_index("id")
             return _as_image_df(df)
 
         return DataFrame()
@@ -116,7 +116,7 @@ class GetImageContainer(DataContainer):
         """Return the data as a pandas dataframe."""
         data = self._data.to_dict()
         if len(data):
-            df = json_normalize(data).set_index("uid")
+            df = json_normalize(data).set_index("id")
             return _as_image_df(df)
 
         return DataFrame()

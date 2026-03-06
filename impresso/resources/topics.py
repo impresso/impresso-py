@@ -44,7 +44,7 @@ class FindTopicsContainer(DataContainer):
         """Return the data as a pandas dataframe."""
         data = self._data.to_dict()["data"]
         if len(data):
-            return json_normalize(self._data.to_dict()["data"]).set_index("uid")
+            return json_normalize(self._data.to_dict()["data"]).set_index("id")
         return DataFrame()
 
     def pages(self) -> Iterator["FindTopicsContainer"]:
@@ -67,7 +67,7 @@ class GetTopicContainer(DataContainer):
         """Return the data as a pandas dataframe."""
         data = self._data.to_dict()
         if len(data):
-            return json_normalize([self._data.to_dict()]).set_index("uid")
+            return json_normalize([self._data.to_dict()]).set_index("id")
         return DataFrame()
 
 

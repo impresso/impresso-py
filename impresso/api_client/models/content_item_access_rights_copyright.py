@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Literal
 
 
-class ContentItemCopyrightStatus(str, Enum):
+class ContentItemAccessRightsCopyright(str, Enum):
     EUO = "euo"
     IN_CPY = "in_cpy"
     NKN = "nkn"
@@ -14,7 +14,7 @@ class ContentItemCopyrightStatus(str, Enum):
         return str(self.value)
 
 
-ContentItemCopyrightStatusLiteral = Literal[
+ContentItemAccessRightsCopyrightLiteral = Literal[
     "euo",
     "in_cpy",
     "nkn",
