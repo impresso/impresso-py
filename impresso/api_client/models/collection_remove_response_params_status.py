@@ -2,11 +2,11 @@ from enum import Enum
 from typing import Literal
 
 
-class RemoveCollectionResponseParamsStatus(str, Enum):
+class CollectionRemoveResponseParamsStatus(str, Enum):
     DEL = "DEL"
 
     def __str__(self) -> str:
         return str(self.value)
 
 
-RemoveCollectionResponseParamsStatusLiteral = Literal["DEL",]
+CollectionRemoveResponseParamsStatusLiteral = Literal["DEL",]

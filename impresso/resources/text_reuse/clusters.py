@@ -335,6 +335,7 @@ def _build_cluster_facet_filters(
                 q=Q(DateRange._as_filter_value(date_range)),
                 context="exclude" if date_range.inverted else "include",
                 daterange=None,
+                uids=None,
             )
         )
     if newspaper_id is not None:
@@ -415,6 +416,7 @@ def _build_filters(
                 q=Q(DateRange._as_filter_value(date_range)),
                 context="exclude" if date_range.inverted else "include",
                 daterange=None,
+                uids=None,
             )
         )
     if newspaper_id is not None:
@@ -422,7 +424,7 @@ def _build_filters(
     if collection_id is not None:
         filters.extend(and_or_filter(collection_id, "collection"))
     if front_page:
-        filters.append(Filter(type="is_front", daterange=None))
+        filters.append(Filter(type="is_front", daterange=None, uids=None))
     if topic_id is not None:
         filters.extend(and_or_filter(topic_id, "topic"))
     if language is not None:

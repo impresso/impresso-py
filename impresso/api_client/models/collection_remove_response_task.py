@@ -4,11 +4,11 @@ from attrs import define as _attrs_define
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="RemoveCollectionResponseTask")
+T = TypeVar("T", bound="CollectionRemoveResponseTask")
 
 
 @_attrs_define
-class RemoveCollectionResponseTask:
+class CollectionRemoveResponseTask:
     """Deletion task details
 
     Attributes:
@@ -40,9 +40,9 @@ class RemoveCollectionResponseTask:
 
         creation_date = d.pop("creationDate", UNSET)
 
-        remove_collection_response_task = cls(
+        collection_remove_response_task = cls(
             task_id=task_id,
             creation_date=creation_date,
         )
 
-        return remove_collection_response_task
+        return collection_remove_response_task

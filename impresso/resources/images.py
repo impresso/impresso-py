@@ -201,7 +201,7 @@ class ImagesResource(Resource):
         if issue_id is not None:
             filters.extend(and_or_filter(issue_id, "issue"))
         if is_front is not None:
-            filters.append(Filter(type="isFront", daterange=None))
+            filters.append(Filter(type="isFront", daterange=None, uids=None))
         if date_range is not None:
             filters.append(
                 Filter(
@@ -209,6 +209,7 @@ class ImagesResource(Resource):
                     q=Q(DateRange._as_filter_value(date_range)),
                     context="exclude" if date_range.inverted else "include",
                     daterange=None,
+                    uids=None,
                 )
             )
         if visual_content is not None:

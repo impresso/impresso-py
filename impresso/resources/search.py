@@ -457,11 +457,11 @@ class SearchResource(Resource):
         if string:
             filters.extend(and_or_filter(string, "string"))
         if with_text_contents:
-            filters.append(Filter(type="has_text_contents", daterange=None))
+            filters.append(Filter(type="has_text_contents", daterange=None, uids=None))
         if title is not None:
             filters.extend(and_or_filter(title, "title"))
         if front_page:
-            filters.append(Filter(type="is_front", daterange=None))
+            filters.append(Filter(type="is_front", daterange=None, uids=None))
         if entity_id is not None:
             filters.extend(and_or_filter(entity_id, "entity"))
         if newspaper_id is not None:
@@ -473,6 +473,7 @@ class SearchResource(Resource):
                     q=Q(DateRange._as_filter_value(date_range)),
                     context="exclude" if date_range.inverted else "include",
                     daterange=None,
+                    uids=None,
                 )
             )
         if language is not None:

@@ -1,9 +1,12 @@
 from typing import Any, Callable, Iterator, cast
 from pandas import DataFrame, json_normalize
 from impresso.api_client.api.collections import (
+    create_collection,
     find_collections,
     get_collection,
     patch_collections_collection_id_items,
+    remove_collection,
+    update_collection,
 )
 from impresso.api_client.models.find_collections_base_find_response import (
     FindCollectionsBaseFindResponse,
@@ -11,6 +14,11 @@ from impresso.api_client.models.find_collections_base_find_response import (
 from impresso.api_client.models.find_collections_order_by import (
     FindCollectionsOrderBy,
     FindCollectionsOrderByLiteral,
+)
+from impresso.api_client.models.new_collection_request import NewCollectionRequest
+from impresso.api_client.models.new_collection_request_access_level import (
+    NewCollectionRequestAccessLevel,
+    NewCollectionRequestAccessLevelLiteral,
 )
 from impresso.api_client.models.update_collectable_items_request import (
     UpdateCollectableItemsRequest,
@@ -76,6 +84,11 @@ class GetCollectionContainer(DataContainer):
         return DataFrame()
 
     @property
+    def pydantic(self) -> Collection:
+        """The response data as a pydantic model."""
+        return Collection.model_validate(self.raw)
+
+    @property
     def size(self) -> int:
         """Current page size."""
         data = self._data.to_dict()
@@ -114,6 +127,16 @@ class CollectionsResource(Resource):
         Remove items from a collection:
         >>> item_ids_to_remove = ["item-id-1"] # Replace with real item IDs
         >>> collections.remove_items(collection_id, item_ids_to_remove) # doctest: +SKIP
+
+        Create a new collection:
+        >>> new_collection = collections.create("My Collection", description="A test collection") # doctest: +SKIP
+        >>> print(new_collection.df) # doctest: +SKIP
+
+        Rename a collection:
+        >>> collections.rename(collection_id, "New Name") # doctest: +SKIP
+
+        Delete a collection:
+        >>> collections.delete(collection_id) # doctest: +SKIP
     """
 
     name = "collections"
@@ -232,6 +255,70 @@ class CollectionsResource(Resource):
                 add=item_ids,
                 remove=UNSET,
             ),
+        )
+        raise_for_error(result)
+
+    def create(
+        self,
+        title: str,
+        description: str | None = None,
+        access_level: NewCollectionRequestAccessLevelLiteral | None = None,
+    ) -> GetCollectionContainer:
+        """
+        Create a new collection.
+
+        Args:
+            title: Title of the collection.
+            description: Optional description of the collection.
+            access_level: Access level of the collection ("private" or "public").
+
+        Returns:
+            GetCollectionContainer: Data container with the created collection.
+        """
+        result = create_collection.sync(
+            client=self._api_client,
+            body=NewCollectionRequest(
+                title=title,
+                description=description if description is not None else UNSET,
+                access_level=(
+                    get_enum_from_literal(access_level, NewCollectionRequestAccessLevel)
+                    if access_level is not None
+                    else UNSET
+                ),
+            ),
+        )
+        raise_for_error(result)
+        return GetCollectionContainer(result, FindCollectionsSchema)
+
+    def rename(self, id: str, title: str) -> GetCollectionContainer:
+        """
+        Rename a collection.
+
+        Args:
+            id: The ID of the collection to rename.
+            title: The new title for the collection.
+
+        Returns:
+            GetCollectionContainer: Data container with the updated collection.
+        """
+        result = update_collection.sync(
+            id=id,
+            client=self._api_client,
+            body=NewCollectionRequest(title=title),
+        )
+        raise_for_error(result)
+        return GetCollectionContainer(result, FindCollectionsSchema)
+
+    def delete(self, id: str) -> None:
+        """
+        Delete a collection by ID.
+
+        Args:
+            id: The ID of the collection to delete.
+        """
+        result = remove_collection.sync(
+            id=id,
+            client=self._api_client,
         )
         raise_for_error(result)
 

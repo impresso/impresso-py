@@ -25,6 +25,10 @@ from .collectable_item_group_content_type import CollectableItemGroupContentType
 from .collectable_items_updated_response import CollectableItemsUpdatedResponse
 from .collection import Collection
 from .collection_access_level import CollectionAccessLevel
+from .collection_remove_response import CollectionRemoveResponse
+from .collection_remove_response_params import CollectionRemoveResponseParams
+from .collection_remove_response_params_status import CollectionRemoveResponseParamsStatus
+from .collection_remove_response_task import CollectionRemoveResponseTask
 from .content_item import ContentItem
 from .content_item_access_bitmaps import ContentItemAccessBitmaps
 from .content_item_access_rights import ContentItemAccessRights
@@ -165,10 +169,6 @@ from .media_source_type import MediaSourceType
 from .new_collection_request import NewCollectionRequest
 from .new_collection_request_access_level import NewCollectionRequestAccessLevel
 from .partner import Partner
-from .remove_collection_response import RemoveCollectionResponse
-from .remove_collection_response_params import RemoveCollectionResponseParams
-from .remove_collection_response_params_status import RemoveCollectionResponseParamsStatus
-from .remove_collection_response_task import RemoveCollectionResponseTask
 from .search_base_find_response import SearchBaseFindResponse
 from .search_base_find_response_pagination import SearchBaseFindResponsePagination
 from .search_facet_bucket import SearchFacetBucket
@@ -220,6 +220,10 @@ __all__ = (
     "CollectableItemsUpdatedResponse",
     "Collection",
     "CollectionAccessLevel",
+    "CollectionRemoveResponse",
+    "CollectionRemoveResponseParams",
+    "CollectionRemoveResponseParamsStatus",
+    "CollectionRemoveResponseTask",
     "ContentItem",
     "ContentItemAccessBitmaps",
     "ContentItemAccessRights",
@@ -344,10 +348,6 @@ __all__ = (
     "NewCollectionRequest",
     "NewCollectionRequestAccessLevel",
     "Partner",
-    "RemoveCollectionResponse",
-    "RemoveCollectionResponseParams",
-    "RemoveCollectionResponseParamsStatus",
-    "RemoveCollectionResponseTask",
     "SearchBaseFindResponse",
     "SearchBaseFindResponsePagination",
     "SearchFacetBucket",
