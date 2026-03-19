@@ -109,6 +109,7 @@ def and_or_filter(
             context="exclude" if item.inverted else "include",
             precision=item.precision,
             daterange=None,
+            uids=None,
         )
         chain_filters = [
             Filter(
@@ -117,11 +118,18 @@ def and_or_filter(
                 op=chain_item.op,
                 context="exclude" if chain_item.inverted else "include",
                 daterange=None,
+                uids=None,
             )
             for chain_item in item.chain
         ]
         return [filter] + chain_filters
     else:
         return [
-            Filter(type=type, q=Q(converter(item)), daterange=None, precision="exact")
+            Filter(
+                type=type,
+                q=Q(converter(item)),
+                daterange=None,
+                precision="exact",
+                uids=None,
+            )
         ]
