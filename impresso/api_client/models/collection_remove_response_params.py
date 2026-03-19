@@ -2,22 +2,22 @@ from typing import Any, Dict, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 
-from ..models.remove_collection_response_params_status import RemoveCollectionResponseParamsStatus
+from ..models.collection_remove_response_params_status import CollectionRemoveResponseParamsStatus
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="RemoveCollectionResponseParams")
+T = TypeVar("T", bound="CollectionRemoveResponseParams")
 
 
 @_attrs_define
-class RemoveCollectionResponseParams:
+class CollectionRemoveResponseParams:
     """
     Attributes:
         id (Union[Unset, str]): The collection id
-        status (Union[Unset, RemoveCollectionResponseParamsStatus]): The status of the operation
+        status (Union[Unset, CollectionRemoveResponseParamsStatus]): The status of the operation
     """
 
     id: Union[Unset, str] = UNSET
-    status: Union[Unset, RemoveCollectionResponseParamsStatus] = UNSET
+    status: Union[Unset, CollectionRemoveResponseParamsStatus] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
         id = self.id
@@ -41,15 +41,15 @@ class RemoveCollectionResponseParams:
         id = d.pop("id", UNSET)
 
         _status = d.pop("status", UNSET)
-        status: Union[Unset, RemoveCollectionResponseParamsStatus]
+        status: Union[Unset, CollectionRemoveResponseParamsStatus]
         if isinstance(_status, Unset):
             status = UNSET
         else:
-            status = RemoveCollectionResponseParamsStatus(_status)
+            status = CollectionRemoveResponseParamsStatus(_status)
 
-        remove_collection_response_params = cls(
+        collection_remove_response_params = cls(
             id=id,
             status=status,
         )
 
-        return remove_collection_response_params
+        return collection_remove_response_params

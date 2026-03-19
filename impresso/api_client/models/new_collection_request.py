@@ -13,17 +13,17 @@ class NewCollectionRequest:
     """Create new collection request
 
     Attributes:
-        name (str):
+        title (str):
         description (Union[Unset, str]):
         access_level (Union[Unset, NewCollectionRequestAccessLevel]): Access level of the collection.
     """
 
-    name: str
+    title: str
     description: Union[Unset, str] = UNSET
     access_level: Union[Unset, NewCollectionRequestAccessLevel] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
-        name = self.name
+        title = self.title
 
         description = self.description
 
@@ -34,7 +34,7 @@ class NewCollectionRequest:
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
-                "name": name,
+                "title": title,
             }
         )
         if description is not UNSET:
@@ -47,7 +47,7 @@ class NewCollectionRequest:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        name = d.pop("name")
+        title = d.pop("title")
 
         description = d.pop("description", UNSET)
 
@@ -59,7 +59,7 @@ class NewCollectionRequest:
             access_level = NewCollectionRequestAccessLevel(_access_level)
 
         new_collection_request = cls(
-            name=name,
+            title=title,
             description=description,
             access_level=access_level,
         )
