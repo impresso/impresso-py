@@ -9,12 +9,12 @@ if TYPE_CHECKING:
     from ..models.content_item_page import ContentItemPage
 
 
-T = TypeVar("T", bound="ContentItemImage")
+T = TypeVar("T", bound="ContentItemFacsimile")
 
 
 @_attrs_define
-class ContentItemImage:
-    """Image-related information for digitized content
+class ContentItemFacsimile:
+    """Facsimile-related information for digitized content
 
     Attributes:
         pages_count (Union[Unset, int]): Total number of pages in the content item.
@@ -108,7 +108,7 @@ class ContentItemImage:
 
         region_breaks = cast(List[int], d.pop("regionBreaks", UNSET))
 
-        content_item_image = cls(
+        content_item_facsimile = cls(
             pages_count=pages_count,
             is_front_page=is_front_page,
             is_coordinates_converted=is_coordinates_converted,
@@ -118,8 +118,8 @@ class ContentItemImage:
             region_breaks=region_breaks,
         )
 
-        content_item_image.additional_properties = d
-        return content_item_image
+        content_item_facsimile.additional_properties = d
+        return content_item_facsimile
 
     @property
     def additional_keys(self) -> List[str]:

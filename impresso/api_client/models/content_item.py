@@ -7,7 +7,7 @@ from ..types import UNSET, Unset
 if TYPE_CHECKING:
     from ..models.content_item_access_rights import ContentItemAccessRights
     from ..models.content_item_audio import ContentItemAudio
-    from ..models.content_item_image import ContentItemImage
+    from ..models.content_item_facsimile import ContentItemFacsimile
     from ..models.content_item_meta import ContentItemMeta
     from ..models.content_item_semantic_enrichments import ContentItemSemanticEnrichments
     from ..models.content_item_text import ContentItemText
@@ -27,7 +27,7 @@ class ContentItem:
         meta (Union[Unset, ContentItemMeta]): Content Item metadata
         text (Union[Unset, ContentItemText]): Textual content details
         semantic_enrichments (Union[Unset, ContentItemSemanticEnrichments]): Semantic enrichments information
-        image (Union[Unset, ContentItemImage]): Image-related information for digitized content
+        facsimile (Union[Unset, ContentItemFacsimile]): Facsimile-related information for digitized content
         audio (Union[Unset, ContentItemAudio]): Audio-related information for broadcast content
         access (Union[Unset, ContentItemAccessRights]): Access rights information
     """
@@ -38,7 +38,7 @@ class ContentItem:
     meta: Union[Unset, "ContentItemMeta"] = UNSET
     text: Union[Unset, "ContentItemText"] = UNSET
     semantic_enrichments: Union[Unset, "ContentItemSemanticEnrichments"] = UNSET
-    image: Union[Unset, "ContentItemImage"] = UNSET
+    facsimile: Union[Unset, "ContentItemFacsimile"] = UNSET
     audio: Union[Unset, "ContentItemAudio"] = UNSET
     access: Union[Unset, "ContentItemAccessRights"] = UNSET
 
@@ -61,9 +61,9 @@ class ContentItem:
         if not isinstance(self.semantic_enrichments, Unset):
             semantic_enrichments = self.semantic_enrichments.to_dict()
 
-        image: Union[Unset, Dict[str, Any]] = UNSET
-        if not isinstance(self.image, Unset):
-            image = self.image.to_dict()
+        facsimile: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.facsimile, Unset):
+            facsimile = self.facsimile.to_dict()
 
         audio: Union[Unset, Dict[str, Any]] = UNSET
         if not isinstance(self.audio, Unset):
@@ -89,8 +89,8 @@ class ContentItem:
             field_dict["text"] = text
         if semantic_enrichments is not UNSET:
             field_dict["semanticEnrichments"] = semantic_enrichments
-        if image is not UNSET:
-            field_dict["image"] = image
+        if facsimile is not UNSET:
+            field_dict["facsimile"] = facsimile
         if audio is not UNSET:
             field_dict["audio"] = audio
         if access is not UNSET:
@@ -102,7 +102,7 @@ class ContentItem:
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         from ..models.content_item_access_rights import ContentItemAccessRights
         from ..models.content_item_audio import ContentItemAudio
-        from ..models.content_item_image import ContentItemImage
+        from ..models.content_item_facsimile import ContentItemFacsimile
         from ..models.content_item_meta import ContentItemMeta
         from ..models.content_item_semantic_enrichments import ContentItemSemanticEnrichments
         from ..models.content_item_text import ContentItemText
@@ -135,12 +135,12 @@ class ContentItem:
         else:
             semantic_enrichments = ContentItemSemanticEnrichments.from_dict(_semantic_enrichments)
 
-        _image = d.pop("image", UNSET)
-        image: Union[Unset, ContentItemImage]
-        if isinstance(_image, Unset):
-            image = UNSET
+        _facsimile = d.pop("facsimile", UNSET)
+        facsimile: Union[Unset, ContentItemFacsimile]
+        if isinstance(_facsimile, Unset):
+            facsimile = UNSET
         else:
-            image = ContentItemImage.from_dict(_image)
+            facsimile = ContentItemFacsimile.from_dict(_facsimile)
 
         _audio = d.pop("audio", UNSET)
         audio: Union[Unset, ContentItemAudio]
@@ -163,7 +163,7 @@ class ContentItem:
             meta=meta,
             text=text,
             semantic_enrichments=semantic_enrichments,
-            image=image,
+            facsimile=facsimile,
             audio=audio,
             access=access,
         )
