@@ -37,7 +37,7 @@ from .content_item_access_rights_data_domain import ContentItemAccessRightsDataD
 from .content_item_audio import ContentItemAudio
 from .content_item_audio_locator import ContentItemAudioLocator
 from .content_item_audio_record import ContentItemAudioRecord
-from .content_item_image import ContentItemImage
+from .content_item_facsimile import ContentItemFacsimile
 from .content_item_mention import ContentItemMention
 from .content_item_meta import ContentItemMeta
 from .content_item_meta_source_medium import ContentItemMetaSourceMedium
@@ -232,7 +232,7 @@ __all__ = (
     "ContentItemAudio",
     "ContentItemAudioLocator",
     "ContentItemAudioRecord",
-    "ContentItemImage",
+    "ContentItemFacsimile",
     "ContentItemMention",
     "ContentItemMeta",
     "ContentItemMetaSourceMedium",

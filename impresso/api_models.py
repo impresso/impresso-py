@@ -1581,7 +1581,7 @@ class SearchFacetBucket(BaseModel):
     ]
 
 
-class ContentItemImage(BaseModel):
+class ContentItemFacsimile(BaseModel):
     pagesCount: Annotated[
         Optional[int],
         Field(None, description='Total number of pages in the content item.'),
@@ -1640,6 +1640,6 @@ class ContentItem(BaseModel):
     meta: Optional[ContentItemMeta] = None
     text: Optional[ContentItemText] = None
     semanticEnrichments: Optional[ContentItemSemanticEnrichments] = None
-    image: Optional[ContentItemImage] = None
+    facsimile: Optional[ContentItemFacsimile] = None
     audio: Optional[ContentItemAudio] = None
     access: Optional[ContentItemAccessRights] = None
