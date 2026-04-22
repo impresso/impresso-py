@@ -80,6 +80,10 @@ result = client.content_items.get("NZG-1877-10-20-a-i0024")
 result
 ```
 
+## Create a session
+
+::: impresso.connect
+
 ## About Impresso
 
 ### Impresso project
