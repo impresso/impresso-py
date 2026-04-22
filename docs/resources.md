@@ -29,6 +29,9 @@ impresso.search.facet(facet='newspaper', term='war')
 ::: impresso.resources.search.SearchResource
 
 ::: impresso.api_client.models.search_order_by.SearchOrderByLiteral
+::: impresso.api_client.models.content_item_access_rights_copyright.ContentItemAccessRightsCopyrightLiteral
+::: impresso.resources.tools.Embedding
+
 ::: impresso.resources.search.SearchDataContainer
 
 ## Entities
@@ -72,6 +75,7 @@ impresso.media_sources.find(
 
 ::: impresso.resources.media_sources.MediaSourcesResource
 
+::: impresso.api_client.models.find_media_sources_type.FindMediaSourcesTypeLiteral
 ::: impresso.api_client.models.find_media_sources_order_by.FindMediaSourcesOrderByLiteral
 ::: impresso.resources.media_sources.FindMediaSourcesContainer
 
