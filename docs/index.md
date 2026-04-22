@@ -16,59 +16,69 @@ pip install impresso
 
 The library requires Python version `3.10` or higher. It also depends on several packages commonly found in Jupyter environments, such as `matplotlib` and `pandas`.
 
-# A Glance:
+## At a glance
 
-## Create a session
+### Create a session
 
-```
+```python
 from impresso import connect
 client = connect()
 ```
 
-## Search 
-```
+### Search 
+
+```python
 results = client.search.find(term="moon landing")
 results
 ```
-'results' will be displayed as preview of pandas data frame. To see full data frame, run:
-```
+
+`results` will display a summary of the result including a preview of a pandas data frame with the result data. Use `df` property to access the full data frame:
+
+```python
 results.df
 ```
-## Pagination
-'results' are paginated. This data frame just displays the first 100 results. To navigate through pages, use:
-```
-# Define the total amount of items you want to retrieve 
-total_results = 2000
-limit = 1000
+### Pagination
 
-# This creates a list called 'all_results' to save your items 
-all_results = []
+!!! warning "Monthly Quota"
+    Every Impresso user has a monthly quota of the content items they can access.
+    The quota is currently set at 200,000 content items. Paginating through a
+    large result set may see you hitting the quota limit fairly soon.
+    Make sure to check the size of the full result set before fetching all pages.
 
-# Now you loop through pages of 1000 outputs until you have collected all the items you defined in 'total_results'
-# Results are saved in the list 'all_results'
-for offset in range(0, total_results, limit):
-    results = client.search.find(
-        term="Titanic",
-        order_by="-date",
-        limit=limit,
-        offset=offset
-    )
-    all_results.append(results.df)
+By default every result object is the first page of the full result set. Use the following code to go through the rest of the pages:
 
-# To conclude, you transform your list into a Pandas Dataframe and visualise it by running 'full_results_df'
-full_results_df = pd.concat(all_results, ignore_index=True)
-full_results_df
-```
-## Accessing transcripts 
-Transcripts, text data from content items, can accessed by sending a request using the content item id. See example below:
-```
-results = client.content_items.get("NZG-1877-10-20-a-i0024")
-# transcript data is shown in column 'text.content'
-```
-## See content item on Web App (shortcut)
-To see a specific content item on the Web App, just add the content item id on the URL
-https://impresso-project.ch/app/article/{id}
+```python
+import pandas as pd
+# Get first page with 100 items per page
+results = impresso.search.find(term="landing", limit=100)
+print(f"Full result contains {results.total} items.")
 
+full_df = results.df
+
+# Iterate through all pages
+for page in results.pages():
+    full_df = pd.concat([full_df, page.df])
+
+full_df
+```
+
+### Accessing transcripts
+
+Content item transcripts can be large and are not returned by default.
+To access a transcript, request it by content item ID:
+
+```python
+result = client.content_items.get("NZG-1877-10-20-a-i0024")
+result.df['text.content'][0]
+```
+
+### See content item on Web App (shortcut)
+To see a specific content item in the Web App, look for the link "See this result in the Impresso App" in the rendered result summary:
+
+```python
+result = client.content_items.get("NZG-1877-10-20-a-i0024")
+result
+```
 
 ## About Impresso
 
