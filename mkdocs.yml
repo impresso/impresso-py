@@ -25,6 +25,9 @@ plugins:
 markdown_extensions:
 - toc
 - tables
+- admonition
+- pymdownx.details  # Optional: allows for collapsible blocks
+# - pymdownx.superfences  # Recommended: allows nesting code blocks inside banners
 
 nav:
   - Home: index.md
