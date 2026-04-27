@@ -18,3 +18,4 @@ impresso.egg-info/*
 tmp/
 dist/
 site/
+.python-version

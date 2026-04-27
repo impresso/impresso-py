@@ -25,7 +25,7 @@ from impresso import connect
 client = connect()
 ```
 
-### Search 
+### Search
 
 ```python
 results = client.search.find(term="moon landing")
@@ -37,20 +37,21 @@ results
 ```python
 results.df
 ```
+
 ### Pagination
 
 !!! warning "Monthly Quota"
-    Every Impresso user has a monthly quota of the content items they can access.
-    The quota is currently set at 200,000 content items. Paginating through a
-    large result set may see you hitting the quota limit fairly soon.
-    Make sure to check the size of the full result set before fetching all pages.
+Every Impresso user has a monthly quota of the content items they can access.
+The quota is currently set at 200,000 content items. Paginating through a
+large result set may see you hitting the quota limit fairly soon.
+Make sure to check the size of the full result set before fetching all pages.
 
 By default every result object is the first page of the full result set. Use the following code to go through the rest of the pages:
 
 ```python
 import pandas as pd
 # Get first page with 100 items per page
-results = impresso.search.find(term="landing", limit=100)
+results = client.search.find(term="landing", limit=100)
 print(f"Full result contains {results.total} items.")
 
 full_df = results.df
@@ -73,6 +74,7 @@ result.df['text.content'][0]
 ```
 
 ### See content item on Web App (shortcut)
+
 To see a specific content item in the Web App, look for the link "See this result in the Impresso App" in the rendered result summary:
 
 ```python
