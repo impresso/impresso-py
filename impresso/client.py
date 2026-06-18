@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 import httpx
 
 from impresso.api_client import AuthenticatedClient
+from impresso.api_client.retry import is_retryable_response
 from impresso.client_base import ImpressoApiResourcesBase
 from impresso.config_file import DEFAULT_API_URL, ImpressoPyConfig
 from impresso.util.token import get_jwt_status
@@ -28,6 +29,7 @@ DEFAULT_LOCALHOST_TOKEN_NETLOC = "impresso-project.ch"
 def _log_non_2xx(response: httpx.Response) -> None:
     if response.status_code >= 400:
         response.read()
+    if response.status_code >= 400 and not is_retryable_response(response):
         logging.error(
             f"Received error response ({response.status_code}): {response.text}"
         )

@@ -10,5 +10,9 @@
   },
   "python.testing.pytestArgs": ["-vv"],
   "editor.formatOnSave": true,
-  "pylint.args": ["--generate-members"]
+  "pylint.args": [
+    "--generate-members"
+  ],
+  "python-envs.defaultEnvManager": "ms-python.python:poetry",
+  "python-envs.defaultPackageManager": "ms-python.python:poetry"
 }
