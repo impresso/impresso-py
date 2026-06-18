@@ -253,9 +253,9 @@ def test_exhausting_retries_returns_final_response(
     )
     delays = _disable_sync_sleep(client)
 
-    result = get_data_sources_csv_export.sync(client=client)
+    result = get_data_sources_csv_export.sync_detailed(client=client)
 
-    assert result.status == 500
+    assert result.status_code == 500
     assert len(requests) == 6
     assert delays == [1.0, 2.0, 4.0, 8.0, 16.0]
     captured = capsys.readouterr()
