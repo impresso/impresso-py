@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Jupyter Notebook Guide - Impresso</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Jupyter Notebook Guide";
+        var mkdocs_page_input_path = "jupyter_guide.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Impresso
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Jupyter Notebook Guide</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-connecting-to-impresso">1. Connecting to Impresso</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#how-the-token-works">How the Token Works</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-searching-and-faceting-the-clientsearch-resource">2. Searching and Faceting (The client.search Resource)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#a-searching-for-articles-clientsearchfind">A. Searching for Articles (client.search.find)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#most-common-search-parameters">Most Common Search Parameters</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#combining-search-terms">Combining Search Terms</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#b-aggregating-results-clientsearchfacet">B. Aggregating Results (client.search.facet)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#key-facet-parameters">Key Facet Parameters</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-working-with-other-resources">3. Working with Other Resources</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#a-entities-cliententities">A. Entities (client.entities)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#key-entity-parameters">Key Entity Parameters</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#b-media-sources-clientmedia_sources">B. Media Sources (client.media_sources)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#key-media-source-parameters">Key Media Source Parameters</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#c-images-clientimages">C. Images (client.images)</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#key-image-parameters">Key Image Parameters</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#d-topics-clienttopics">D. Topics (client.topics)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#e-collections-clientcollections">E. Collections (client.collections)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#f-text-reuse-clienttext_reuse">F. Text Reuse (client.text_reuse)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#g-data-providers-clientdata_providers">G. Data Providers (client.data_providers)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-understanding-the-result-object-datacontainer">4. Understanding the Result Object (DataContainer)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#rich-preview-in-jupyter">Rich Preview in Jupyter</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#accessing-the-data">Accessing the Data</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#1-as-a-pandas-dataframe-df">1. As a Pandas DataFrame (.df)</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#2-pagination-metadata">2. Pagination Metadata</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#3-raw-response-raw">3. Raw Response (.raw)</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-practical-code-snippets">5. Practical Code Snippets</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#a-downloading-all-pages-of-results-pagination">A. Downloading All Pages of Results (Pagination)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#b-getting-the-full-text-of-an-article">B. Getting the Full Text of an Article</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#c-extracting-named-entities-ner">C. Extracting Named Entities (NER)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#d-exporting-your-data">D. Exporting Your Data</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#need-more-details">Need More Details?</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../result/">Result Object</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../resources/">Resources</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../preparing_queries/">Preparing Queries</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Impresso</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Jupyter Notebook Guide</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="jupyter-notebook-quick-start-guide">Jupyter Notebook Quick Start Guide</h1>
+<p>Welcome to the Impresso Python library! This guide is designed to help you get up and running quickly with Impresso in Jupyter Notebooks. It explains the most important tools for searching, accessing, and analyzing newspaper data.</p>
+<hr />
+<h2 id="1-connecting-to-impresso">1. Connecting to Impresso</h2>
+<p>Before you can search the database, you need to connect to the Impresso API.</p>
+<pre><code class="language-python">from impresso import connect
+
+# Create a session client
+client = connect()
+</code></pre>
+<h3 id="how-the-token-works">How the Token Works</h3>
+<ol>
+<li><strong>First-time Login:</strong> When you run <code>connect()</code> for the first time, a link will appear in your notebook. Click it to log in with your Impresso credentials.</li>
+<li><strong>Copy the Token:</strong> Copy the secret key (token) shown on that page.</li>
+<li><strong>Paste in Jupyter:</strong> Paste it into the input box that appears in Jupyter and press <strong>Enter</strong>.</li>
+<li><strong>Auto-Save:</strong> The library saves this token to a configuration file (<code>~/.impresso_py.yml</code>) on your computer. Next time you run your notebook, you won't need to log in again!</li>
+</ol>
+<hr />
+<h2 id="2-searching-and-faceting-the-clientsearch-resource">2. Searching and Faceting (The <code>client.search</code> Resource)</h2>
+<p>The <code>client.search</code> resource allows you to query the Impresso database to find relevant newspaper articles and group results by metadata attributes.</p>
+<h3 id="a-searching-for-articles-clientsearchfind">A. Searching for Articles (<code>client.search.find</code>)</h3>
+<p>To find articles matching your keywords, use the <code>.find()</code> method:</p>
+<pre><code class="language-python"># Search for articles containing &quot;moon landing&quot;
+results = client.search.find(term=&quot;moon landing&quot;)
+</code></pre>
+<h4 id="most-common-search-parameters">Most Common Search Parameters</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><code>term</code></strong></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">The keywords you want to search for in the text.</td>
+<td style="text-align: left;"><code>term="revolution"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>date_range</code></strong></td>
+<td style="text-align: left;"><code>DateRange</code></td>
+<td style="text-align: left;">Filter articles by a specific timeframe.</td>
+<td style="text-align: left;"><code>date_range=DateRange("1914-07-28", "1918-11-11")</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>newspaper_id</code></strong></td>
+<td style="text-align: left;"><code>str</code> or <code>OR</code></td>
+<td style="text-align: left;">Limit results to specific newspapers.</td>
+<td style="text-align: left;"><code>newspaper_id="GDL"</code> or <code>newspaper_id=OR("GDL", "EXP")</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>language</code></strong></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Filter by language (2-letter ISO code: <code>en</code>, <code>fr</code>, <code>de</code>).</td>
+<td style="text-align: left;"><code>language="fr"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>limit</code></strong></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;">How many results to return on the current page (max 100).</td>
+<td style="text-align: left;"><code>limit=50</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>with_text_contents</code></strong></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;">If <code>True</code>, only returns articles with readable text.</td>
+<td style="text-align: left;"><code>with_text_contents=True</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>[!NOTE]
+The table above lists only the most common search filters. For a complete list of parameters—including search by title (<code>title</code>), front page status (<code>front_page</code>), entity ID (<code>entity_id</code>), entity mention (<code>mention</code>), topic ID (<code>topic_id</code>), collection ID (<code>collection_id</code>), country code (<code>country</code>), partner ID (<code>partner_id</code>), issue ID (<code>issue_id</code>), text reuse cluster ID (<code>text_reuse_cluster_id</code>), semantic embeddings (<code>embedding</code>), copyright status (<code>copyright</code>), and whether to include embeddings (<code>include_embeddings</code>)—please see the detailed <a href="../resources/#search">Search Resource Reference in Resources</a>.</p>
+</blockquote>
+<h4 id="combining-search-terms">Combining Search Terms</h4>
+<p>You can build complex search queries using <code>AND</code> and <code>OR</code> helper objects:</p>
+<pre><code class="language-python">from impresso import AND, OR, DateRange
+
+results = client.search.find(
+    term=AND(&quot;Titanic&quot;, &quot;iceberg&quot;),
+    newspaper_id=OR(&quot;GDL&quot;, &quot;EXP&quot;),
+    date_range=DateRange(&quot;1912-04-01&quot;, &quot;1912-05-01&quot;),
+    language=&quot;fr&quot;
+)
+</code></pre>
+<hr />
+<h3 id="b-aggregating-results-clientsearchfacet">B. Aggregating Results (<code>client.search.facet</code>)</h3>
+<p>Faceting lets you count and group search results by a specific attribute—for example, finding how many matching articles appeared in each newspaper, or how many were written in French vs. German.</p>
+<pre><code class="language-python"># Count articles mentioning &quot;war&quot; grouped by newspaper
+newspaper_facets = client.search.facet(facet=&quot;newspaper&quot;, term=&quot;war&quot;)
+</code></pre>
+<h4 id="key-facet-parameters">Key Facet Parameters</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><code>facet</code></strong></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">The attribute to group by (<code>newspaper</code>, <code>language</code>, <code>year</code>, <code>decade</code>).</td>
+<td style="text-align: left;"><code>facet="newspaper"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>term</code></strong></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Filter articles matching these terms before grouping.</td>
+<td style="text-align: left;"><code>term="aviation"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>order_by</code></strong></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Sort order for the groups (<code>value</code> or <code>count</code>).</td>
+<td style="text-align: left;"><code>order_by="count"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>limit</code></strong></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;">Maximum number of groups to return.</td>
+<td style="text-align: left;"><code>limit=10</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>[!NOTE]
+<code>client.search.facet</code> accepts the exact same search filters as <code>client.search.find</code> (like <code>date_range</code>, <code>language</code>, <code>newspaper_id</code>, etc.). For details on all filtering parameters, see <a href="../resources/#search">Search Resource Reference in Resources</a>. For all facet ordering options, check <a href="../resources/#search">SearchOrderBy in Resources</a>.</p>
+</blockquote>
+<p>When run in a Jupyter Notebook, a facet result automatically renders as a <strong>bar chart</strong> showing the distribution.</p>
+<hr />
+<h2 id="3-working-with-other-resources">3. Working with Other Resources</h2>
+<p>Besides general search, the Impresso library provides dedicated resources for accessing structured entities, media metadata, images, topic models, and collections.</p>
+<h3 id="a-entities-cliententities">A. Entities (<code>client.entities</code>)</h3>
+<p>Find named entities (people, locations, organizations) in the Impresso database or link them to Wikidata:</p>
+<pre><code class="language-python"># Find entities matching &quot;Douglas Adams&quot;
+entities = client.entities.find(term=&quot;Douglas Adams&quot;)
+
+# Filter by location and resolve Wikidata details
+locations = client.entities.find(term=&quot;Paris&quot;, entity_type=&quot;location&quot;, resolve=True)
+</code></pre>
+<h4 id="key-entity-parameters">Key Entity Parameters</h4>
+<ul>
+<li><code>term</code> (<code>str</code>): The name of the entity.</li>
+<li><code>entity_type</code> (<code>str</code>): Type filter (e.g. <code>'person'</code> or <code>'location'</code>).</li>
+<li><code>resolve</code> (<code>bool</code>): If <code>True</code>, retrieves detailed attributes from Wikidata.</li>
+</ul>
+<blockquote>
+<p>[!NOTE]
+For other parameters (such as <code>wikidata_id</code>, sorting parameters, and specific entity schemas), see the <a href="../resources/#entities">Entities API Reference in Resources</a>.</p>
+</blockquote>
+<hr />
+<h3 id="b-media-sources-clientmedia_sources">B. Media Sources (<code>client.media_sources</code>)</h3>
+<p>Retrieve information about newspapers, magazines, and other periodicals available in the corpus:</p>
+<pre><code class="language-python"># Find media sources matching &quot;wort&quot; sorted by last issue date
+publications = client.media_sources.find(term=&quot;wort&quot;, order_by=&quot;lastIssue&quot;)
+</code></pre>
+<h4 id="key-media-source-parameters">Key Media Source Parameters</h4>
+<ul>
+<li><code>term</code> (<code>str</code>): Keyword matching the publication name.</li>
+<li><code>order_by</code> (<code>str</code>): Sort criteria (e.g., <code>'name'</code>, <code>'firstIssue'</code>, <code>'lastIssue'</code>).</li>
+</ul>
+<blockquote>
+<p>[!NOTE]
+For additional media source parameters (like filtering by media type or complete ordering values), see the <a href="../resources/#media-sources">Media Sources API Reference in Resources</a>.</p>
+</blockquote>
+<hr />
+<h3 id="c-images-clientimages">C. Images (<code>client.images</code>)</h3>
+<p>Search for historical illustrations and images in newspapers, or perform visual similarity searches:</p>
+<pre><code class="language-python"># Search for images matching keyword &quot;rocket&quot;
+images = client.images.find(term=&quot;rocket&quot;, content_type=&quot;object&quot;)
+</code></pre>
+<h4 id="key-image-parameters">Key Image Parameters</h4>
+<ul>
+<li><code>term</code> (<code>str</code>): Metadata keyword matching the image.</li>
+<li><code>content_type</code> (<code>str</code>): Classification of the image contents (e.g., <code>'object'</code>, <code>'portrait'</code>).</li>
+<li><code>embedding</code> (<code>list</code>): Embedding array for similarity-based lookups.</li>
+</ul>
+<blockquote>
+<p>[!NOTE]
+For image search filters (including image-level metadata, limits, offsets, and embedding details), see the <a href="../resources/#images">Images API Reference in Resources</a>.</p>
+</blockquote>
+<hr />
+<h3 id="d-topics-clienttopics">D. Topics (<code>client.topics</code>)</h3>
+<p>Browse topics and thematic clusters generated through topic modeling algorithms on the newspaper texts:</p>
+<pre><code class="language-python"># Search for topics related to &quot;economy&quot;
+topics = client.topics.find(term=&quot;economy&quot;)
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+For the complete list of topic attributes, ordering fields, and detail configurations, see the <a href="../resources/#topics">Topics API Reference in Resources</a>.</p>
+</blockquote>
+<hr />
+<h3 id="e-collections-clientcollections">E. Collections (<code>client.collections</code>)</h3>
+<p>Explore user-created and public collections of articles, or add/remove items to/from them:</p>
+<pre><code class="language-python"># Search for collections mentioning &quot;war&quot;
+collections = client.collections.find(term=&quot;war&quot;)
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+For full collection management methods (including how to add and remove items with <code>client.collections.add_items</code> and <code>client.collections.remove_items</code>), see the <a href="../resources/#collections">Collections API Reference in Resources</a>.</p>
+</blockquote>
+<hr />
+<h3 id="f-text-reuse-clienttext_reuse">F. Text Reuse (<code>client.text_reuse</code>)</h3>
+<p>Explore instances where blocks of text have been repeated or syndicated across different newspapers:</p>
+<pre><code class="language-python"># Search for clusters of text reuse with 10 to 20 passages
+clusters = client.text_reuse.clusters.find(cluster_size=(10, 20))
+
+# Search for individual repeated passages mentioning &quot;revolution&quot; in France
+passages = client.text_reuse.passages.find(term=&quot;revolution&quot;, country=&quot;FR&quot;)
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+For details on text reuse faceting and other parameters (such as <code>date_range</code>, <code>newspaper_id</code>, or <code>limit</code>), see the <a href="../resources/#text-reuse">Text Reuse API Reference in Resources</a>.</p>
+</blockquote>
+<hr />
+<h3 id="g-data-providers-clientdata_providers">G. Data Providers (<code>client.data_providers</code>)</h3>
+<p>Information about the libraries and archives that partner with Impresso to provide content:</p>
+<pre><code class="language-python"># Search for partner libraries
+providers = client.data_providers.find(term=&quot;library&quot;)
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+For a full breakdown of provider schemas, see the <a href="../resources/#data-providers">Data Providers API Reference in Resources</a>.</p>
+</blockquote>
+<hr />
+<h2 id="4-understanding-the-result-object-datacontainer">4. Understanding the Result Object (<code>DataContainer</code>)</h2>
+<p>When you fetch data from any resource, the library returns a <strong><code>DataContainer</code></strong> (specifically a subclass like <code>SearchDataContainer</code> or <code>FindEntitiesContainer</code>). This object is a wrapper around your data and provides powerful tools to interact with it.</p>
+<h3 id="rich-preview-in-jupyter">Rich Preview in Jupyter</h3>
+<p>If you type the variable name of your result in a cell and run it, Jupyter will render a beautiful visual summary:</p>
+<pre><code class="language-python"># Just type the variable to see a rich HTML preview!
+results
+</code></pre>
+<p>The preview shows:
+- <strong>Total results</strong> found in the entire database.
+- <strong>Current page status</strong> (e.g. showing items 0 to 50).
+- <strong>A link to the Web App</strong> ("<em>See this result in the Impresso App</em>"), which opens the exact same search in your browser.
+- <strong>A Data Preview table</strong> showing the first few rows of the dataset.</p>
+<hr />
+<h3 id="accessing-the-data">Accessing the Data</h3>
+<p>The result object offers multiple ways to access the data, but the most important one for analysis is <strong><code>.df</code></strong>:</p>
+<h4 id="1-as-a-pandas-dataframe-df">1. As a Pandas DataFrame (<code>.df</code>)</h4>
+<p>The <code>.df</code> property converts the current page of results into a standard <strong>Pandas DataFrame</strong>. This is perfect for filtering, grouping, and exporting:</p>
+<pre><code class="language-python"># Get the DataFrame
+df = results.df
+
+# Inspect the columns
+print(df.columns)
+
+# See the first few rows
+df.head()
+</code></pre>
+<h4 id="2-pagination-metadata">2. Pagination Metadata</h4>
+<p>You can inspect the pagination status using these properties:
+* <code>results.total</code>: The total number of matching items in the entire database.
+* <code>results.size</code>: The number of items in the current page.
+* <code>results.limit</code>: The maximum page size set for the request.
+* <code>results.offset</code>: The starting position of the current page.</p>
+<h4 id="3-raw-response-raw">3. Raw Response (<code>.raw</code>)</h4>
+<p>Returns the raw API response as a Python dictionary. Helpful if you need to inspect the direct JSON structure.</p>
+<pre><code class="language-python">raw_dict = results.raw
+</code></pre>
+<hr />
+<h2 id="5-practical-code-snippets">5. Practical Code Snippets</h2>
+<p>Here are some ready-to-use recipes for common tasks in Jupyter.</p>
+<h3 id="a-downloading-all-pages-of-results-pagination">A. Downloading All Pages of Results (Pagination)</h3>
+<p>By default, the library only fetches the first page of results (usually 50 or 100 items). To download all pages and combine them into a single Pandas DataFrame, use the <code>.pages()</code> method:</p>
+<pre><code class="language-python">import pandas as pd
+
+# 1. Fetch the first page
+results = client.search.find(term=&quot;moon landing&quot;, limit=100)
+
+print(f&quot;Downloading {results.total} results...&quot;)
+
+# 2. Iterate through all pages and collect their DataFrames
+all_pages_dfs = []
+for page in results.pages():
+    all_pages_dfs.append(page.df)
+
+# 3. Combine everything into one single DataFrame
+full_df = pd.concat(all_pages_dfs)
+
+print(f&quot;Successfully loaded {len(full_df)} articles into the DataFrame!&quot;)
+</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Check the Total Before Downloading!</p>
+<p>Every Impresso user has a <strong>monthly quota of 200,000 content items</strong>. If a search matches 150,000 items and you download all pages, you will consume most of your monthly quota!</p>
+<p>Always check <code>results.total</code> before running a pagination loop:
+<code>python
+results = client.search.find(term="common word")
+if results.total &gt; 5000:
+    print(f"Warning: Too many results ({results.total}). Please refine your search filters.")</code></p>
+</div>
+<hr />
+<h3 id="b-getting-the-full-text-of-an-article">B. Getting the Full Text of an Article</h3>
+<p>To keep the search fast, <code>client.search.find()</code> does <strong>not</strong> download the full text of the articles. </p>
+<p>If you want to read or analyze the full text of a specific article, use <code>client.content_items.get()</code> with the article's unique ID:</p>
+<pre><code class="language-python"># 1. Get the article using its ID
+article = client.content_items.get(&quot;NZG-1877-10-20-a-i0024&quot;)
+
+# 2. Access the full text content
+full_text = article.raw['text']['content']
+print(full_text[:500]) # Print first 500 characters
+</code></pre>
+<hr />
+<h3 id="c-extracting-named-entities-ner">C. Extracting Named Entities (NER)</h3>
+<p>Named Entity Recognition (NER) finds people, locations, and organizations in a text. You can run NER on any text or article content:</p>
+<pre><code class="language-python">text = &quot;Albert Einstein was born in Ulm, Germany, and later lived in Switzerland.&quot;
+
+# Extract and link entities to Wikidata
+ner_results = client.tools.ner_nel(text)
+
+# View results as a table
+ner_results.df
+</code></pre>
+<p>This returns a table showing:
+* <strong>The entity name</strong> (e.g., "Albert Einstein")
+* <strong>Its type</strong> (e.g., Person, Location)
+* <strong>The Wikidata URL/ID</strong> (e.g., <code>Q937</code>), which you can use to fetch more info online.</p>
+<hr />
+<h3 id="d-exporting-your-data">D. Exporting Your Data</h3>
+<p>Once you have your results in a Pandas DataFrame, you can easily save them to your computer:</p>
+<pre><code class="language-python"># Save to a CSV file (can be opened in Excel)
+full_df.to_csv(&quot;my_impresso_results.csv&quot;)
+
+# Save as Excel file
+full_df.to_excel(&quot;my_impresso_results.xlsx&quot;)
+</code></pre>
+<hr />
+<h2 id="need-more-details">Need More Details?</h2>
+<ul>
+<li>Learn how to write complex boolean searches in <a href="../preparing_queries/">Preparing Queries</a>.</li>
+<li>Read a complete reference of the result structure in <a href="../result/">Result Object</a>.</li>
+<li>Explore other resources like images, topics, and collections in <a href="../resources/">Resources</a>.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../result/" class="btn btn-neutral float-right" title="Result Object">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../result/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

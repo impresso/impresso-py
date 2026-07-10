@@ -44,26 +44,76 @@
                 <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../jupyter_guide/">Jupyter Notebook Guide</a>
+                </li>
+              </ul>
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Result Object</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#impresso.data_container.DataContainer">DataContainer</a>
+    <li class="toctree-l2"><a class="reference internal" href="#understanding-datacontainer">Understanding DataContainer</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#accessing-result-data">Accessing Result Data</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#impresso.data_container.DataContainer.df">df</a>
+    <li class="toctree-l3"><a class="reference internal" href="#as-a-pandas-dataframe">As a Pandas DataFrame</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#impresso.data_container.DataContainer.limit">limit</a>
+    <li class="toctree-l3"><a class="reference internal" href="#as-raw-dictionary">As Raw Dictionary</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#impresso.data_container.DataContainer.offset">offset</a>
+    <li class="toctree-l3"><a class="reference internal" href="#as-pydantic-model">As Pydantic Model</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#impresso.data_container.DataContainer.pydantic">pydantic</a>
+        </ul>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#impresso.data_container.DataContainer.raw">raw</a>
+    <li class="toctree-l2"><a class="reference internal" href="#pagination-information">Pagination Information</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#impresso.data_container.DataContainer.size">size</a>
+    <li class="toctree-l2"><a class="reference internal" href="#iterating-through-pages">Iterating Through Pages</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#impresso.data_container.DataContainer.total">total</a>
+    <li class="toctree-l2"><a class="reference internal" href="#notebook-visualization">Notebook Visualization</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#impresso.data_container.DataContainer.url">url</a>
+    <li class="toctree-l2"><a class="reference internal" href="#specialized-containers">Specialized Containers</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#search-results-searchdatacontainer">Search Results (SearchDataContainer)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#facet-results-facetdatacontainer">Facet Results (FacetDataContainer)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#image-results-findimagescontainer-getimagecontainer">Image Results (FindImagesContainer, GetImageContainer)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ner-results-nercontainer">NER Results (NerContainer)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#collectionentitytopic-containers">Collection/Entity/Topic Containers</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#web-app-integration">Web App Integration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#common-patterns">Common Patterns</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#collecting-all-results">Collecting All Results</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#conditional-processing">Conditional Processing</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exporting-results">Exporting Results</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#impresso.data_container.DataContainer">DataContainer</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#impresso.data_container.DataContainer.df">df</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#impresso.data_container.DataContainer.limit">limit</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#impresso.data_container.DataContainer.offset">offset</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#impresso.data_container.DataContainer.pydantic">pydantic</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#impresso.data_container.DataContainer.raw">raw</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#impresso.data_container.DataContainer.size">size</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#impresso.data_container.DataContainer.total">total</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#impresso.data_container.DataContainer.url">url</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#impresso.data_container.DataContainer.pages">pages</a>
+    </li>
+        </ul>
     </li>
         </ul>
     </li>
@@ -103,18 +153,171 @@
               
                 <h1 id="result-object">Result object</h1>
 <p>When you execute a query, a <code>DataContainer</code> object is returned. This object encapsulates the query results along with metadata about the query. Additionally, it provides a suite of utility methods for accessing the results in various ways.</p>
-<p>In a Python notebook environment, the <code>DataContainer</code> object can render a preview of its data, facilitating quick inspection of the query results.</p>
+<h2 id="understanding-datacontainer">Understanding DataContainer</h2>
+<p>All API methods that retrieve data (<code>find()</code>, <code>get()</code>, <code>facet()</code>) return specialized container objects that extend the base <code>DataContainer</code> class. These containers provide multiple ways to access and work with your results.</p>
+<h2 id="accessing-result-data">Accessing Result Data</h2>
+<p>The <code>DataContainer</code> provides several properties for accessing the same data in different formats:</p>
+<h3 id="as-a-pandas-dataframe">As a Pandas DataFrame</h3>
+<p>The <code>df</code> property returns results as a pandas DataFrame, which is ideal for data analysis, filtering, and manipulation:</p>
+<pre><code class="language-python">results = impresso.search.find(term=&quot;revolution&quot;, limit=10)
+df = results.df
+
+# Use standard pandas operations
+print(df.head())
+print(df.columns)
+filtered = df[df['language'] == 'fr']
+</code></pre>
+<p>For image results, the DataFrame includes special formatting that renders thumbnail images in Jupyter notebooks.</p>
+<h3 id="as-raw-dictionary">As Raw Dictionary</h3>
+<p>The <code>raw</code> property returns the complete API response as a Python dictionary:</p>
+<pre><code class="language-python">results = impresso.search.find(term=&quot;revolution&quot;, limit=10)
+raw_data = results.raw
+
+# Access the raw response structure
+items = raw_data['data']
+pagination = raw_data['pagination']
+</code></pre>
+<p>This is useful when you need the complete, unprocessed API response or want to serialize the results.</p>
+<h3 id="as-pydantic-model">As Pydantic Model</h3>
+<p>The <code>pydantic</code> property returns the data as a validated Pydantic model:</p>
+<pre><code class="language-python">results = impresso.search.find(term=&quot;revolution&quot;, limit=10)
+model = results.pydantic
+
+# Access data with IDE autocompletion and type checking
+for item in model.data:
+    print(item.title)
+</code></pre>
+<p>Pydantic models provide type validation and can be useful for structured data processing.</p>
+<h2 id="pagination-information">Pagination Information</h2>
+<p>DataContainer objects include metadata about pagination:</p>
+<pre><code class="language-python">results = impresso.search.find(term=&quot;revolution&quot;, limit=20, offset=40)
+
+print(results.total)   # Total number of results across all pages
+print(results.size)    # Number of items in current page
+print(results.limit)   # Maximum items per page
+print(results.offset)  # Starting index of current page
+</code></pre>
+<h2 id="iterating-through-pages">Iterating Through Pages</h2>
+<p>Use the <code>pages()</code> method to iterate through all pages of results automatically:</p>
+<pre><code class="language-python"># Get first page with 50 items per page
+results = impresso.search.find(term=&quot;revolution&quot;, limit=50)
+
+# Iterate through all pages
+for page in results.pages():
+    print(f&quot;Processing page at offset {page.offset}&quot;)
+    print(f&quot;Contains {page.size} items&quot;)
+
+    # Process each page's data
+    for item in page.df.itertuples():
+        print(item.title)
+</code></pre>
+<p>This is efficient for processing large result sets without loading everything into memory at once.</p>
+<h2 id="notebook-visualization">Notebook Visualization</h2>
+<p>In Jupyter notebooks or similar environments, DataContainer objects automatically render a rich HTML preview when displayed:</p>
+<pre><code class="language-python">results = impresso.search.find(term=&quot;revolution&quot;, limit=10)
+
+# Simply display the container - no need to access .df
+results  # Renders as formatted HTML with preview
+</code></pre>
+<p>The preview includes:</p>
+<ul>
+<li><strong>Result summary</strong>: Type of result, number of items, and total count</li>
+<li><strong>Link to Impresso App</strong>: Direct link to view results in the web interface</li>
+<li><strong>Data preview</strong>: First few rows of the DataFrame</li>
+<li><strong>Visual charts</strong>: For facet results, displays a bar chart of the distribution</li>
+</ul>
+<h2 id="specialized-containers">Specialized Containers</h2>
+<p>Different API methods return specialized container types with additional features:</p>
+<h3 id="search-results-searchdatacontainer">Search Results (<code>SearchDataContainer</code>)</h3>
+<p>Returned by <code>search.find()</code>, contains content items with full-text search results.</p>
+<h3 id="facet-results-facetdatacontainer">Facet Results (<code>FacetDataContainer</code>)</h3>
+<p>Returned by <code>search.facet()</code> and text reuse facet methods. Includes automatic chart visualization showing the distribution of facet values.</p>
+<pre><code class="language-python">facets = impresso.search.facet(facet='newspaper', term='war')
+
+# The preview automatically shows a bar chart
+facets  # Displays chart in notebook
+
+# Access the data
+print(facets.df['count'])  # Counts for each facet value
+</code></pre>
+<h3 id="image-results-findimagescontainer-getimagecontainer">Image Results (<code>FindImagesContainer</code>, <code>GetImageContainer</code>)</h3>
+<p>Returned by <code>images.find()</code> and <code>images.get()</code>. The DataFrame includes special formatting to display image thumbnails in notebooks:</p>
+<pre><code class="language-python">images = impresso.images.find(term='portrait', limit=10)
+
+# In Jupyter, the DataFrame shows thumbnail images
+images.df  # Displays images inline
+</code></pre>
+<h3 id="ner-results-nercontainer">NER Results (<code>NerContainer</code>)</h3>
+<p>Returned by <code>tools.ner()</code>, <code>tools.ner_nel()</code>, and <code>tools.nel()</code>. Contains named entities extracted from text:</p>
+<pre><code class="language-python">entities = impresso.tools.ner(&quot;Napoleon visited Paris in 1815.&quot;)
+
+# Access entities as DataFrame
+print(entities.df)  # Shows entity text, type, and position
+</code></pre>
+<h3 id="collectionentitytopic-containers">Collection/Entity/Topic Containers</h3>
+<p>Single-item containers returned by <code>get()</code> methods (<code>GetCollectionContainer</code>, <code>GetEntityContainer</code>, <code>GetTopicContainer</code>, etc.) typically contain one item and provide the same access patterns:</p>
+<pre><code class="language-python">entity = impresso.entities.get(&quot;entity-id&quot;)
+
+print(entity.df)      # Single-row DataFrame
+print(entity.raw)     # Dictionary with entity details
+print(entity.pydantic) # Pydantic model of the entity
+</code></pre>
+<h2 id="web-app-integration">Web App Integration</h2>
+<p>Most containers include a <code>url</code> property that links to the corresponding view in the Impresso web application:</p>
+<pre><code class="language-python">results = impresso.search.find(term=&quot;revolution&quot;)
+
+# Open this URL in a browser to see the results in the Impresso App
+print(results.url)
+</code></pre>
+<p>This is automatically displayed in the notebook preview, allowing you to seamlessly transition from programmatic exploration to the visual interface.</p>
+<h2 id="common-patterns">Common Patterns</h2>
+<h3 id="collecting-all-results">Collecting All Results</h3>
+<pre><code class="language-python">results = impresso.search.find(term=&quot;revolution&quot;, limit=100)
+
+# Collect all pages into a single DataFrame
+all_items = []
+for page in results.pages():
+    all_items.append(page.df)
+
+combined_df = pd.concat(all_items)
+print(f&quot;Total items collected: {len(combined_df)}&quot;)
+</code></pre>
+<h3 id="conditional-processing">Conditional Processing</h3>
+<pre><code class="language-python">results = impresso.search.find(term=&quot;revolution&quot;, limit=50)
+
+for page in results.pages():
+    # Stop if we've found what we're looking for
+    if some_condition:
+        break
+
+    # Process page
+    process_items(page.df)
+</code></pre>
+<h3 id="exporting-results">Exporting Results</h3>
+<pre><code class="language-python">results = impresso.search.find(term=&quot;revolution&quot;, limit=100)
+
+# Export to CSV
+results.df.to_csv('results.csv')
+
+# Export to JSON
+import json
+with open('results.json', 'w') as f:
+    json.dump(results.raw, f, indent=2)
+
+# Export as Parquet (efficient for large datasets)
+results.df.to_parquet('results.parquet')
+</code></pre>
 
 
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="impresso.data_container.DataContainer" class="doc doc-heading">
+<h3 id="impresso.data_container.DataContainer" class="doc doc-heading">
             <code>impresso.data_container.DataContainer</code>
 
 
-</h2>
+</h3>
 
 
     <div class="doc doc-contents first">
@@ -123,8 +326,12 @@
 
 
         <p>Generic container for responses from the Impresso API
-returned by resource methods (<code>get</code>, <code>find</code>).
-Generally represents a single page of the result.</p>
+returned by resource methods (<code>get</code>, <code>find</code>).</p>
+<p>Generally represents a single page of the result. The results can be
+paginated through by adjusting the <code>offset</code> and <code>limit</code> parameters
+in the corresponding resource method call (e.g., <code>client.newspapers.find</code>).
+The <code>total</code>, <code>limit</code>, <code>offset</code>, and <code>size</code> properties provide information
+about the current page and the overall result set.</p>
 
 
 
@@ -146,19 +353,21 @@ Generally represents a single page of the result.</p>
 
 
 
-<h3 id="impresso.data_container.DataContainer.df" class="doc doc-heading">
+<h4 id="impresso.data_container.DataContainer.df" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">df</span><span class="p">:</span> <span class="n">DataFrame</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
 
-</h3>
+</h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>Returns the response data as a pandas dataframe.</p>
+        <p>The response data for the current page as a pandas dataframe.</p>
+<p>Note that this DataFrame only contains the items from the current
+page of results, not the entire result set across all pages.</p>
     </div>
 
 </div>
@@ -167,19 +376,19 @@ Generally represents a single page of the result.</p>
 
 
 
-<h3 id="impresso.data_container.DataContainer.limit" class="doc doc-heading">
+<h4 id="impresso.data_container.DataContainer.limit" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
 
-</h3>
+</h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>Current page size.</p>
+        <p>Maximum number of items requested for the current page.</p>
     </div>
 
 </div>
@@ -188,19 +397,19 @@ Generally represents a single page of the result.</p>
 
 
 
-<h3 id="impresso.data_container.DataContainer.offset" class="doc doc-heading">
+<h4 id="impresso.data_container.DataContainer.offset" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">offset</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
 
-</h3>
+</h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>Current page offset.</p>
+        <p>The starting index (0-based) of the items on the current page.</p>
     </div>
 
 </div>
@@ -209,19 +418,19 @@ Generally represents a single page of the result.</p>
 
 
 
-<h3 id="impresso.data_container.DataContainer.pydantic" class="doc doc-heading">
+<h4 id="impresso.data_container.DataContainer.pydantic" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">pydantic</span><span class="p">:</span> <span class="n">T</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
 
-</h3>
+</h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>Returns the response data as a pydantic model.</p>
+        <p>The response data as a pydantic model.</p>
     </div>
 
 </div>
@@ -230,19 +439,19 @@ Generally represents a single page of the result.</p>
 
 
 
-<h3 id="impresso.data_container.DataContainer.raw" class="doc doc-heading">
+<h4 id="impresso.data_container.DataContainer.raw" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
 
-</h3>
+</h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>Returns the response data as a python dictionary.</p>
+        <p>The response data as a python dictionary.</p>
     </div>
 
 </div>
@@ -251,19 +460,19 @@ Generally represents a single page of the result.</p>
 
 
 
-<h3 id="impresso.data_container.DataContainer.size" class="doc doc-heading">
+<h4 id="impresso.data_container.DataContainer.size" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">size</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
 
-</h3>
+</h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>Current page size.</p>
+        <p>Number of items actually present on the current page.</p>
     </div>
 
 </div>
@@ -272,19 +481,19 @@ Generally represents a single page of the result.</p>
 
 
 
-<h3 id="impresso.data_container.DataContainer.total" class="doc doc-heading">
+<h4 id="impresso.data_container.DataContainer.total" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">total</span><span class="p">:</span> <span class="nb">int</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
 
-</h3>
+</h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>Total number of results.</p>
+        <p>Total number of results available across all pages.</p>
     </div>
 
 </div>
@@ -293,25 +502,92 @@ Generally represents a single page of the result.</p>
 
 
 
-<h3 id="impresso.data_container.DataContainer.url" class="doc doc-heading">
+<h4 id="impresso.data_container.DataContainer.url" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span></code>
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
 
-</h3>
+</h4>
 
 
     <div class="doc doc-contents ">
 
-        <p>URL of an Impresso web application page
-representing the result set from this container.</p>
+        <p>URL of an Impresso web application page representing the result set.</p>
     </div>
 
 </div>
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="impresso.data_container.DataContainer.pages" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">pages</span><span class="p">()</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Yields the current page and all subsequent pages of results.</p>
+<p>This method first yields the current DataContainer instance (self),
+then attempts to fetch and yield subsequent pages by making new API
+calls with adjusted offsets.</p>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Returns:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code><span title="typing.Iterator">Iterator</span>[<a class="autorefs autorefs-internal" title="impresso.data_container.DataContainer" href="../resources/#impresso.data_container.DataContainer">DataContainer</a>[<span title="impresso.data_container.IT">IT</span>, <span title="impresso.data_container.T">T</span>]]</code>
+              –
+              <div class="doc-md-description">
+                <p>Iterator["DataContainer[IT, T]"]: An iterator that yields</p>
+              </div>
+            </li>
+            <li>
+                  <code><span title="typing.Iterator">Iterator</span>[<a class="autorefs autorefs-internal" title="impresso.data_container.DataContainer" href="../resources/#impresso.data_container.DataContainer">DataContainer</a>[<span title="impresso.data_container.IT">IT</span>, <span title="impresso.data_container.T">T</span>]]</code>
+              –
+              <div class="doc-md-description">
+                <p>DataContainer instances, starting with the current one,</p>
+              </div>
+            </li>
+            <li>
+                  <code><span title="typing.Iterator">Iterator</span>[<a class="autorefs autorefs-internal" title="impresso.data_container.DataContainer" href="../resources/#impresso.data_container.DataContainer">DataContainer</a>[<span title="impresso.data_container.IT">IT</span>, <span title="impresso.data_container.T">T</span>]]</code>
+              –
+              <div class="doc-md-description">
+                <p>followed by subsequent pages.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>        <p>Example:</p>
+<pre><code># Get the first page with 10 items per page
+first_page = client.newspapers.find(limit=10)
+
+# Iterate through all pages
+for page in first_page.pages():
+    # Process items from the current page
+    print(f"Page {page.offset // page.limit + 1}:")
+    print(page.df)
+    # The loop will continue with the next page, if any
+</code></pre>
+
+    </div>
+
+</div>
 
 
 
@@ -324,7 +600,7 @@ representing the result set from this container.</p>
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../jupyter_guide/" class="btn btn-neutral float-left" title="Jupyter Notebook Guide"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../resources/" class="btn btn-neutral float-right" title="Resources">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -348,7 +624,7 @@ representing the result set from this container.</p>
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../jupyter_guide/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../resources/" style="color: #fcfcfc">Next &raquo;</a></span>
