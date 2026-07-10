@@ -6,6 +6,9 @@
 
 Impresso is a library designed to facilitate interaction with the [Impresso](https://impresso-project.ch/app) dataset. It offers a comprehensive set of classes for API interaction and a variety of tools to streamline data manipulation and analysis.
 
+!!! tip "Using Jupyter Notebooks?"
+    Check out our friendly, step-by-step **[Jupyter Notebook Quick Start Guide](jupyter_guide.md)** to learn how to search, use Pandas DataFrames, extract entities, and avoid hitting your query quota.
+
 ## Installation and prerequisites
 
 The Impresso python library can be installed using `pip`:
