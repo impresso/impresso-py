@@ -43,6 +43,23 @@ poetry run flake8 impresso tests
 poetry run mypy impresso tests
 ```
 
+### Run Documentation
+
+If you want to write or update the documentation (the content published on Read the Docs), edit the Markdown files in the `docs/` folder and then run the commands below to check your changes locally.
+
+```shell
+poetry install --with docs
+poetry run mkdocs serve
+```
+
+Open the local URL shown in the terminal (usually `http://127.0.0.1:8000`) to preview the documentation and verify that pages render correctly.
+
+To run a build check (the same type of check used for publication), use:
+
+```shell
+poetry run mkdocs build
+```
+
 ### OpenAPI client generation
 
 The OpenAPI client is generated using the OpenAPI Generator. Pydantic models from the OpenAPI spec are generated too. The following command generates both the client code and the pydantic models. Make sure the Public API is running on `localhost`.:
