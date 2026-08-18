@@ -51,7 +51,6 @@ class FilterType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     TYPE_TEXT_REUSE_CLUSTER_LEXICAL_OVERLAP: _ClassVar[FilterType]
     TYPE_TEXT_REUSE_CLUSTER_DAY_DELTA: _ClassVar[FilterType]
     TYPE_TEXT_REUSE_CLUSTER: _ClassVar[FilterType]
-    TYPE_MENTION_FUNCTION: _ClassVar[FilterType]
     TYPE_NAG: _ClassVar[FilterType]
     TYPE_WIKIDATA_ID: _ClassVar[FilterType]
     TYPE_DATA_DOMAIN: _ClassVar[FilterType]
@@ -64,6 +63,11 @@ class FilterType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     TYPE_IMAGE_TECHNIQUE: _ClassVar[FilterType]
     TYPE_IMAGE_COMMUNICATION_GOAL: _ClassVar[FilterType]
     TYPE_IMAGE_CONTENT_TYPE: _ClassVar[FilterType]
+    TYPE_CONTENT_ITEM_ID: _ClassVar[FilterType]
+    TYPE_MEDIA_SOURCE: _ClassVar[FilterType]
+    TYPE_PERMISSION_EXPLORE: _ClassVar[FilterType]
+    TYPE_PERMISSION_GET_TRANSCRIPT: _ClassVar[FilterType]
+    TYPE_PERMISSION_GET_IMAGE: _ClassVar[FilterType]
 
 class FilterPrecision(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -113,7 +117,6 @@ TYPE_TEXT_REUSE_CLUSTER_SIZE: FilterType
 TYPE_TEXT_REUSE_CLUSTER_LEXICAL_OVERLAP: FilterType
 TYPE_TEXT_REUSE_CLUSTER_DAY_DELTA: FilterType
 TYPE_TEXT_REUSE_CLUSTER: FilterType
-TYPE_MENTION_FUNCTION: FilterType
 TYPE_NAG: FilterType
 TYPE_WIKIDATA_ID: FilterType
 TYPE_DATA_DOMAIN: FilterType
@@ -126,6 +129,11 @@ TYPE_IMAGE_VISUAL_CONTENT: FilterType
 TYPE_IMAGE_TECHNIQUE: FilterType
 TYPE_IMAGE_COMMUNICATION_GOAL: FilterType
 TYPE_IMAGE_CONTENT_TYPE: FilterType
+TYPE_CONTENT_ITEM_ID: FilterType
+TYPE_MEDIA_SOURCE: FilterType
+TYPE_PERMISSION_EXPLORE: FilterType
+TYPE_PERMISSION_GET_TRANSCRIPT: FilterType
+TYPE_PERMISSION_GET_IMAGE: FilterType
 PRECISION_UNSPECIFIED: FilterPrecision
 PRECISION_EXACT: FilterPrecision
 PRECISION_PARTIAL: FilterPrecision
@@ -134,30 +142,19 @@ PRECISION_SOFT: FilterPrecision
 GROUPVALUE_UNSPECIFIED: GroupValue
 GROUPVALUE_ARTICLES: GroupValue
 
-class DateRange(_message.Message):
-    __slots__ = ("to",)
-    FROM_FIELD_NUMBER: _ClassVar[int]
-    TO_FIELD_NUMBER: _ClassVar[int]
-    to: int
-    def __init__(self, to: _Optional[int] = ..., **kwargs) -> None: ...
-
 class Filter(_message.Message):
-    __slots__ = ("context", "op", "type", "precision", "q", "daterange", "uids")
+    __slots__ = ("context", "op", "type", "precision", "q")
     CONTEXT_FIELD_NUMBER: _ClassVar[int]
     OP_FIELD_NUMBER: _ClassVar[int]
     TYPE_FIELD_NUMBER: _ClassVar[int]
     PRECISION_FIELD_NUMBER: _ClassVar[int]
     Q_FIELD_NUMBER: _ClassVar[int]
-    DATERANGE_FIELD_NUMBER: _ClassVar[int]
-    UIDS_FIELD_NUMBER: _ClassVar[int]
     context: FilterContext
     op: FilterOperator
     type: FilterType
     precision: FilterPrecision
     q: _containers.RepeatedScalarFieldContainer[str]
-    daterange: DateRange
-    uids: _containers.RepeatedScalarFieldContainer[str]
-    def __init__(self, context: _Optional[_Union[FilterContext, str]] = ..., op: _Optional[_Union[FilterOperator, str]] = ..., type: _Optional[_Union[FilterType, str]] = ..., precision: _Optional[_Union[FilterPrecision, str]] = ..., q: _Optional[_Iterable[str]] = ..., daterange: _Optional[_Union[DateRange, _Mapping]] = ..., uids: _Optional[_Iterable[str]] = ...) -> None: ...
+    def __init__(self, context: _Optional[_Union[FilterContext, str]] = ..., op: _Optional[_Union[FilterOperator, str]] = ..., type: _Optional[_Union[FilterType, str]] = ..., precision: _Optional[_Union[FilterPrecision, str]] = ..., q: _Optional[_Iterable[str]] = ...) -> None: ...
 
 class SearchQuery(_message.Message):
     __slots__ = ("filters", "group_by")
@@ -166,63 +163,3 @@ class SearchQuery(_message.Message):
     filters: _containers.RepeatedCompositeFieldContainer[Filter]
     group_by: GroupValue
     def __init__(self, filters: _Optional[_Iterable[_Union[Filter, _Mapping]]] = ..., group_by: _Optional[_Union[GroupValue, str]] = ...) -> None: ...
-
-class CollectionRecommenderParameter(_message.Message):
-    __slots__ = ("key", "string_value", "number_value", "bool_value")
-    class RecommenderParameterId(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
-        __slots__ = ()
-        ID_UNSPECIFIED: _ClassVar[CollectionRecommenderParameter.RecommenderParameterId]
-        ID_COUNT_TYPE: _ClassVar[CollectionRecommenderParameter.RecommenderParameterId]
-        ID_MIN_OCCURRENCES: _ClassVar[CollectionRecommenderParameter.RecommenderParameterId]
-        ID_NUMBER_TO_KEEP: _ClassVar[CollectionRecommenderParameter.RecommenderParameterId]
-        ID_REMOVE_FULLY_MENTIONED: _ClassVar[CollectionRecommenderParameter.RecommenderParameterId]
-        ID_NORMALIZE_MAX_SCORE: _ClassVar[CollectionRecommenderParameter.RecommenderParameterId]
-        ID_MARGIN: _ClassVar[CollectionRecommenderParameter.RecommenderParameterId]
-        ID_SCALING_FACTOR: _ClassVar[CollectionRecommenderParameter.RecommenderParameterId]
-    ID_UNSPECIFIED: CollectionRecommenderParameter.RecommenderParameterId
-    ID_COUNT_TYPE: CollectionRecommenderParameter.RecommenderParameterId
-    ID_MIN_OCCURRENCES: CollectionRecommenderParameter.RecommenderParameterId
-    ID_NUMBER_TO_KEEP: CollectionRecommenderParameter.RecommenderParameterId
-    ID_REMOVE_FULLY_MENTIONED: CollectionRecommenderParameter.RecommenderParameterId
-    ID_NORMALIZE_MAX_SCORE: CollectionRecommenderParameter.RecommenderParameterId
-    ID_MARGIN: CollectionRecommenderParameter.RecommenderParameterId
-    ID_SCALING_FACTOR: CollectionRecommenderParameter.RecommenderParameterId
-    KEY_FIELD_NUMBER: _ClassVar[int]
-    STRING_VALUE_FIELD_NUMBER: _ClassVar[int]
-    NUMBER_VALUE_FIELD_NUMBER: _ClassVar[int]
-    BOOL_VALUE_FIELD_NUMBER: _ClassVar[int]
-    key: CollectionRecommenderParameter.RecommenderParameterId
-    string_value: str
-    number_value: int
-    bool_value: bool
-    def __init__(self, key: _Optional[_Union[CollectionRecommenderParameter.RecommenderParameterId, str]] = ..., string_value: _Optional[str] = ..., number_value: _Optional[int] = ..., bool_value: _Optional[bool] = ...) -> None: ...
-
-class CollectionRecommender(_message.Message):
-    __slots__ = ("type", "weight", "parameters", "enabled")
-    class RecommenderType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
-        __slots__ = ()
-        TYPE_UNSPECIFIED: _ClassVar[CollectionRecommender.RecommenderType]
-        TYPE_TIME_RANGE: _ClassVar[CollectionRecommender.RecommenderType]
-        TYPE_ENTITIES: _ClassVar[CollectionRecommender.RecommenderType]
-        TYPE_TOPICS: _ClassVar[CollectionRecommender.RecommenderType]
-        TYPE_TEXT_REUSE_CLUSTERS: _ClassVar[CollectionRecommender.RecommenderType]
-    TYPE_UNSPECIFIED: CollectionRecommender.RecommenderType
-    TYPE_TIME_RANGE: CollectionRecommender.RecommenderType
-    TYPE_ENTITIES: CollectionRecommender.RecommenderType
-    TYPE_TOPICS: CollectionRecommender.RecommenderType
-    TYPE_TEXT_REUSE_CLUSTERS: CollectionRecommender.RecommenderType
-    TYPE_FIELD_NUMBER: _ClassVar[int]
-    WEIGHT_FIELD_NUMBER: _ClassVar[int]
-    PARAMETERS_FIELD_NUMBER: _ClassVar[int]
-    ENABLED_FIELD_NUMBER: _ClassVar[int]
-    type: CollectionRecommender.RecommenderType
-    weight: int
-    parameters: _containers.RepeatedCompositeFieldContainer[CollectionRecommenderParameter]
-    enabled: bool
-    def __init__(self, type: _Optional[_Union[CollectionRecommender.RecommenderType, str]] = ..., weight: _Optional[int] = ..., parameters: _Optional[_Iterable[_Union[CollectionRecommenderParameter, _Mapping]]] = ..., enabled: _Optional[bool] = ...) -> None: ...
-
-class CollectionRecommendersSettings(_message.Message):
-    __slots__ = ("recommenders",)
-    RECOMMENDERS_FIELD_NUMBER: _ClassVar[int]
-    recommenders: _containers.RepeatedCompositeFieldContainer[CollectionRecommender]
-    def __init__(self, recommenders: _Optional[_Iterable[_Union[CollectionRecommender, _Mapping]]] = ...) -> None: ...

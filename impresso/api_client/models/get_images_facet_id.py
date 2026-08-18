@@ -8,6 +8,7 @@ class GetImagesFacetId(str, Enum):
     IMAGECONTENTTYPE = "imageContentType"
     IMAGETECHNIQUE = "imageTechnique"
     IMAGEVISUALCONTENT = "imageVisualContent"
+    MEDIASOURCE = "mediaSource"
     NEWSPAPER = "newspaper"
     YEAR = "year"
 
@@ -21,6 +22,7 @@ GetImagesFacetIdLiteral = Literal[
     "imageContentType",
     "imageTechnique",
     "imageVisualContent",
+    "mediaSource",
     "newspaper",
     "year",
 ]

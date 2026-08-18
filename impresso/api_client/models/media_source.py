@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union, cast
 from attrs import define as _attrs_define
 from dateutil.parser import isoparse
 
+from ..models.media_source_medium import MediaSourceMedium
 from ..models.media_source_type import MediaSourceType
 from ..types import UNSET, Unset
 
@@ -22,6 +23,7 @@ class MediaSource:
     Attributes:
         id (str): The unique identifier of the media source.
         type (MediaSourceType): The type of the media source.
+        medium (MediaSourceMedium): The medium of the media source.
         name (str): A display name of the media source.
         language_codes (List[str]): ISO 639-2 language codes this media source has content in.
         totals (MediaSourceTotals):
@@ -35,6 +37,7 @@ class MediaSource:
 
     id: str
     type: MediaSourceType
+    medium: MediaSourceMedium
     name: str
     language_codes: List[str]
     totals: "MediaSourceTotals"
@@ -46,6 +49,8 @@ class MediaSource:
         id = self.id
 
         type = self.type.value
+
+        medium = self.medium.value
 
         name = self.name
 
@@ -76,6 +81,7 @@ class MediaSource:
             {
                 "id": id,
                 "type": type,
+                "medium": medium,
                 "name": name,
                 "languageCodes": language_codes,
                 "totals": totals,
@@ -99,6 +105,8 @@ class MediaSource:
         id = d.pop("id")
 
         type = MediaSourceType(d.pop("type"))
+
+        medium = MediaSourceMedium(d.pop("medium"))
 
         name = d.pop("name")
 
@@ -125,6 +133,7 @@ class MediaSource:
         media_source = cls(
             id=id,
             type=type,
+            medium=medium,
             name=name,
             language_codes=language_codes,
             totals=totals,

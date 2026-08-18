@@ -1,5 +1,6 @@
 import base64
-import datetime
+
+# import datetime
 from typing import Callable, List, TypeVar
 
 from impresso.api_models import Q, Filter, QItem
@@ -49,14 +50,15 @@ def _to_pb_filter(filter: Filter) -> pb.Filter:
     if q is not None:
         pb_filter.q.extend([q] if isinstance(q, str) else q)
 
-    daterange = filter_dict.get("daterange")
-    if daterange is not None:
-        daterange_from, daterange_to = daterange.split(" TO ")
-        if daterange_from is not None and daterange_to is not None:
-            _from = int(datetime.datetime.fromisoformat(daterange_from).timestamp())
-            _to = int(datetime.datetime.fromisoformat(daterange_to).timestamp())
+    # Not used anymore (https://github.com/impresso/impresso-jscommons/blob/master/proto/query.proto#L126)
+    # daterange = filter_dict.get("daterange")
+    # if daterange is not None:
+    #     daterange_from, daterange_to = daterange.split(" TO ")
+    #     if daterange_from is not None and daterange_to is not None:
+    #         _from = int(datetime.datetime.fromisoformat(daterange_from).timestamp())
+    #         _to = int(datetime.datetime.fromisoformat(daterange_to).timestamp())
 
-            pb_filter.daterange = _to_pb_filter_daterange(_from, _to)
+    #         pb_filter.daterange = _to_pb_filter_daterange(_from, _to)
 
     return pb_filter
 
@@ -89,8 +91,8 @@ def _to_pb_filter_precision(p: str) -> pb.FilterPrecision:
     return v
 
 
-def _to_pb_filter_daterange(from_: int, to: int) -> pb.DateRange:
-    return pb.DateRange(to=to, **{"from": from_})
+# def _to_pb_filter_daterange(from_: int, to: int) -> pb.DateRange:
+#     return pb.DateRange(to=to, **{"from": from_})
 
 
 T = TypeVar("T")

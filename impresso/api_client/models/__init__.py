@@ -64,6 +64,8 @@ from .filter_ import Filter
 from .filter_context import FilterContext
 from .filter_op import FilterOp
 from .filter_precision import FilterPrecision
+from .filter_serialization_request import FilterSerializationRequest
+from .filter_serialization_response import FilterSerializationResponse
 from .find_collections_base_find_response import FindCollectionsBaseFindResponse
 from .find_collections_base_find_response_pagination import FindCollectionsBaseFindResponsePagination
 from .find_collections_order_by import FindCollectionsOrderBy
@@ -163,6 +165,7 @@ from .impresso_text_embedding_request import ImpressoTextEmbeddingRequest
 from .impresso_text_embedding_request_search_target import ImpressoTextEmbeddingRequestSearchTarget
 from .interact_with_experiment_body import InteractWithExperimentBody
 from .media_source import MediaSource
+from .media_source_medium import MediaSourceMedium
 from .media_source_properties_item import MediaSourcePropertiesItem
 from .media_source_totals import MediaSourceTotals
 from .media_source_type import MediaSourceType
@@ -259,6 +262,8 @@ __all__ = (
     "FilterContext",
     "FilterOp",
     "FilterPrecision",
+    "FilterSerializationRequest",
+    "FilterSerializationResponse",
     "FindCollectionsBaseFindResponse",
     "FindCollectionsBaseFindResponsePagination",
     "FindCollectionsOrderBy",
@@ -342,6 +347,7 @@ __all__ = (
     "ImpressoTextEmbeddingRequestSearchTarget",
     "InteractWithExperimentBody",
     "MediaSource",
+    "MediaSourceMedium",
     "MediaSourcePropertiesItem",
     "MediaSourceTotals",
     "MediaSourceType",
