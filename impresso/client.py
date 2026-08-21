@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 import httpx
 
 from impresso.api_client import AuthenticatedClient
-from impresso.api_client.retry import is_retryable_response
+from impresso.util.retry import is_retryable_response
 from impresso.client_base import ImpressoApiResourcesBase
 from impresso.config_file import DEFAULT_API_URL, ImpressoPyConfig
 from impresso.util.token import get_jwt_status

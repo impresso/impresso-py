@@ -3,7 +3,6 @@ from typing import Literal
 
 
 class GetSearchFacetId(str, Enum):
-    ACCESSRIGHT = "accessRight"
     COLLECTION = "collection"
     CONTENTLENGTH = "contentLength"
     COPYRIGHT = "copyright"
@@ -12,11 +11,16 @@ class GetSearchFacetId(str, Enum):
     DATERANGE = "daterange"
     LANGUAGE = "language"
     LOCATION = "location"
+    MEDIASOURCE = "mediaSource"
     MONTH = "month"
     NAG = "nag"
     NEWSPAPER = "newspaper"
+    OCRQUALITY = "ocrQuality"
     ORGANISATION = "organisation"
     PARTNER = "partner"
+    PERMISSIONEXPLORE = "permissionExplore"
+    PERMISSIONGETIMAGE = "permissionGetImage"
+    PERMISSIONGETTRANSCRIPT = "permissionGetTranscript"
     PERSON = "person"
     SOURCEMEDIUM = "sourceMedium"
     SOURCETYPE = "sourceType"
@@ -29,7 +33,6 @@ class GetSearchFacetId(str, Enum):
 
 
 GetSearchFacetIdLiteral = Literal[
-    "accessRight",
     "collection",
     "contentLength",
     "copyright",
@@ -38,11 +41,16 @@ GetSearchFacetIdLiteral = Literal[
     "daterange",
     "language",
     "location",
+    "mediaSource",
     "month",
     "nag",
     "newspaper",
+    "ocrQuality",
     "organisation",
     "partner",
+    "permissionExplore",
+    "permissionGetImage",
+    "permissionGetTranscript",
     "person",
     "sourceMedium",
     "sourceType",

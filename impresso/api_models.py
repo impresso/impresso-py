@@ -101,11 +101,11 @@ class FacetWithLabel(BaseModel):
 
 
 class Q(RootModel[str]):
-    root: Annotated[str, Field(max_length=6000, min_length=2)]
+    root: Annotated[str, Field(max_length=6000, min_length=1)]
 
 
 class QItem(RootModel[str]):
-    root: Annotated[str, Field(max_length=6000, min_length=2)]
+    root: Annotated[str, Field(max_length=6000, min_length=1)]
 
 
 class Filter(BaseModel):
@@ -358,7 +358,19 @@ class MediaSource(BaseModel):
     )
     id: Annotated[str, Field(description='The unique identifier of the media source.')]
     type: Annotated[
-        Literal['newspaper'], Field(description='The type of the media source.')
+        Literal[
+            'newspaper',
+            'radio_broadcast',
+            'radio_magazine',
+            'radio_schedule',
+            'monograph',
+            'encyclopedia',
+        ],
+        Field(description='The type of the media source.'),
+    ]
+    medium: Annotated[
+        Literal['print', 'typescript', 'audio'],
+        Field(description='The medium of the media source.'),
     ]
     name: Annotated[str, Field(description='A display name of the media source.')]
     languageCodes: Annotated[
@@ -909,6 +921,15 @@ class AuthenticationCreateRequest(BaseModel):
     accessToken: Optional[str] = None
 
 
+class FilterSerializationRequest(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    filters: Annotated[
+        Sequence[Filter], Field(description='A list of Impresso search filters.')
+    ]
+
+
 class ImpressoImageEmbeddingRequest(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -1136,6 +1157,15 @@ class Error(BaseModel):
             None,
             description='A human-readable explanation specific to this occurrence of the problem.',
         ),
+    ]
+
+
+class FilterSerializationResponse(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    filters: Annotated[
+        str, Field(description='The protobuf base64 serialized filters string.')
     ]
 
 
@@ -1519,17 +1549,27 @@ class ContentItemText(BaseModel):
         Optional[
             Literal[
                 'ar',
+                'article',
                 'ad',
+                'advertisement',
                 'page',
                 'tb',
                 'ob',
                 'w',
                 'ch',
                 'chapter',
+                'death_notice',
                 'chronicle',
                 'unsegmented',
                 'radio_broadcast_episode',
                 'radio_bulletin',
+                'rbe',
+                'rb',
+                'dsc',
+                'discussion',
+                'ent',
+                'entertainment',
+                'no-type',
             ]
         ],
         Field(None, description='Type of content item, e.g., article, section.'),

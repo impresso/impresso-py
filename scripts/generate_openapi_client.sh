@@ -9,3 +9,4 @@ poetry run openapi-python-client \
 popd
 rm -rf impresso/api_client
 mv tmp/generated/impresso/api_client impresso/
+python scripts/patch_generated_client.py

@@ -5,7 +5,7 @@ import httpx
 
 from impresso.api_client import Client
 from impresso.api_client.api.reference_data import get_data_sources_csv_export
-from impresso.api_client.retry import AsyncRetryingClient, RetryingClient
+from impresso.util.retry import AsyncRetryingClient, RetryingClient
 
 
 def _client_with_responses(
@@ -63,9 +63,7 @@ async def _disable_async_sleep(client: Client) -> list[float]:
 def test_retries_500_responses_then_returns_success(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ):
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     client, requests = _client_with_responses(
         [
             _response(500, b'{"type":"error","title":"Error","status":500}'),
@@ -88,9 +86,7 @@ def test_retries_500_responses_then_returns_success(
 
 
 def test_retries_418_response(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     client, requests = _client_with_responses(
         [
             _response(418, b'{"type":"error","title":"Error","status":418}'),
@@ -109,9 +105,7 @@ def test_retries_418_response(monkeypatch: pytest.MonkeyPatch):
 def test_retries_429_response_with_backoff(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ):
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     client, requests = _client_with_responses(
         [
             _response(
@@ -136,9 +130,7 @@ def test_retries_429_response_with_backoff(
 def test_retries_429_response_with_retry_after_header(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ):
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     client, requests = _client_with_responses(
         [
             _response(
@@ -164,9 +156,7 @@ def test_retries_429_response_with_retry_after_header(
 def test_exhausting_429_retries_prints_rate_limit_message(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ):
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     client, requests = _client_with_responses(
         [
             _response(
@@ -193,9 +183,7 @@ def test_exhausting_429_retries_prints_rate_limit_message(
 
 @pytest.mark.parametrize("status_code", [401, 403])
 def test_retries_html_auth_responses(status_code: int, monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     client, requests = _client_with_responses(
         [
             _response(
@@ -242,9 +230,7 @@ def test_does_not_retry_json_auth_responses(
 def test_exhausting_retries_returns_final_response(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ):
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     client, requests = _client_with_responses(
         [
             _response(500, b'{"type":"error","title":"Error","status":500}')
@@ -267,9 +253,7 @@ def test_exhausting_retries_returns_final_response(
 
 
 def test_retry_after_header_overrides_backoff(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     client, _requests = _client_with_responses(
         [
             _response(
@@ -289,9 +273,7 @@ def test_retry_after_header_overrides_backoff(monkeypatch: pytest.MonkeyPatch):
 
 
 def test_retries_post_request_with_json_body(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     bodies: list[bytes] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -315,9 +297,7 @@ def test_retries_post_request_with_json_body(monkeypatch: pytest.MonkeyPatch):
 def test_retries_read_error_then_returns_success(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ):
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     requests: list[httpx.Request] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -347,9 +327,7 @@ def test_retries_read_error_then_returns_success(
 def test_exhausting_read_error_retries_raises_original_error(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ):
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     requests: list[httpx.Request] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -385,9 +363,7 @@ def test_async_retries_html_auth_response(monkeypatch: pytest.MonkeyPatch):
         assert len(requests) == 2
         assert delays == [1.0]
 
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     client, requests = _client_with_responses(
         [
             _response(401, "<html>blocked</html>", {"content-type": "text/html"}),
@@ -410,9 +386,7 @@ def test_async_retries_read_error_then_returns_success(
         assert len(requests) == 2
         assert delays == [1.0]
 
-    monkeypatch.setattr(
-        "impresso.api_client.retry.random.uniform", lambda _min, _max: 0
-    )
+    monkeypatch.setattr("impresso.util.retry.random.uniform", lambda _min, _max: 0)
     requests: list[httpx.Request] = []
 
     def handler(request: httpx.Request) -> httpx.Response:

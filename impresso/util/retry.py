@@ -23,7 +23,7 @@ import asyncio
 import random
 import time
 from email.utils import parsedate_to_datetime
-from typing import Callable
+from typing import Any, Awaitable, Callable
 
 import httpx
 
@@ -162,14 +162,14 @@ class RetryingClient(httpx.Client):
 
     def __init__(
         self,
-        *args: object,
+        *args: Any,
         sleep: Callable[[float], None] = time.sleep,
-        **kwargs: object,
+        **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._sleep = sleep
 
-    def send(self, request: httpx.Request, **kwargs: object) -> httpx.Response:
+    def send(self, request: httpx.Request, **kwargs: Any) -> httpx.Response:
         for attempt in range(1, MAX_ATTEMPTS + 1):
             try:
                 response = super().send(request, **kwargs)
@@ -224,14 +224,14 @@ class AsyncRetryingClient(httpx.AsyncClient):
 
     def __init__(
         self,
-        *args: object,
-        sleep: Callable[[float], object] = asyncio.sleep,
-        **kwargs: object,
+        *args: Any,
+        sleep: Callable[[float], Awaitable[None]] = asyncio.sleep,
+        **kwargs: Any,
     ) -> None:
         super().__init__(*args, **kwargs)
         self._sleep = sleep
 
-    async def send(self, request: httpx.Request, **kwargs: object) -> httpx.Response:
+    async def send(self, request: httpx.Request, **kwargs: Any) -> httpx.Response:
         for attempt in range(1, MAX_ATTEMPTS + 1):
             try:
                 response = await super().send(request, **kwargs)

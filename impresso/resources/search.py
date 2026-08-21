@@ -169,6 +169,7 @@ class SearchResource(Resource):
         front_page: bool | None = None,
         entity_id: str | AND[str] | OR[str] | None = None,
         newspaper_id: str | AND[str] | OR[str] | None = None,
+        media_source_id: str | AND[str] | OR[str] | None = None,
         date_range: DateRange | None = None,
         language: str | AND[str] | OR[str] | None = None,
         mention: str | AND[str] | OR[str] | None = None,
@@ -198,7 +199,8 @@ class SearchResource(Resource):
             title: Filter by content items having this term or all/any of the terms in the title.
             front_page: Return only content items that were on the front page.
             entity_id: Filter by content items mentioning this entity or all/any of the entities.
-            newspaper_id: Filter by newspaper ID(s).
+            newspaper_id: Filter by newspaper ID(s). (Deprecated, use media_source_id instead.)
+            media_source_id: Filter by media source ID(s).
             date_range: Filter by publication date range.
             language: Filter by content language or all/any of the languages.
                 Use 2-letter ISO language codes (e.g., 'en', 'de', 'fr').
@@ -228,7 +230,7 @@ class SearchResource(Resource):
             title=title,
             front_page=front_page,
             entity_id=entity_id,
-            newspaper_id=newspaper_id,
+            media_source_id=media_source_id or newspaper_id,
             date_range=date_range,
             language=language,
             mention=mention,
@@ -301,6 +303,7 @@ class SearchResource(Resource):
         front_page: bool | None = None,
         entity_id: str | AND[str] | OR[str] | None = None,
         newspaper_id: str | AND[str] | OR[str] | None = None,
+        media_source_id: str | AND[str] | OR[str] | None = None,
         date_range: DateRange | None = None,
         language: str | AND[str] | OR[str] | None = None,
         mention: str | AND[str] | OR[str] | None = None,
@@ -325,7 +328,8 @@ class SearchResource(Resource):
             title: Filter by content items having this term or terms in the title.
             front_page: Filter for content items that were on the front page.
             entity_id: Filter by content items mentioning this entity or entities.
-            newspaper_id: Filter by newspaper ID(s).
+            newspaper_id: Filter by newspaper ID(s) . (Deprecated, use media_source_id instead.)
+            media_source_id: Filter by media source ID(s).
             date_range: Filter by publication date range.
             language: Filter by content language. Use 2-letter ISO language codes
                 (e.g., 'en', 'de', 'fr').
@@ -358,7 +362,7 @@ class SearchResource(Resource):
             title=title,
             front_page=front_page,
             entity_id=entity_id,
-            newspaper_id=newspaper_id,
+            media_source_id=media_source_id or newspaper_id,
             date_range=date_range,
             language=language,
             mention=mention,
@@ -435,7 +439,7 @@ class SearchResource(Resource):
         title: str | AND[str] | OR[str] | None = None,
         front_page: bool | None = None,
         entity_id: str | AND[str] | OR[str] | None = None,
-        newspaper_id: str | AND[str] | OR[str] | None = None,
+        media_source_id: str | AND[str] | OR[str] | None = None,
         date_range: DateRange | None = None,
         language: str | AND[str] | OR[str] | None = None,
         mention: str | AND[str] | OR[str] | None = None,
@@ -464,8 +468,8 @@ class SearchResource(Resource):
             filters.append(Filter(type="is_front", daterange=None, uids=None))
         if entity_id is not None:
             filters.extend(and_or_filter(entity_id, "entity"))
-        if newspaper_id is not None:
-            filters.extend(and_or_filter(newspaper_id, "newspaper"))
+        if media_source_id is not None:
+            filters.extend(and_or_filter(media_source_id, "media_source"))
         if date_range is not None:
             filters.append(
                 Filter(
