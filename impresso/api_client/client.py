@@ -4,6 +4,8 @@ from typing import Any, Dict, Optional, Union
 import httpx
 from attrs import define, evolve, field
 
+from impresso.util.retry import AsyncRetryingClient, RetryingClient
+
 
 @define
 class Client:
@@ -80,7 +82,7 @@ class Client:
     def get_httpx_client(self) -> httpx.Client:
         """Get the underlying httpx.Client, constructing a new one if not previously set"""
         if self._client is None:
-            self._client = httpx.Client(
+            self._client = RetryingClient(
                 base_url=self._base_url,
                 cookies=self._cookies,
                 headers=self._headers,
@@ -111,7 +113,7 @@ class Client:
     def get_async_httpx_client(self) -> httpx.AsyncClient:
         """Get the underlying httpx.AsyncClient, constructing a new one if not previously set"""
         if self._async_client is None:
-            self._async_client = httpx.AsyncClient(
+            self._async_client = AsyncRetryingClient(
                 base_url=self._base_url,
                 cookies=self._cookies,
                 headers=self._headers,
@@ -215,7 +217,7 @@ class AuthenticatedClient:
         """Get the underlying httpx.Client, constructing a new one if not previously set"""
         if self._client is None:
             self._headers[self.auth_header_name] = f"{self.prefix} {self.token}" if self.prefix else self.token
-            self._client = httpx.Client(
+            self._client = RetryingClient(
                 base_url=self._base_url,
                 cookies=self._cookies,
                 headers=self._headers,
@@ -247,7 +249,7 @@ class AuthenticatedClient:
         """Get the underlying httpx.AsyncClient, constructing a new one if not previously set"""
         if self._async_client is None:
             self._headers[self.auth_header_name] = f"{self.prefix} {self.token}" if self.prefix else self.token
-            self._async_client = httpx.AsyncClient(
+            self._async_client = AsyncRetryingClient(
                 base_url=self._base_url,
                 cookies=self._cookies,
                 headers=self._headers,
