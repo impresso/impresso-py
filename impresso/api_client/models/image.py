@@ -7,6 +7,7 @@ from dateutil.parser import isoparse
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
+    from ..models.content_item_access_rights import ContentItemAccessRights
     from ..models.image_image_types import ImageImageTypes
     from ..models.image_media_source_ref import ImageMediaSourceRef
 
@@ -24,6 +25,7 @@ class Image:
         preview_url (str): The URL of the image preview
         media_source_ref (ImageMediaSourceRef): The media source of the image
         date (datetime.date): The date of the image or the date of the issue that the image belongs to.
+        access (ContentItemAccessRights): Access rights information
         caption (Union[Unset, str]): Image caption
         content_item_id (Union[Unset, str]): The unique identifier of the content item that the image belongs to.
         page_numbers (Union[Unset, List[int]]): The page numbers of the issue that the image belongs to.
@@ -37,6 +39,7 @@ class Image:
     preview_url: str
     media_source_ref: "ImageMediaSourceRef"
     date: datetime.date
+    access: "ContentItemAccessRights"
     caption: Union[Unset, str] = UNSET
     content_item_id: Union[Unset, str] = UNSET
     page_numbers: Union[Unset, List[int]] = UNSET
@@ -53,6 +56,8 @@ class Image:
         media_source_ref = self.media_source_ref.to_dict()
 
         date = self.date.isoformat()
+
+        access = self.access.to_dict()
 
         caption = self.caption
 
@@ -78,6 +83,7 @@ class Image:
                 "previewUrl": preview_url,
                 "mediaSourceRef": media_source_ref,
                 "date": date,
+                "access": access,
             }
         )
         if caption is not UNSET:
@@ -95,6 +101,7 @@ class Image:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
+        from ..models.content_item_access_rights import ContentItemAccessRights
         from ..models.image_image_types import ImageImageTypes
         from ..models.image_media_source_ref import ImageMediaSourceRef
 
@@ -108,6 +115,8 @@ class Image:
         media_source_ref = ImageMediaSourceRef.from_dict(d.pop("mediaSourceRef"))
 
         date = isoparse(d.pop("date")).date()
+
+        access = ContentItemAccessRights.from_dict(d.pop("access"))
 
         caption = d.pop("caption", UNSET)
 
@@ -130,6 +139,7 @@ class Image:
             preview_url=preview_url,
             media_source_ref=media_source_ref,
             date=date,
+            access=access,
             caption=caption,
             content_item_id=content_item_id,
             page_numbers=page_numbers,

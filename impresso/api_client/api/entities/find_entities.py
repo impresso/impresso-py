@@ -84,7 +84,7 @@ def _parse_response(
         response_418 = Error.from_dict(response.json())
 
         return response_418
-    if response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT:
+    if response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
         response_422 = Error.from_dict(response.json())
 
         return response_422

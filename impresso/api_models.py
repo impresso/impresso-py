@@ -163,51 +163,6 @@ class MediaSourceRef(BaseModel):
     ]
 
 
-class Image(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    id: Annotated[str, Field(description='The unique identifier of the image')]
-    caption: Annotated[Optional[str], Field(None, description='Image caption')]
-    issueId: Annotated[
-        str,
-        Field(
-            description='The unique identifier of the issue that the image belongs to.'
-        ),
-    ]
-    contentItemId: Annotated[
-        Optional[str],
-        Field(
-            None,
-            description='The unique identifier of the content item that the image belongs to.',
-        ),
-    ]
-    previewUrl: Annotated[AnyUrl, Field(description='The URL of the image preview')]
-    pageNumbers: Annotated[
-        Optional[Sequence[int]],
-        Field(
-            None, description='The page numbers of the issue that the image belongs to.'
-        ),
-    ]
-    imageTypes: Optional[ImageTypes] = None
-    mediaSourceRef: Annotated[
-        MediaSourceRef, Field(description='The media source of the image')
-    ]
-    date: Annotated[
-        date,
-        Field(
-            description='The date of the image or the date of the issue that the image belongs to.'
-        ),
-    ]
-    embeddings: Annotated[
-        Optional[Sequence[str]],
-        Field(
-            None,
-            description='Precomputed embeddings for the image in the format: <model_type>:<base64_embedding_vector>.',
-        ),
-    ]
-
-
 class Offset(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -1420,6 +1375,52 @@ class EntityDetails(BaseModel):
     wikidataDetails: Optional[Union[WikidataPerson, WikidataLocation]] = None
 
 
+class Image(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='The unique identifier of the image')]
+    caption: Annotated[Optional[str], Field(None, description='Image caption')]
+    issueId: Annotated[
+        str,
+        Field(
+            description='The unique identifier of the issue that the image belongs to.'
+        ),
+    ]
+    contentItemId: Annotated[
+        Optional[str],
+        Field(
+            None,
+            description='The unique identifier of the content item that the image belongs to.',
+        ),
+    ]
+    previewUrl: Annotated[AnyUrl, Field(description='The URL of the image preview')]
+    pageNumbers: Annotated[
+        Optional[Sequence[int]],
+        Field(
+            None, description='The page numbers of the issue that the image belongs to.'
+        ),
+    ]
+    imageTypes: Optional[ImageTypes] = None
+    mediaSourceRef: Annotated[
+        MediaSourceRef, Field(description='The media source of the image')
+    ]
+    date: Annotated[
+        date,
+        Field(
+            description='The date of the image or the date of the issue that the image belongs to.'
+        ),
+    ]
+    embeddings: Annotated[
+        Optional[Sequence[str]],
+        Field(
+            None,
+            description='Precomputed embeddings for the image in the format: <model_type>:<base64_embedding_vector>.',
+        ),
+    ]
+    access: ContentItemAccessRights
+
+
 class Topic(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -1547,29 +1548,19 @@ class ContentItemText(BaseModel):
     ]
     itemType: Annotated[
         Optional[
-            Literal[
-                'ar',
-                'article',
-                'ad',
-                'advertisement',
-                'page',
-                'tb',
-                'ob',
-                'w',
-                'ch',
-                'chapter',
-                'death_notice',
-                'chronicle',
-                'unsegmented',
-                'radio_broadcast_episode',
-                'radio_bulletin',
-                'rbe',
-                'rb',
-                'dsc',
-                'discussion',
-                'ent',
-                'entertainment',
-                'no-type',
+            Union[
+                Literal['ar'],
+                Literal['ad'],
+                Literal['img'],
+                Literal['tb'],
+                Literal['ob'],
+                Literal['w'],
+                Literal['ch'],
+                Literal['rb'],
+                Literal['rbe'],
+                Literal['no-type'],
+                Literal['dsc'],
+                Literal['ent'],
             ]
         ],
         Field(None, description='Type of content item, e.g., article, section.'),

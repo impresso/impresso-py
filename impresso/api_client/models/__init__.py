@@ -48,9 +48,20 @@ from .content_item_semantic_enrichments import ContentItemSemanticEnrichments
 from .content_item_semantic_enrichments_mentions import ContentItemSemanticEnrichmentsMentions
 from .content_item_semantic_enrichments_named_entities import ContentItemSemanticEnrichmentsNamedEntities
 from .content_item_text import ContentItemText
+from .content_item_text_advertisement import ContentItemTextAdvertisement
+from .content_item_text_article import ContentItemTextArticle
+from .content_item_text_chronicle import ContentItemTextChronicle
+from .content_item_text_discussion import ContentItemTextDiscussion
 from .content_item_text_document_type import ContentItemTextDocumentType
-from .content_item_text_item_type import ContentItemTextItemType
+from .content_item_text_entretien import ContentItemTextEntretien
+from .content_item_text_image import ContentItemTextImage
 from .content_item_text_match import ContentItemTextMatch
+from .content_item_text_no_type_provided import ContentItemTextNoTypeProvided
+from .content_item_text_obituary import ContentItemTextObituary
+from .content_item_text_radio_broadcast import ContentItemTextRadioBroadcast
+from .content_item_text_radio_broadcast_episode import ContentItemTextRadioBroadcastEpisode
+from .content_item_text_table import ContentItemTextTable
+from .content_item_text_weather import ContentItemTextWeather
 from .content_item_topic import ContentItemTopic
 from .data_provider import DataProvider
 from .data_provider_names_item import DataProviderNamesItem
@@ -246,9 +257,20 @@ __all__ = (
     "ContentItemSemanticEnrichmentsMentions",
     "ContentItemSemanticEnrichmentsNamedEntities",
     "ContentItemText",
+    "ContentItemTextAdvertisement",
+    "ContentItemTextArticle",
+    "ContentItemTextChronicle",
+    "ContentItemTextDiscussion",
     "ContentItemTextDocumentType",
-    "ContentItemTextItemType",
+    "ContentItemTextEntretien",
+    "ContentItemTextImage",
     "ContentItemTextMatch",
+    "ContentItemTextNoTypeProvided",
+    "ContentItemTextObituary",
+    "ContentItemTextRadioBroadcast",
+    "ContentItemTextRadioBroadcastEpisode",
+    "ContentItemTextTable",
+    "ContentItemTextWeather",
     "ContentItemTopic",
     "DataProvider",
     "DataProviderNamesItem",
