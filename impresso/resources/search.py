@@ -187,6 +187,7 @@ class SearchResource(Resource):
             | None
         ) = None,
         include_embeddings: bool = False,
+        include_transcript: bool = False,
     ) -> SearchDataContainer:
         """Search for content items in Impresso.
 
@@ -216,7 +217,7 @@ class SearchResource(Resource):
                 embeddings from text.
             copyright: Filter by copyright status.
             include_embeddings: Whether to include embeddings in the response. Defaults to False.
-
+            include_transcript: Whether to include transcript in the response. Defaults to False.
         Returns:
             SearchDataContainer: Data container with the first page of search results.
         """
@@ -258,6 +259,7 @@ class SearchResource(Resource):
             limit=page_limit,
             offset=offset if offset is not None else UNSET,
             include_embeddings=include_embeddings if include_embeddings else UNSET,
+            include_transcript=include_transcript if include_transcript else UNSET,
         )
         raise_for_error(result)
         return SearchDataContainer(
@@ -281,6 +283,8 @@ class SearchResource(Resource):
                 "partner_id": partner_id,
                 "text_reuse_cluster_id": text_reuse_cluster_id,
                 "embedding": embedding_with_limit,
+                "include_transcript": include_transcript,
+                "include_embeddings": include_embeddings,
             },
             web_app_search_result_url=_build_web_app_search_url(
                 f"{self._get_web_app_base_url()}/search",
