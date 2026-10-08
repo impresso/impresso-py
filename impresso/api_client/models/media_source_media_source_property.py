@@ -2,11 +2,11 @@ from typing import Any, Dict, Type, TypeVar
 
 from attrs import define as _attrs_define
 
-T = TypeVar("T", bound="MediaSourcePropertiesItem")
+T = TypeVar("T", bound="MediaSourceMediaSourceProperty")
 
 
 @_attrs_define
-class MediaSourcePropertiesItem:
+class MediaSourceMediaSourceProperty:
     """
     Attributes:
         id (str): The unique identifier of the property.
@@ -45,10 +45,10 @@ class MediaSourcePropertiesItem:
 
         value = d.pop("value")
 
-        media_source_properties_item = cls(
+        media_source_media_source_property = cls(
             id=id,
             label=label,
             value=value,
         )
 
-        return media_source_properties_item
+        return media_source_media_source_property

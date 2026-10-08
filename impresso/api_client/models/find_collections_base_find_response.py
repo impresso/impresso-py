@@ -1,9 +1,12 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar
+from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 
+from ..types import UNSET, Unset
+
 if TYPE_CHECKING:
     from ..models.collection import Collection
+    from ..models.find_collections_base_find_response_meta import FindCollectionsBaseFindResponseMeta
     from ..models.find_collections_base_find_response_pagination import FindCollectionsBaseFindResponsePagination
 
 
@@ -16,10 +19,12 @@ class FindCollectionsBaseFindResponse:
     Attributes:
         data (List['Collection']):
         pagination (FindCollectionsBaseFindResponsePagination):
+        meta (Union[Unset, FindCollectionsBaseFindResponseMeta]):
     """
 
     data: List["Collection"]
     pagination: "FindCollectionsBaseFindResponsePagination"
+    meta: Union[Unset, "FindCollectionsBaseFindResponseMeta"] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
         data = []
@@ -29,6 +34,10 @@ class FindCollectionsBaseFindResponse:
 
         pagination = self.pagination.to_dict()
 
+        meta: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.meta, Unset):
+            meta = self.meta.to_dict()
+
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
@@ -36,12 +45,15 @@ class FindCollectionsBaseFindResponse:
                 "pagination": pagination,
             }
         )
+        if meta is not UNSET:
+            field_dict["meta"] = meta
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         from ..models.collection import Collection
+        from ..models.find_collections_base_find_response_meta import FindCollectionsBaseFindResponseMeta
         from ..models.find_collections_base_find_response_pagination import FindCollectionsBaseFindResponsePagination
 
         d = src_dict.copy()
@@ -54,9 +66,17 @@ class FindCollectionsBaseFindResponse:
 
         pagination = FindCollectionsBaseFindResponsePagination.from_dict(d.pop("pagination"))
 
+        _meta = d.pop("meta", UNSET)
+        meta: Union[Unset, FindCollectionsBaseFindResponseMeta]
+        if isinstance(_meta, Unset):
+            meta = UNSET
+        else:
+            meta = FindCollectionsBaseFindResponseMeta.from_dict(_meta)
+
         find_collections_base_find_response = cls(
             data=data,
             pagination=pagination,
+            meta=meta,
         )
 
         return find_collections_base_find_response

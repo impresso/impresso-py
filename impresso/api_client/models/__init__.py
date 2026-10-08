@@ -19,6 +19,8 @@ from .authentication_response_authentication import AuthenticationResponseAuthen
 from .authentication_response_authentication_payload import AuthenticationResponseAuthenticationPayload
 from .authentication_response_user import AuthenticationResponseUser
 from .base_find_response import BaseFindResponse
+from .base_find_response_meta import BaseFindResponseMeta
+from .base_find_response_meta_provenance import BaseFindResponseMetaProvenance
 from .base_find_response_pagination import BaseFindResponsePagination
 from .collectable_item_group import CollectableItemGroup
 from .collectable_item_group_content_type import CollectableItemGroupContentType
@@ -48,9 +50,20 @@ from .content_item_semantic_enrichments import ContentItemSemanticEnrichments
 from .content_item_semantic_enrichments_mentions import ContentItemSemanticEnrichmentsMentions
 from .content_item_semantic_enrichments_named_entities import ContentItemSemanticEnrichmentsNamedEntities
 from .content_item_text import ContentItemText
+from .content_item_text_advertisement import ContentItemTextAdvertisement
+from .content_item_text_article import ContentItemTextArticle
+from .content_item_text_chronicle import ContentItemTextChronicle
+from .content_item_text_discussion import ContentItemTextDiscussion
 from .content_item_text_document_type import ContentItemTextDocumentType
-from .content_item_text_item_type import ContentItemTextItemType
+from .content_item_text_entretien import ContentItemTextEntretien
+from .content_item_text_image import ContentItemTextImage
 from .content_item_text_match import ContentItemTextMatch
+from .content_item_text_no_type_provided import ContentItemTextNoTypeProvided
+from .content_item_text_obituary import ContentItemTextObituary
+from .content_item_text_radio_broadcast import ContentItemTextRadioBroadcast
+from .content_item_text_radio_broadcast_episode import ContentItemTextRadioBroadcastEpisode
+from .content_item_text_table import ContentItemTextTable
+from .content_item_text_weather import ContentItemTextWeather
 from .content_item_topic import ContentItemTopic
 from .data_provider import DataProvider
 from .data_provider_names_item import DataProviderNamesItem
@@ -67,26 +80,43 @@ from .filter_precision import FilterPrecision
 from .filter_serialization_request import FilterSerializationRequest
 from .filter_serialization_response import FilterSerializationResponse
 from .find_collections_base_find_response import FindCollectionsBaseFindResponse
+from .find_collections_base_find_response_meta import FindCollectionsBaseFindResponseMeta
+from .find_collections_base_find_response_meta_provenance import FindCollectionsBaseFindResponseMetaProvenance
 from .find_collections_base_find_response_pagination import FindCollectionsBaseFindResponsePagination
 from .find_collections_order_by import FindCollectionsOrderBy
 from .find_data_providers_base_find_response import FindDataProvidersBaseFindResponse
+from .find_data_providers_base_find_response_meta import FindDataProvidersBaseFindResponseMeta
+from .find_data_providers_base_find_response_meta_provenance import FindDataProvidersBaseFindResponseMetaProvenance
 from .find_data_providers_base_find_response_pagination import FindDataProvidersBaseFindResponsePagination
 from .find_entities_base_find_response import FindEntitiesBaseFindResponse
+from .find_entities_base_find_response_meta import FindEntitiesBaseFindResponseMeta
+from .find_entities_base_find_response_meta_provenance import FindEntitiesBaseFindResponseMetaProvenance
 from .find_entities_base_find_response_pagination import FindEntitiesBaseFindResponsePagination
 from .find_entities_order_by import FindEntitiesOrderBy
 from .find_experiments_base_find_response import FindExperimentsBaseFindResponse
+from .find_experiments_base_find_response_meta import FindExperimentsBaseFindResponseMeta
+from .find_experiments_base_find_response_meta_provenance import FindExperimentsBaseFindResponseMetaProvenance
 from .find_experiments_base_find_response_pagination import FindExperimentsBaseFindResponsePagination
 from .find_images_base_find_response import FindImagesBaseFindResponse
+from .find_images_base_find_response_meta import FindImagesBaseFindResponseMeta
+from .find_images_base_find_response_meta_provenance import FindImagesBaseFindResponseMetaProvenance
 from .find_images_base_find_response_pagination import FindImagesBaseFindResponsePagination
 from .find_images_order_by import FindImagesOrderBy
 from .find_media_sources_base_find_response import FindMediaSourcesBaseFindResponse
+from .find_media_sources_base_find_response_meta import FindMediaSourcesBaseFindResponseMeta
+from .find_media_sources_base_find_response_meta_provenance import FindMediaSourcesBaseFindResponseMetaProvenance
 from .find_media_sources_base_find_response_pagination import FindMediaSourcesBaseFindResponsePagination
 from .find_media_sources_order_by import FindMediaSourcesOrderBy
 from .find_media_sources_type import FindMediaSourcesType
 from .find_text_reuse_clusters_base_find_response import FindTextReuseClustersBaseFindResponse
+from .find_text_reuse_clusters_base_find_response_meta import FindTextReuseClustersBaseFindResponseMeta
+from .find_text_reuse_clusters_base_find_response_meta_provenance import (
+    FindTextReuseClustersBaseFindResponseMetaProvenance,
+)
 from .find_text_reuse_clusters_base_find_response_pagination import FindTextReuseClustersBaseFindResponsePagination
 from .find_text_reuse_clusters_order_by import FindTextReuseClustersOrderBy
 from .find_text_reuse_clusters_response import FindTextReuseClustersResponse
+from .find_text_reuse_clusters_response_info import FindTextReuseClustersResponseInfo
 from .find_text_reuse_clusters_response_text_reuse_cluster_compound import (
     FindTextReuseClustersResponseTextReuseClusterCompound,
 )
@@ -109,9 +139,15 @@ from .find_text_reuse_clusters_response_text_reuse_cluster_compound_text_reuse_c
     FindTextReuseClustersResponseTextReuseClusterCompoundTextReuseClusterTimeCoverage,
 )
 from .find_text_reuse_passages_base_find_response import FindTextReusePassagesBaseFindResponse
+from .find_text_reuse_passages_base_find_response_meta import FindTextReusePassagesBaseFindResponseMeta
+from .find_text_reuse_passages_base_find_response_meta_provenance import (
+    FindTextReusePassagesBaseFindResponseMetaProvenance,
+)
 from .find_text_reuse_passages_base_find_response_pagination import FindTextReusePassagesBaseFindResponsePagination
 from .find_text_reuse_passages_order_by import FindTextReusePassagesOrderBy
 from .find_topics_base_find_response import FindTopicsBaseFindResponse
+from .find_topics_base_find_response_meta import FindTopicsBaseFindResponseMeta
+from .find_topics_base_find_response_meta_provenance import FindTopicsBaseFindResponseMetaProvenance
 from .find_topics_base_find_response_pagination import FindTopicsBaseFindResponsePagination
 from .find_topics_order_by import FindTopicsOrderBy
 from .freeform import Freeform
@@ -130,18 +166,26 @@ from .full_version_details_partner_institutions_item_names_item import (
 from .full_version_details_solr import FullVersionDetailsSolr
 from .full_version_details_solr_endpoints import FullVersionDetailsSolrEndpoints
 from .get_images_facet_base_find_response import GetImagesFacetBaseFindResponse
+from .get_images_facet_base_find_response_meta import GetImagesFacetBaseFindResponseMeta
+from .get_images_facet_base_find_response_meta_provenance import GetImagesFacetBaseFindResponseMetaProvenance
 from .get_images_facet_base_find_response_pagination import GetImagesFacetBaseFindResponsePagination
 from .get_images_facet_id import GetImagesFacetId
 from .get_images_facet_order_by import GetImagesFacetOrderBy
 from .get_search_facet_base_find_response import GetSearchFacetBaseFindResponse
+from .get_search_facet_base_find_response_meta import GetSearchFacetBaseFindResponseMeta
+from .get_search_facet_base_find_response_meta_provenance import GetSearchFacetBaseFindResponseMetaProvenance
 from .get_search_facet_base_find_response_pagination import GetSearchFacetBaseFindResponsePagination
 from .get_search_facet_id import GetSearchFacetId
 from .get_search_facet_order_by import GetSearchFacetOrderBy
 from .get_tr_clusters_facet_base_find_response import GetTrClustersFacetBaseFindResponse
+from .get_tr_clusters_facet_base_find_response_meta import GetTrClustersFacetBaseFindResponseMeta
+from .get_tr_clusters_facet_base_find_response_meta_provenance import GetTrClustersFacetBaseFindResponseMetaProvenance
 from .get_tr_clusters_facet_base_find_response_pagination import GetTrClustersFacetBaseFindResponsePagination
 from .get_tr_clusters_facet_id import GetTrClustersFacetId
 from .get_tr_clusters_facet_order_by import GetTrClustersFacetOrderBy
 from .get_tr_passages_facet_base_find_response import GetTrPassagesFacetBaseFindResponse
+from .get_tr_passages_facet_base_find_response_meta import GetTrPassagesFacetBaseFindResponseMeta
+from .get_tr_passages_facet_base_find_response_meta_provenance import GetTrPassagesFacetBaseFindResponseMetaProvenance
 from .get_tr_passages_facet_base_find_response_pagination import GetTrPassagesFacetBaseFindResponsePagination
 from .get_tr_passages_facet_id import GetTrPassagesFacetId
 from .get_tr_passages_facet_order_by import GetTrPassagesFacetOrderBy
@@ -165,14 +209,38 @@ from .impresso_text_embedding_request import ImpressoTextEmbeddingRequest
 from .impresso_text_embedding_request_search_target import ImpressoTextEmbeddingRequestSearchTarget
 from .interact_with_experiment_body import InteractWithExperimentBody
 from .media_source import MediaSource
+from .media_source_media_source_property import MediaSourceMediaSourceProperty
 from .media_source_medium import MediaSourceMedium
-from .media_source_properties_item import MediaSourcePropertiesItem
 from .media_source_totals import MediaSourceTotals
 from .media_source_type import MediaSourceType
 from .new_collection_request import NewCollectionRequest
 from .new_collection_request_access_level import NewCollectionRequestAccessLevel
 from .partner import Partner
+from .provenance_verification_response_json_type_0_claims_type_0 import (
+    ProvenanceVerificationResponseJsonType0ClaimsType0,
+)
+from .provenance_verification_response_json_type_0_claims_type_0_kind import (
+    ProvenanceVerificationResponseJsonType0ClaimsType0Kind,
+)
+from .provenance_verification_response_json_type_0_claims_type_1 import (
+    ProvenanceVerificationResponseJsonType0ClaimsType1,
+)
+from .provenance_verification_response_json_type_0_claims_type_1_kind import (
+    ProvenanceVerificationResponseJsonType0ClaimsType1Kind,
+)
+from .provenance_verification_response_json_type_1 import ProvenanceVerificationResponseJsonType1
+from .provenance_verification_response_type_0_claims_type_0 import ProvenanceVerificationResponseType0ClaimsType0
+from .provenance_verification_response_type_0_claims_type_0_kind import (
+    ProvenanceVerificationResponseType0ClaimsType0Kind,
+)
+from .provenance_verification_response_type_0_claims_type_1 import ProvenanceVerificationResponseType0ClaimsType1
+from .provenance_verification_response_type_0_claims_type_1_kind import (
+    ProvenanceVerificationResponseType0ClaimsType1Kind,
+)
+from .provenance_verification_response_type_1 import ProvenanceVerificationResponseType1
 from .search_base_find_response import SearchBaseFindResponse
+from .search_base_find_response_meta import SearchBaseFindResponseMeta
+from .search_base_find_response_meta_provenance import SearchBaseFindResponseMetaProvenance
 from .search_base_find_response_pagination import SearchBaseFindResponsePagination
 from .search_facet_bucket import SearchFacetBucket
 from .search_order_by import SearchOrderBy
@@ -217,6 +285,8 @@ __all__ = (
     "AuthenticationResponseAuthenticationPayload",
     "AuthenticationResponseUser",
     "BaseFindResponse",
+    "BaseFindResponseMeta",
+    "BaseFindResponseMetaProvenance",
     "BaseFindResponsePagination",
     "CollectableItemGroup",
     "CollectableItemGroupContentType",
@@ -246,9 +316,20 @@ __all__ = (
     "ContentItemSemanticEnrichmentsMentions",
     "ContentItemSemanticEnrichmentsNamedEntities",
     "ContentItemText",
+    "ContentItemTextAdvertisement",
+    "ContentItemTextArticle",
+    "ContentItemTextChronicle",
+    "ContentItemTextDiscussion",
     "ContentItemTextDocumentType",
-    "ContentItemTextItemType",
+    "ContentItemTextEntretien",
+    "ContentItemTextImage",
     "ContentItemTextMatch",
+    "ContentItemTextNoTypeProvided",
+    "ContentItemTextObituary",
+    "ContentItemTextRadioBroadcast",
+    "ContentItemTextRadioBroadcastEpisode",
+    "ContentItemTextTable",
+    "ContentItemTextWeather",
     "ContentItemTopic",
     "DataProvider",
     "DataProviderNamesItem",
@@ -265,26 +346,41 @@ __all__ = (
     "FilterSerializationRequest",
     "FilterSerializationResponse",
     "FindCollectionsBaseFindResponse",
+    "FindCollectionsBaseFindResponseMeta",
+    "FindCollectionsBaseFindResponseMetaProvenance",
     "FindCollectionsBaseFindResponsePagination",
     "FindCollectionsOrderBy",
     "FindDataProvidersBaseFindResponse",
+    "FindDataProvidersBaseFindResponseMeta",
+    "FindDataProvidersBaseFindResponseMetaProvenance",
     "FindDataProvidersBaseFindResponsePagination",
     "FindEntitiesBaseFindResponse",
+    "FindEntitiesBaseFindResponseMeta",
+    "FindEntitiesBaseFindResponseMetaProvenance",
     "FindEntitiesBaseFindResponsePagination",
     "FindEntitiesOrderBy",
     "FindExperimentsBaseFindResponse",
+    "FindExperimentsBaseFindResponseMeta",
+    "FindExperimentsBaseFindResponseMetaProvenance",
     "FindExperimentsBaseFindResponsePagination",
     "FindImagesBaseFindResponse",
+    "FindImagesBaseFindResponseMeta",
+    "FindImagesBaseFindResponseMetaProvenance",
     "FindImagesBaseFindResponsePagination",
     "FindImagesOrderBy",
     "FindMediaSourcesBaseFindResponse",
+    "FindMediaSourcesBaseFindResponseMeta",
+    "FindMediaSourcesBaseFindResponseMetaProvenance",
     "FindMediaSourcesBaseFindResponsePagination",
     "FindMediaSourcesOrderBy",
     "FindMediaSourcesType",
     "FindTextReuseClustersBaseFindResponse",
+    "FindTextReuseClustersBaseFindResponseMeta",
+    "FindTextReuseClustersBaseFindResponseMetaProvenance",
     "FindTextReuseClustersBaseFindResponsePagination",
     "FindTextReuseClustersOrderBy",
     "FindTextReuseClustersResponse",
+    "FindTextReuseClustersResponseInfo",
     "FindTextReuseClustersResponseTextReuseClusterCompound",
     "FindTextReuseClustersResponseTextReuseClusterCompoundTextReuseCluster",
     "FindTextReuseClustersResponseTextReuseClusterCompoundTextReuseClusterDetails",
@@ -293,9 +389,13 @@ __all__ = (
     "FindTextReuseClustersResponseTextReuseClusterCompoundTextReuseClusterDetailsResolution",
     "FindTextReuseClustersResponseTextReuseClusterCompoundTextReuseClusterTimeCoverage",
     "FindTextReusePassagesBaseFindResponse",
+    "FindTextReusePassagesBaseFindResponseMeta",
+    "FindTextReusePassagesBaseFindResponseMetaProvenance",
     "FindTextReusePassagesBaseFindResponsePagination",
     "FindTextReusePassagesOrderBy",
     "FindTopicsBaseFindResponse",
+    "FindTopicsBaseFindResponseMeta",
+    "FindTopicsBaseFindResponseMetaProvenance",
     "FindTopicsBaseFindResponsePagination",
     "FindTopicsOrderBy",
     "Freeform",
@@ -312,18 +412,26 @@ __all__ = (
     "FullVersionDetailsSolr",
     "FullVersionDetailsSolrEndpoints",
     "GetImagesFacetBaseFindResponse",
+    "GetImagesFacetBaseFindResponseMeta",
+    "GetImagesFacetBaseFindResponseMetaProvenance",
     "GetImagesFacetBaseFindResponsePagination",
     "GetImagesFacetId",
     "GetImagesFacetOrderBy",
     "GetSearchFacetBaseFindResponse",
+    "GetSearchFacetBaseFindResponseMeta",
+    "GetSearchFacetBaseFindResponseMetaProvenance",
     "GetSearchFacetBaseFindResponsePagination",
     "GetSearchFacetId",
     "GetSearchFacetOrderBy",
     "GetTrClustersFacetBaseFindResponse",
+    "GetTrClustersFacetBaseFindResponseMeta",
+    "GetTrClustersFacetBaseFindResponseMetaProvenance",
     "GetTrClustersFacetBaseFindResponsePagination",
     "GetTrClustersFacetId",
     "GetTrClustersFacetOrderBy",
     "GetTrPassagesFacetBaseFindResponse",
+    "GetTrPassagesFacetBaseFindResponseMeta",
+    "GetTrPassagesFacetBaseFindResponseMetaProvenance",
     "GetTrPassagesFacetBaseFindResponsePagination",
     "GetTrPassagesFacetId",
     "GetTrPassagesFacetOrderBy",
@@ -347,14 +455,26 @@ __all__ = (
     "ImpressoTextEmbeddingRequestSearchTarget",
     "InteractWithExperimentBody",
     "MediaSource",
+    "MediaSourceMediaSourceProperty",
     "MediaSourceMedium",
-    "MediaSourcePropertiesItem",
     "MediaSourceTotals",
     "MediaSourceType",
     "NewCollectionRequest",
     "NewCollectionRequestAccessLevel",
     "Partner",
+    "ProvenanceVerificationResponseJsonType0ClaimsType0",
+    "ProvenanceVerificationResponseJsonType0ClaimsType0Kind",
+    "ProvenanceVerificationResponseJsonType0ClaimsType1",
+    "ProvenanceVerificationResponseJsonType0ClaimsType1Kind",
+    "ProvenanceVerificationResponseJsonType1",
+    "ProvenanceVerificationResponseType0ClaimsType0",
+    "ProvenanceVerificationResponseType0ClaimsType0Kind",
+    "ProvenanceVerificationResponseType0ClaimsType1",
+    "ProvenanceVerificationResponseType0ClaimsType1Kind",
+    "ProvenanceVerificationResponseType1",
     "SearchBaseFindResponse",
+    "SearchBaseFindResponseMeta",
+    "SearchBaseFindResponseMetaProvenance",
     "SearchBaseFindResponsePagination",
     "SearchFacetBucket",
     "SearchOrderBy",

@@ -15,7 +15,7 @@ class Filter:
     """A single search filter criteria
 
     Attributes:
-        type (str): Possible values are in 'impresso-jscomons Filter.type'
+        type (str): Possible values are in 'impresso-jscommons Filter.type'
         context (Union[Unset, FilterContext]):  Default: FilterContext.INCLUDE.
         op (Union[Unset, FilterOp]):  Default: FilterOp.OR.
         precision (Union[Unset, FilterPrecision]):  Default: FilterPrecision.EXACT.

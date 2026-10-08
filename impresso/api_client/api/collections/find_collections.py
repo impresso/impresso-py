@@ -15,6 +15,7 @@ def _get_kwargs(
     *,
     term: Union[Unset, str] = UNSET,
     order_by: FindCollectionsOrderBy = FindCollectionsOrderBy.VALUE_0,
+    include_public: Union[Unset, bool] = False,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Dict[str, Any]:
@@ -24,6 +25,8 @@ def _get_kwargs(
 
     json_order_by = order_by.value
     params["order_by"] = json_order_by
+
+    params["includePublic"] = include_public
 
     params["limit"] = limit
 
@@ -101,6 +104,7 @@ def sync_detailed(
     client: AuthenticatedClient,
     term: Union[Unset, str] = UNSET,
     order_by: FindCollectionsOrderBy = FindCollectionsOrderBy.VALUE_0,
+    include_public: Union[Unset, bool] = False,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, FindCollectionsBaseFindResponse]]:
@@ -109,6 +113,7 @@ def sync_detailed(
     Args:
         term (Union[Unset, str]):
         order_by (FindCollectionsOrderBy):  Default: FindCollectionsOrderBy.VALUE_0.
+        include_public (Union[Unset, bool]):  Default: False.
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -123,6 +128,7 @@ def sync_detailed(
     kwargs = _get_kwargs(
         term=term,
         order_by=order_by,
+        include_public=include_public,
         limit=limit,
         offset=offset,
     )
@@ -139,6 +145,7 @@ def sync(
     client: AuthenticatedClient,
     term: Union[Unset, str] = UNSET,
     order_by: FindCollectionsOrderBy = FindCollectionsOrderBy.VALUE_0,
+    include_public: Union[Unset, bool] = False,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, FindCollectionsBaseFindResponse]]:
@@ -147,6 +154,7 @@ def sync(
     Args:
         term (Union[Unset, str]):
         order_by (FindCollectionsOrderBy):  Default: FindCollectionsOrderBy.VALUE_0.
+        include_public (Union[Unset, bool]):  Default: False.
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -162,6 +170,7 @@ def sync(
         client=client,
         term=term,
         order_by=order_by,
+        include_public=include_public,
         limit=limit,
         offset=offset,
     ).parsed
@@ -172,6 +181,7 @@ async def asyncio_detailed(
     client: AuthenticatedClient,
     term: Union[Unset, str] = UNSET,
     order_by: FindCollectionsOrderBy = FindCollectionsOrderBy.VALUE_0,
+    include_public: Union[Unset, bool] = False,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Response[Union[Error, FindCollectionsBaseFindResponse]]:
@@ -180,6 +190,7 @@ async def asyncio_detailed(
     Args:
         term (Union[Unset, str]):
         order_by (FindCollectionsOrderBy):  Default: FindCollectionsOrderBy.VALUE_0.
+        include_public (Union[Unset, bool]):  Default: False.
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -194,6 +205,7 @@ async def asyncio_detailed(
     kwargs = _get_kwargs(
         term=term,
         order_by=order_by,
+        include_public=include_public,
         limit=limit,
         offset=offset,
     )
@@ -208,6 +220,7 @@ async def asyncio(
     client: AuthenticatedClient,
     term: Union[Unset, str] = UNSET,
     order_by: FindCollectionsOrderBy = FindCollectionsOrderBy.VALUE_0,
+    include_public: Union[Unset, bool] = False,
     limit: Union[Unset, int] = UNSET,
     offset: Union[Unset, int] = UNSET,
 ) -> Optional[Union[Error, FindCollectionsBaseFindResponse]]:
@@ -216,6 +229,7 @@ async def asyncio(
     Args:
         term (Union[Unset, str]):
         order_by (FindCollectionsOrderBy):  Default: FindCollectionsOrderBy.VALUE_0.
+        include_public (Union[Unset, bool]):  Default: False.
         limit (Union[Unset, int]):
         offset (Union[Unset, int]):
 
@@ -232,6 +246,7 @@ async def asyncio(
             client=client,
             term=term,
             order_by=order_by,
+            include_public=include_public,
             limit=limit,
             offset=offset,
         )
