@@ -115,7 +115,8 @@ class Filter(BaseModel):
     context: Optional[Literal['include', 'exclude']] = 'include'
     op: Optional[Literal['AND', 'OR']] = 'OR'
     type: Annotated[
-        str, Field(description="Possible values are in 'impresso-jscomons Filter.type'")
+        str,
+        Field(description="Possible values are in 'impresso-jscommons Filter.type'"),
     ]
     precision: Optional[Literal['fuzzy', 'soft', 'exact', 'partial']] = 'exact'
     q: Optional[Union[Q, Sequence[QItem]]] = None
@@ -160,51 +161,6 @@ class MediaSourceRef(BaseModel):
     type: Annotated[
         Optional[Literal['newspaper']],
         Field(None, description='The type of the media source'),
-    ]
-
-
-class Image(BaseModel):
-    model_config = ConfigDict(
-        extra='forbid',
-    )
-    id: Annotated[str, Field(description='The unique identifier of the image')]
-    caption: Annotated[Optional[str], Field(None, description='Image caption')]
-    issueId: Annotated[
-        str,
-        Field(
-            description='The unique identifier of the issue that the image belongs to.'
-        ),
-    ]
-    contentItemId: Annotated[
-        Optional[str],
-        Field(
-            None,
-            description='The unique identifier of the content item that the image belongs to.',
-        ),
-    ]
-    previewUrl: Annotated[AnyUrl, Field(description='The URL of the image preview')]
-    pageNumbers: Annotated[
-        Optional[Sequence[int]],
-        Field(
-            None, description='The page numbers of the issue that the image belongs to.'
-        ),
-    ]
-    imageTypes: Optional[ImageTypes] = None
-    mediaSourceRef: Annotated[
-        MediaSourceRef, Field(description='The media source of the image')
-    ]
-    date: Annotated[
-        date,
-        Field(
-            description='The date of the image or the date of the issue that the image belongs to.'
-        ),
-    ]
-    embeddings: Annotated[
-        Optional[Sequence[str]],
-        Field(
-            None,
-            description='Precomputed embeddings for the image in the format: <model_type>:<base64_embedding_vector>.',
-        ),
     ]
 
 
@@ -390,7 +346,7 @@ class MediaSource(BaseModel):
         Optional[Sequence[AwareDatetime]],
         Field(
             None,
-            description='The range of dates this media source has content items for. This represents the earliest and the latest dates of the contet items.  Is not defined if there are no content items for this source.',
+            description='The range of dates this media source has content items for. This represents the earliest and the latest dates of the content items.  Is not defined if there are no content items for this source.',
             max_length=2,
             min_length=2,
         ),
@@ -500,6 +456,27 @@ class TopicWord(BaseModel):
     h: Annotated[Optional[bool], Field(None, description='If word is highlighted')]
 
 
+class WikidataItem(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[
+        str,
+        Field(
+            description='The Q Wikidata ID of the item (https://www.wikidata.org/wiki/Wikidata:Identifiers)'
+        ),
+    ]
+    type: Annotated[Literal['item'], Field(description='The type of the entity')]
+    labels: Annotated[
+        Optional[Mapping[str, str]],
+        Field(None, description='Labels of the item in different languages'),
+    ]
+    descriptions: Annotated[
+        Optional[Mapping[str, Sequence[str]]],
+        Field(None, description='Descriptions of the item in different languages'),
+    ]
+
+
 class Coordinates(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
@@ -524,7 +501,7 @@ class WikidataLocation(BaseModel):
     ]
     type: Annotated[Literal['location'], Field(description='The type of the entity')]
     labels: Annotated[
-        Optional[Mapping[str, Sequence[str]]],
+        Optional[Mapping[str, str]],
         Field(None, description='Labels of the location in different languages'),
     ]
     descriptions: Annotated[
@@ -546,7 +523,7 @@ class WikidataPerson(BaseModel):
     ]
     type: Annotated[Literal['human'], Field(description='The type of the entity')]
     labels: Annotated[
-        Optional[Mapping[str, Sequence[str]]],
+        Optional[Mapping[str, str]],
         Field(None, description='Labels of the person in different languages'),
     ]
     descriptions: Annotated[
@@ -733,10 +710,9 @@ class ContentItemMeta(BaseModel):
         ),
     ]
     mediaId: Annotated[
-        Optional[str],
+        str,
         Field(
-            None,
-            description='Media title alias. Usually a 3 letter code of the media title (newspaper, radio station, etc.).',
+            description='Media title alias. Usually a 3 letter code of the media title (newspaper, radio station, etc.).'
         ),
     ]
     mediaTitle: Annotated[
@@ -834,6 +810,7 @@ class NamedEntities(BaseModel):
     locations: Optional[Sequence[ContentItemNamedEntity]] = None
     organisations: Optional[Sequence[ContentItemNamedEntity]] = None
     newsagencies: Optional[Sequence[ContentItemNamedEntity]] = None
+    radiostations: Optional[Sequence[ContentItemNamedEntity]] = None
 
 
 class Mentions(BaseModel):
@@ -844,6 +821,7 @@ class Mentions(BaseModel):
     locations: Optional[Sequence[ContentItemMention]] = None
     organisations: Optional[Sequence[ContentItemMention]] = None
     newsagencies: Optional[Sequence[ContentItemMention]] = None
+    radiostations: Optional[Sequence[ContentItemMention]] = None
 
 
 class ContentItemTextMatch(BaseModel):
@@ -990,6 +968,78 @@ class NewCollectionRequest(BaseModel):
     ]
 
 
+class Id(RootModel[str]):
+    root: Annotated[str, Field(max_length=4096, min_length=1, pattern='^[^\\r\\n]+$')]
+
+
+class ProvenanceVerificationRequest1(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    token: Annotated[str, Field(max_length=16384, min_length=1)]
+    ids: Annotated[Optional[Sequence[Id]], Field(None, max_length=100000)]
+    csv: Annotated[Optional[str], Field(None, max_length=1048576)]
+    idsHash: Annotated[Optional[str], Field(None, pattern='^[a-f0-9]{64}$')]
+    idsCount: Annotated[Optional[int], Field(None, ge=0)]
+
+
+class ProvenanceVerificationRequest2(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    token: Annotated[str, Field(max_length=16384, min_length=1)]
+    ids: Annotated[Sequence[Id], Field(max_length=100000)]
+    csv: Annotated[Optional[str], Field(None, max_length=1048576)]
+    idsHash: Annotated[Optional[str], Field(None, pattern='^[a-f0-9]{64}$')]
+    idsCount: Annotated[Optional[int], Field(None, ge=0)]
+
+
+class ProvenanceVerificationRequest3(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    token: Annotated[str, Field(max_length=16384, min_length=1)]
+    ids: Annotated[Optional[Sequence[Id]], Field(None, max_length=100000)]
+    csv: Annotated[str, Field(max_length=1048576)]
+    idsHash: Annotated[Optional[str], Field(None, pattern='^[a-f0-9]{64}$')]
+    idsCount: Annotated[Optional[int], Field(None, ge=0)]
+
+
+class ProvenanceVerificationRequest4(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    token: Annotated[str, Field(max_length=16384, min_length=1)]
+    ids: Annotated[Optional[Sequence[Id]], Field(None, max_length=100000)]
+    csv: Annotated[Optional[str], Field(None, max_length=1048576)]
+    idsHash: Annotated[str, Field(pattern='^[a-f0-9]{64}$')]
+    idsCount: Annotated[int, Field(ge=0)]
+
+
+class ProvenanceVerificationRequest(
+    RootModel[
+        Union[
+            ProvenanceVerificationRequest1,
+            ProvenanceVerificationRequest2,
+            ProvenanceVerificationRequest3,
+            ProvenanceVerificationRequest4,
+        ]
+    ]
+):
+    root: Annotated[
+        Union[
+            ProvenanceVerificationRequest1,
+            ProvenanceVerificationRequest2,
+            ProvenanceVerificationRequest3,
+            ProvenanceVerificationRequest4,
+        ],
+        Field(
+            description='Signed delivery receipts identify receiving accounts and ordered item IDs only. They do not attest item content or identify a publisher.',
+            title='ProvenanceVerificationRequest',
+        ),
+    ]
+
+
 class UpdateCollectableItemsRequest(BaseModel):
     add: Annotated[
         Optional[Sequence[str]],
@@ -1093,12 +1143,28 @@ class Pagination(BaseModel):
     ]
 
 
+class Provenance(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    token: str
+    kid: str
+
+
+class Meta(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    provenance: Optional[Provenance] = None
+
+
 class BaseFind(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
     data: Sequence
     pagination: Pagination
+    meta: Optional[Meta] = None
 
 
 class CollectableItemsUpdatedResponse(BaseModel):
@@ -1262,12 +1328,30 @@ class Cluster(BaseModel):
     ]
 
 
+class Info(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    limit: Annotated[
+        int, Field(description='The number of items returned in this response')
+    ]
+    offset: Annotated[
+        int,
+        Field(
+            description='Starting index of the items subset returned in this response'
+        ),
+    ]
+    total: Annotated[
+        int, Field(description='The total number of items matching the query')
+    ]
+
+
 class FindTextReuseClustersResponse(BaseModel):
     model_config = ConfigDict(
         extra='forbid',
     )
     clusters: Sequence[Cluster]
-    info: Any
+    info: Info
 
 
 class Freeform(BaseModel):
@@ -1304,6 +1388,49 @@ class ImpressoNerResponse(BaseModel):
         Field(description='Timestamp of when named entity recognition was performed'),
     ]
     entities: Sequence[ImpressoNerEntity]
+
+
+class Claims(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    iss: str
+    aud: str
+    iat: float
+    jti: Annotated[str, Field(min_length=1)]
+    userRef: Annotated[str, Field(min_length=1)]
+    kind: Literal['api']
+    path: Annotated[str, Field(min_length=1)]
+    idsHash: Annotated[str, Field(pattern='^[a-f0-9]{64}$')]
+    idsCount: Annotated[int, Field(ge=0)]
+
+
+class Claims1(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    iss: str
+    aud: str
+    iat: float
+    jti: Annotated[str, Field(min_length=1)]
+    userRef: Annotated[str, Field(min_length=1)]
+    kind: Literal['export']
+    exportId: Annotated[str, Field(min_length=1)]
+    idsHash: Annotated[str, Field(pattern='^[a-f0-9]{64}$')]
+    idsCount: Annotated[int, Field(ge=0)]
+
+
+class ProvenanceVerificationResponse(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    valid: bool
+    claims: Annotated[
+        Optional[Union[Claims, Claims1]],
+        Field(None, title='ProvenanceVerificationClaims'),
+    ]
+    idsMatch: Optional[bool] = None
+    reason: Optional[str] = None
 
 
 class Solr(BaseModel):
@@ -1402,7 +1529,9 @@ class EntityDetails(BaseModel):
     )
     id: Annotated[str, Field(description='Unique identifier of the entity')]
     label: Annotated[Optional[str], Field(None, description='Entity label')]
-    type: Optional[Literal['person', 'location', 'organisation', 'newsagency']] = None
+    type: Optional[
+        Literal['person', 'location', 'organisation', 'newsagency', 'radiostation']
+    ] = None
     wikidataId: Annotated[
         Optional[str], Field(None, description='Wikidata identifier of the entity.')
     ]
@@ -1417,7 +1546,55 @@ class EntityDetails(BaseModel):
             description='Total number of content items the entity is mentioned in.',
         ),
     ]
-    wikidataDetails: Optional[Union[WikidataPerson, WikidataLocation]] = None
+    wikidataDetails: Optional[Union[WikidataPerson, WikidataLocation, WikidataItem]] = (
+        None
+    )
+
+
+class Image(BaseModel):
+    model_config = ConfigDict(
+        extra='forbid',
+    )
+    id: Annotated[str, Field(description='The unique identifier of the image')]
+    caption: Annotated[Optional[str], Field(None, description='Image caption')]
+    issueId: Annotated[
+        str,
+        Field(
+            description='The unique identifier of the issue that the image belongs to.'
+        ),
+    ]
+    contentItemId: Annotated[
+        Optional[str],
+        Field(
+            None,
+            description='The unique identifier of the content item that the image belongs to.',
+        ),
+    ]
+    previewUrl: Annotated[AnyUrl, Field(description='The URL of the image preview')]
+    pageNumbers: Annotated[
+        Optional[Sequence[int]],
+        Field(
+            None, description='The page numbers of the issue that the image belongs to.'
+        ),
+    ]
+    imageTypes: Optional[ImageTypes] = None
+    mediaSourceRef: Annotated[
+        MediaSourceRef, Field(description='The media source of the image')
+    ]
+    date: Annotated[
+        date,
+        Field(
+            description='The date of the image or the date of the issue that the image belongs to.'
+        ),
+    ]
+    embeddings: Annotated[
+        Optional[Sequence[str]],
+        Field(
+            None,
+            description='Precomputed embeddings for the image in the format: <model_type>:<base64_embedding_vector>.',
+        ),
+    ]
+    access: Optional[ContentItemAccessRights] = None
 
 
 class Topic(BaseModel):
@@ -1547,32 +1724,24 @@ class ContentItemText(BaseModel):
     ]
     itemType: Annotated[
         Optional[
-            Literal[
-                'ar',
-                'article',
-                'ad',
-                'advertisement',
-                'page',
-                'tb',
-                'ob',
-                'w',
-                'ch',
-                'chapter',
-                'death_notice',
-                'chronicle',
-                'unsegmented',
-                'radio_broadcast_episode',
-                'radio_bulletin',
-                'rbe',
-                'rb',
-                'dsc',
-                'discussion',
-                'ent',
-                'entertainment',
-                'no-type',
+            Union[
+                Literal['page'],
+                Literal['ar', 'article'],
+                Literal['ad'],
+                Literal['img', 'image'],
+                Literal['tb', 'table'],
+                Literal['ob', 'death_notice'],
+                Literal['w', 'weather'],
+                Literal['ch', 'chronicle'],
+                Literal['radio_bulletin', 'rb'],
+                Literal['rbe', 'radio_broadcast_episode'],
+                Literal['no-type'],
+                Literal['dsc', 'discussion'],
+                Literal['ent', 'entertainment'],
+                Literal['chapter'],
             ]
         ],
-        Field(None, description='Type of content item, e.g., article, section.'),
+        Field(None, description='Type of content item.'),
     ]
     itemTypeLabel: Annotated[
         Optional[str],

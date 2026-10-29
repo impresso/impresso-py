@@ -2,11 +2,11 @@ from enum import Enum
 from typing import Literal
 
 
-class ContentItemTextEntretien(str, Enum):
-    ENT = "ent"
+class ContentItemTextPage(str, Enum):
+    PAGE = "page"
 
     def __str__(self) -> str:
         return str(self.value)
 
 
-ContentItemTextEntretienLiteral = Literal["ent",]
+ContentItemTextPageLiteral = Literal["page",]

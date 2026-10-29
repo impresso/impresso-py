@@ -4,9 +4,13 @@ from typing import Literal
 
 class ContentItemTextChronicle(str, Enum):
     CH = "ch"
+    CHRONICLE = "chronicle"
 
     def __str__(self) -> str:
         return str(self.value)
 
 
-ContentItemTextChronicleLiteral = Literal["ch",]
+ContentItemTextChronicleLiteral = Literal[
+    "ch",
+    "chronicle",
+]

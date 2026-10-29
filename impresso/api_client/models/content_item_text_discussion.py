@@ -3,10 +3,14 @@ from typing import Literal
 
 
 class ContentItemTextDiscussion(str, Enum):
+    DISCUSSION = "discussion"
     DSC = "dsc"
 
     def __str__(self) -> str:
         return str(self.value)
 
 
-ContentItemTextDiscussionLiteral = Literal["dsc",]
+ContentItemTextDiscussionLiteral = Literal[
+    "discussion",
+    "dsc",
+]

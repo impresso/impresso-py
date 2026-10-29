@@ -3,10 +3,14 @@ from typing import Literal
 
 
 class ContentItemTextTable(str, Enum):
+    TABLE = "table"
     TB = "tb"
 
     def __str__(self) -> str:
         return str(self.value)
 
 
-ContentItemTextTableLiteral = Literal["tb",]
+ContentItemTextTableLiteral = Literal[
+    "table",
+    "tb",
+]

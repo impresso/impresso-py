@@ -4,15 +4,17 @@ from attrs import define as _attrs_define
 
 from ..models.content_item_text_advertisement import ContentItemTextAdvertisement
 from ..models.content_item_text_article import ContentItemTextArticle
+from ..models.content_item_text_chapter import ContentItemTextChapter
 from ..models.content_item_text_chronicle import ContentItemTextChronicle
 from ..models.content_item_text_discussion import ContentItemTextDiscussion
 from ..models.content_item_text_document_type import ContentItemTextDocumentType
-from ..models.content_item_text_entretien import ContentItemTextEntretien
+from ..models.content_item_text_entertainment import ContentItemTextEntertainment
 from ..models.content_item_text_image import ContentItemTextImage
 from ..models.content_item_text_no_type_provided import ContentItemTextNoTypeProvided
 from ..models.content_item_text_obituary import ContentItemTextObituary
-from ..models.content_item_text_radio_broadcast import ContentItemTextRadioBroadcast
+from ..models.content_item_text_page import ContentItemTextPage
 from ..models.content_item_text_radio_broadcast_episode import ContentItemTextRadioBroadcastEpisode
+from ..models.content_item_text_radio_bulletin import ContentItemTextRadioBulletin
 from ..models.content_item_text_table import ContentItemTextTable
 from ..models.content_item_text_weather import ContentItemTextWeather
 from ..types import UNSET, Unset
@@ -31,10 +33,11 @@ class ContentItemText:
     Attributes:
         document_type (Union[Unset, ContentItemTextDocumentType]): Type of document, e.g., page (p) or content item
             (ci).
-        item_type (Union[ContentItemTextAdvertisement, ContentItemTextArticle, ContentItemTextChronicle,
-            ContentItemTextDiscussion, ContentItemTextEntretien, ContentItemTextImage, ContentItemTextNoTypeProvided,
-            ContentItemTextObituary, ContentItemTextRadioBroadcast, ContentItemTextRadioBroadcastEpisode,
-            ContentItemTextTable, ContentItemTextWeather, Unset]): Type of content item, e.g., article, section.
+        item_type (Union[ContentItemTextAdvertisement, ContentItemTextArticle, ContentItemTextChapter,
+            ContentItemTextChronicle, ContentItemTextDiscussion, ContentItemTextEntertainment, ContentItemTextImage,
+            ContentItemTextNoTypeProvided, ContentItemTextObituary, ContentItemTextPage,
+            ContentItemTextRadioBroadcastEpisode, ContentItemTextRadioBulletin, ContentItemTextTable,
+            ContentItemTextWeather, Unset]): Type of content item.
         item_type_label (Union[Unset, str]): Human-readable label for the itemType code.
         original_lang_code (Union[Unset, str]): Original language of the content item.
         lang_code (Union[Unset, str]): Computed language of the content item.
@@ -49,14 +52,16 @@ class ContentItemText:
     item_type: Union[
         ContentItemTextAdvertisement,
         ContentItemTextArticle,
+        ContentItemTextChapter,
         ContentItemTextChronicle,
         ContentItemTextDiscussion,
-        ContentItemTextEntretien,
+        ContentItemTextEntertainment,
         ContentItemTextImage,
         ContentItemTextNoTypeProvided,
         ContentItemTextObituary,
-        ContentItemTextRadioBroadcast,
+        ContentItemTextPage,
         ContentItemTextRadioBroadcastEpisode,
+        ContentItemTextRadioBulletin,
         ContentItemTextTable,
         ContentItemTextWeather,
         Unset,
@@ -78,6 +83,8 @@ class ContentItemText:
         item_type: Union[Unset, str]
         if isinstance(self.item_type, Unset):
             item_type = UNSET
+        elif isinstance(self.item_type, ContentItemTextPage):
+            item_type = self.item_type.value
         elif isinstance(self.item_type, ContentItemTextArticle):
             item_type = self.item_type.value
         elif isinstance(self.item_type, ContentItemTextAdvertisement):
@@ -92,13 +99,15 @@ class ContentItemText:
             item_type = self.item_type.value
         elif isinstance(self.item_type, ContentItemTextChronicle):
             item_type = self.item_type.value
-        elif isinstance(self.item_type, ContentItemTextRadioBroadcast):
+        elif isinstance(self.item_type, ContentItemTextRadioBulletin):
             item_type = self.item_type.value
         elif isinstance(self.item_type, ContentItemTextRadioBroadcastEpisode):
             item_type = self.item_type.value
         elif isinstance(self.item_type, ContentItemTextNoTypeProvided):
             item_type = self.item_type.value
         elif isinstance(self.item_type, ContentItemTextDiscussion):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextEntertainment):
             item_type = self.item_type.value
         else:
             item_type = self.item_type.value
@@ -166,14 +175,16 @@ class ContentItemText:
         ) -> Union[
             ContentItemTextAdvertisement,
             ContentItemTextArticle,
+            ContentItemTextChapter,
             ContentItemTextChronicle,
             ContentItemTextDiscussion,
-            ContentItemTextEntretien,
+            ContentItemTextEntertainment,
             ContentItemTextImage,
             ContentItemTextNoTypeProvided,
             ContentItemTextObituary,
-            ContentItemTextRadioBroadcast,
+            ContentItemTextPage,
             ContentItemTextRadioBroadcastEpisode,
+            ContentItemTextRadioBulletin,
             ContentItemTextTable,
             ContentItemTextWeather,
             Unset,
@@ -183,7 +194,7 @@ class ContentItemText:
             try:
                 if not isinstance(data, str):
                     raise TypeError()
-                item_type_type_0 = ContentItemTextArticle(data)
+                item_type_type_0 = ContentItemTextPage(data)
 
                 return item_type_type_0
             except:  # noqa: E722
@@ -191,7 +202,7 @@ class ContentItemText:
             try:
                 if not isinstance(data, str):
                     raise TypeError()
-                item_type_type_1 = ContentItemTextAdvertisement(data)
+                item_type_type_1 = ContentItemTextArticle(data)
 
                 return item_type_type_1
             except:  # noqa: E722
@@ -199,7 +210,7 @@ class ContentItemText:
             try:
                 if not isinstance(data, str):
                     raise TypeError()
-                item_type_type_2 = ContentItemTextImage(data)
+                item_type_type_2 = ContentItemTextAdvertisement(data)
 
                 return item_type_type_2
             except:  # noqa: E722
@@ -207,7 +218,7 @@ class ContentItemText:
             try:
                 if not isinstance(data, str):
                     raise TypeError()
-                item_type_type_3 = ContentItemTextTable(data)
+                item_type_type_3 = ContentItemTextImage(data)
 
                 return item_type_type_3
             except:  # noqa: E722
@@ -215,7 +226,7 @@ class ContentItemText:
             try:
                 if not isinstance(data, str):
                     raise TypeError()
-                item_type_type_4 = ContentItemTextObituary(data)
+                item_type_type_4 = ContentItemTextTable(data)
 
                 return item_type_type_4
             except:  # noqa: E722
@@ -223,7 +234,7 @@ class ContentItemText:
             try:
                 if not isinstance(data, str):
                     raise TypeError()
-                item_type_type_5 = ContentItemTextWeather(data)
+                item_type_type_5 = ContentItemTextObituary(data)
 
                 return item_type_type_5
             except:  # noqa: E722
@@ -231,7 +242,7 @@ class ContentItemText:
             try:
                 if not isinstance(data, str):
                     raise TypeError()
-                item_type_type_6 = ContentItemTextChronicle(data)
+                item_type_type_6 = ContentItemTextWeather(data)
 
                 return item_type_type_6
             except:  # noqa: E722
@@ -239,7 +250,7 @@ class ContentItemText:
             try:
                 if not isinstance(data, str):
                     raise TypeError()
-                item_type_type_7 = ContentItemTextRadioBroadcast(data)
+                item_type_type_7 = ContentItemTextChronicle(data)
 
                 return item_type_type_7
             except:  # noqa: E722
@@ -247,7 +258,7 @@ class ContentItemText:
             try:
                 if not isinstance(data, str):
                     raise TypeError()
-                item_type_type_8 = ContentItemTextRadioBroadcastEpisode(data)
+                item_type_type_8 = ContentItemTextRadioBulletin(data)
 
                 return item_type_type_8
             except:  # noqa: E722
@@ -255,7 +266,7 @@ class ContentItemText:
             try:
                 if not isinstance(data, str):
                     raise TypeError()
-                item_type_type_9 = ContentItemTextNoTypeProvided(data)
+                item_type_type_9 = ContentItemTextRadioBroadcastEpisode(data)
 
                 return item_type_type_9
             except:  # noqa: E722
@@ -263,16 +274,32 @@ class ContentItemText:
             try:
                 if not isinstance(data, str):
                     raise TypeError()
-                item_type_type_10 = ContentItemTextDiscussion(data)
+                item_type_type_10 = ContentItemTextNoTypeProvided(data)
 
                 return item_type_type_10
             except:  # noqa: E722
                 pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_11 = ContentItemTextDiscussion(data)
+
+                return item_type_type_11
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_12 = ContentItemTextEntertainment(data)
+
+                return item_type_type_12
+            except:  # noqa: E722
+                pass
             if not isinstance(data, str):
                 raise TypeError()
-            item_type_type_11 = ContentItemTextEntretien(data)
+            item_type_type_13 = ContentItemTextChapter(data)
 
-            return item_type_type_11
+            return item_type_type_13
 
         item_type = _parse_item_type(d.pop("itemType", UNSET))
 

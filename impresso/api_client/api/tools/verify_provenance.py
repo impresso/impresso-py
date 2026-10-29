@@ -6,8 +6,7 @@ import httpx
 from ... import errors
 from ...client import AuthenticatedClient, Client
 from ...models.error import Error
-from ...models.provenance_verification_response_type_0 import ProvenanceVerificationResponseType0
-from ...models.provenance_verification_response_type_1 import ProvenanceVerificationResponseType1
+from ...models.provenance_verification_response import ProvenanceVerificationResponse
 from ...types import Response
 
 
@@ -34,31 +33,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Optional[Union[Error, Union["ProvenanceVerificationResponseType0", "ProvenanceVerificationResponseType1"]]]:
+) -> Optional[Union[Error, ProvenanceVerificationResponse]]:
     if response.status_code == HTTPStatus.CREATED:
-
-        def _parse_response_201(
-            data: object,
-        ) -> Union["ProvenanceVerificationResponseType0", "ProvenanceVerificationResponseType1"]:
-            try:
-                if not isinstance(data, dict):
-                    raise TypeError()
-                componentsschemas_provenance_verification_response_type_0 = (
-                    ProvenanceVerificationResponseType0.from_dict(data)
-                )
-
-                return componentsschemas_provenance_verification_response_type_0
-            except:  # noqa: E722
-                pass
-            if not isinstance(data, dict):
-                raise TypeError()
-            componentsschemas_provenance_verification_response_type_1 = ProvenanceVerificationResponseType1.from_dict(
-                data
-            )
-
-            return componentsschemas_provenance_verification_response_type_1
-
-        response_201 = _parse_response_201(response.json())
+        response_201 = ProvenanceVerificationResponse.from_dict(response.json())
 
         return response_201
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -97,7 +74,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Union[AuthenticatedClient, Client], response: httpx.Response
-) -> Response[Union[Error, Union["ProvenanceVerificationResponseType0", "ProvenanceVerificationResponseType1"]]]:
+) -> Response[Union[Error, ProvenanceVerificationResponse]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -110,7 +87,7 @@ def sync_detailed(
     *,
     client: AuthenticatedClient,
     body: Any,
-) -> Response[Union[Error, Union["ProvenanceVerificationResponseType0", "ProvenanceVerificationResponseType1"]]]:
+) -> Response[Union[Error, ProvenanceVerificationResponse]]:
     r"""Usually send only { \"token\": \"<receipt>\" }. Copy the receipt from meta.provenance.token or
     X-Impresso-Provenance; authenticate the request with your normal API JWT. This verifies the
     signature and claims and returns valid and claims (no idsMatch). Optionally supply ID material to
@@ -126,7 +103,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, Union['ProvenanceVerificationResponseType0', 'ProvenanceVerificationResponseType1']]]
+        Response[Union[Error, ProvenanceVerificationResponse]]
     """
 
     kwargs = _get_kwargs(
@@ -144,7 +121,7 @@ def sync(
     *,
     client: AuthenticatedClient,
     body: Any,
-) -> Optional[Union[Error, Union["ProvenanceVerificationResponseType0", "ProvenanceVerificationResponseType1"]]]:
+) -> Optional[Union[Error, ProvenanceVerificationResponse]]:
     r"""Usually send only { \"token\": \"<receipt>\" }. Copy the receipt from meta.provenance.token or
     X-Impresso-Provenance; authenticate the request with your normal API JWT. This verifies the
     signature and claims and returns valid and claims (no idsMatch). Optionally supply ID material to
@@ -160,7 +137,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, Union['ProvenanceVerificationResponseType0', 'ProvenanceVerificationResponseType1']]
+        Union[Error, ProvenanceVerificationResponse]
     """
 
     return sync_detailed(
@@ -173,7 +150,7 @@ async def asyncio_detailed(
     *,
     client: AuthenticatedClient,
     body: Any,
-) -> Response[Union[Error, Union["ProvenanceVerificationResponseType0", "ProvenanceVerificationResponseType1"]]]:
+) -> Response[Union[Error, ProvenanceVerificationResponse]]:
     r"""Usually send only { \"token\": \"<receipt>\" }. Copy the receipt from meta.provenance.token or
     X-Impresso-Provenance; authenticate the request with your normal API JWT. This verifies the
     signature and claims and returns valid and claims (no idsMatch). Optionally supply ID material to
@@ -189,7 +166,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Error, Union['ProvenanceVerificationResponseType0', 'ProvenanceVerificationResponseType1']]]
+        Response[Union[Error, ProvenanceVerificationResponse]]
     """
 
     kwargs = _get_kwargs(
@@ -205,7 +182,7 @@ async def asyncio(
     *,
     client: AuthenticatedClient,
     body: Any,
-) -> Optional[Union[Error, Union["ProvenanceVerificationResponseType0", "ProvenanceVerificationResponseType1"]]]:
+) -> Optional[Union[Error, ProvenanceVerificationResponse]]:
     r"""Usually send only { \"token\": \"<receipt>\" }. Copy the receipt from meta.provenance.token or
     X-Impresso-Provenance; authenticate the request with your normal API JWT. This verifies the
     signature and claims and returns valid and claims (no idsMatch). Optionally supply ID material to
@@ -221,7 +198,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Union[Error, Union['ProvenanceVerificationResponseType0', 'ProvenanceVerificationResponseType1']]
+        Union[Error, ProvenanceVerificationResponse]
     """
 
     return (

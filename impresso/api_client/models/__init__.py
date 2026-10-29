@@ -52,16 +52,18 @@ from .content_item_semantic_enrichments_named_entities import ContentItemSemanti
 from .content_item_text import ContentItemText
 from .content_item_text_advertisement import ContentItemTextAdvertisement
 from .content_item_text_article import ContentItemTextArticle
+from .content_item_text_chapter import ContentItemTextChapter
 from .content_item_text_chronicle import ContentItemTextChronicle
 from .content_item_text_discussion import ContentItemTextDiscussion
 from .content_item_text_document_type import ContentItemTextDocumentType
-from .content_item_text_entretien import ContentItemTextEntretien
+from .content_item_text_entertainment import ContentItemTextEntertainment
 from .content_item_text_image import ContentItemTextImage
 from .content_item_text_match import ContentItemTextMatch
 from .content_item_text_no_type_provided import ContentItemTextNoTypeProvided
 from .content_item_text_obituary import ContentItemTextObituary
-from .content_item_text_radio_broadcast import ContentItemTextRadioBroadcast
+from .content_item_text_page import ContentItemTextPage
 from .content_item_text_radio_broadcast_episode import ContentItemTextRadioBroadcastEpisode
+from .content_item_text_radio_bulletin import ContentItemTextRadioBulletin
 from .content_item_text_table import ContentItemTextTable
 from .content_item_text_weather import ContentItemTextWeather
 from .content_item_topic import ContentItemTopic
@@ -216,28 +218,19 @@ from .media_source_type import MediaSourceType
 from .new_collection_request import NewCollectionRequest
 from .new_collection_request_access_level import NewCollectionRequestAccessLevel
 from .partner import Partner
-from .provenance_verification_response_json_type_0_claims_type_0 import (
-    ProvenanceVerificationResponseJsonType0ClaimsType0,
+from .provenance_verification_response import ProvenanceVerificationResponse
+from .provenance_verification_response_provenance_verification_api_claims import (
+    ProvenanceVerificationResponseProvenanceVerificationApiClaims,
 )
-from .provenance_verification_response_json_type_0_claims_type_0_kind import (
-    ProvenanceVerificationResponseJsonType0ClaimsType0Kind,
+from .provenance_verification_response_provenance_verification_api_claims_kind import (
+    ProvenanceVerificationResponseProvenanceVerificationApiClaimsKind,
 )
-from .provenance_verification_response_json_type_0_claims_type_1 import (
-    ProvenanceVerificationResponseJsonType0ClaimsType1,
+from .provenance_verification_response_provenance_verification_export_claims import (
+    ProvenanceVerificationResponseProvenanceVerificationExportClaims,
 )
-from .provenance_verification_response_json_type_0_claims_type_1_kind import (
-    ProvenanceVerificationResponseJsonType0ClaimsType1Kind,
+from .provenance_verification_response_provenance_verification_export_claims_kind import (
+    ProvenanceVerificationResponseProvenanceVerificationExportClaimsKind,
 )
-from .provenance_verification_response_json_type_1 import ProvenanceVerificationResponseJsonType1
-from .provenance_verification_response_type_0_claims_type_0 import ProvenanceVerificationResponseType0ClaimsType0
-from .provenance_verification_response_type_0_claims_type_0_kind import (
-    ProvenanceVerificationResponseType0ClaimsType0Kind,
-)
-from .provenance_verification_response_type_0_claims_type_1 import ProvenanceVerificationResponseType0ClaimsType1
-from .provenance_verification_response_type_0_claims_type_1_kind import (
-    ProvenanceVerificationResponseType0ClaimsType1Kind,
-)
-from .provenance_verification_response_type_1 import ProvenanceVerificationResponseType1
 from .search_base_find_response import SearchBaseFindResponse
 from .search_base_find_response_meta import SearchBaseFindResponseMeta
 from .search_base_find_response_meta_provenance import SearchBaseFindResponseMetaProvenance
@@ -252,6 +245,10 @@ from .topic import Topic
 from .topic_word import TopicWord
 from .update_collectable_items_request import UpdateCollectableItemsRequest
 from .version_details import VersionDetails
+from .wikidata_item import WikidataItem
+from .wikidata_item_descriptions import WikidataItemDescriptions
+from .wikidata_item_labels import WikidataItemLabels
+from .wikidata_item_type import WikidataItemType
 from .wikidata_location import WikidataLocation
 from .wikidata_location_coordinates import WikidataLocationCoordinates
 from .wikidata_location_descriptions import WikidataLocationDescriptions
@@ -318,16 +315,18 @@ __all__ = (
     "ContentItemText",
     "ContentItemTextAdvertisement",
     "ContentItemTextArticle",
+    "ContentItemTextChapter",
     "ContentItemTextChronicle",
     "ContentItemTextDiscussion",
     "ContentItemTextDocumentType",
-    "ContentItemTextEntretien",
+    "ContentItemTextEntertainment",
     "ContentItemTextImage",
     "ContentItemTextMatch",
     "ContentItemTextNoTypeProvided",
     "ContentItemTextObituary",
-    "ContentItemTextRadioBroadcast",
+    "ContentItemTextPage",
     "ContentItemTextRadioBroadcastEpisode",
+    "ContentItemTextRadioBulletin",
     "ContentItemTextTable",
     "ContentItemTextWeather",
     "ContentItemTopic",
@@ -462,16 +461,11 @@ __all__ = (
     "NewCollectionRequest",
     "NewCollectionRequestAccessLevel",
     "Partner",
-    "ProvenanceVerificationResponseJsonType0ClaimsType0",
-    "ProvenanceVerificationResponseJsonType0ClaimsType0Kind",
-    "ProvenanceVerificationResponseJsonType0ClaimsType1",
-    "ProvenanceVerificationResponseJsonType0ClaimsType1Kind",
-    "ProvenanceVerificationResponseJsonType1",
-    "ProvenanceVerificationResponseType0ClaimsType0",
-    "ProvenanceVerificationResponseType0ClaimsType0Kind",
-    "ProvenanceVerificationResponseType0ClaimsType1",
-    "ProvenanceVerificationResponseType0ClaimsType1Kind",
-    "ProvenanceVerificationResponseType1",
+    "ProvenanceVerificationResponse",
+    "ProvenanceVerificationResponseProvenanceVerificationApiClaims",
+    "ProvenanceVerificationResponseProvenanceVerificationApiClaimsKind",
+    "ProvenanceVerificationResponseProvenanceVerificationExportClaims",
+    "ProvenanceVerificationResponseProvenanceVerificationExportClaimsKind",
     "SearchBaseFindResponse",
     "SearchBaseFindResponseMeta",
     "SearchBaseFindResponseMetaProvenance",
@@ -486,6 +480,10 @@ __all__ = (
     "TopicWord",
     "UpdateCollectableItemsRequest",
     "VersionDetails",
+    "WikidataItem",
+    "WikidataItemDescriptions",
+    "WikidataItemLabels",
+    "WikidataItemType",
     "WikidataLocation",
     "WikidataLocationCoordinates",
     "WikidataLocationDescriptions",

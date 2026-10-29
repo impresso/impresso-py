@@ -7,6 +7,7 @@ class EntityDetailsType(str, Enum):
     NEWSAGENCY = "newsagency"
     ORGANISATION = "organisation"
     PERSON = "person"
+    RADIOSTATION = "radiostation"
 
     def __str__(self) -> str:
         return str(self.value)
@@ -17,4 +18,5 @@ EntityDetailsTypeLiteral = Literal[
     "newsagency",
     "organisation",
     "person",
+    "radiostation",
 ]
