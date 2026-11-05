@@ -33,7 +33,7 @@ from impresso.api_models import ContentItem, BaseFind, Filter, Q, SearchFacetBuc
 from impresso.data_container import DataContainer, iterate_pages
 from impresso.resources.base import DEFAULT_PAGE_SIZE, Resource
 from impresso.resources.tools import Embedding
-from impresso.structures import AND, OR, DateRange
+from impresso.structures import AND, OR, DateRange, NumericRange
 from impresso.util.error import raise_for_error
 from impresso.util.filters import and_or_filter, filters_as_protobuf
 from impresso.util.py import get_enum_from_literal
@@ -188,6 +188,7 @@ class SearchResource(Resource):
         ) = None,
         include_embeddings: bool = False,
         include_transcript: bool = False,
+        ocr_quality: NumericRange | None = None,
     ) -> SearchDataContainer:
         """Search for content items in Impresso.
 
@@ -213,6 +214,8 @@ class SearchResource(Resource):
                 (e.g., 'ch', 'de', 'lu').
             partner_id: Filter by partner institution ID(s).
             text_reuse_cluster_id: Filter by text reuse cluster ID(s).
+            ocr_quality: OCR quality range from 0 to 1, e.g. NumericRange(0.8, 1).
+                Use ~NumericRange(0.8, 1) to exclude a range.
             embedding: Text embedding for similarity search. Use `tools.embed_text()` to generate
                 embeddings from text.
             copyright: Filter by copyright status.
@@ -240,6 +243,7 @@ class SearchResource(Resource):
             country=country,
             partner_id=partner_id,
             text_reuse_cluster_id=text_reuse_cluster_id,
+            ocr_quality=ocr_quality,
             embedding=embedding_with_limit,
             copyright=copyright,
             issue_id=issue_id,
@@ -282,6 +286,7 @@ class SearchResource(Resource):
                 "country": country,
                 "partner_id": partner_id,
                 "text_reuse_cluster_id": text_reuse_cluster_id,
+                "ocr_quality": ocr_quality,
                 "embedding": embedding_with_limit,
                 "include_transcript": include_transcript,
                 "include_embeddings": include_embeddings,
@@ -316,6 +321,7 @@ class SearchResource(Resource):
         country: str | AND[str] | OR[str] | None = None,
         partner_id: str | AND[str] | OR[str] | None = None,
         text_reuse_cluster_id: str | AND[str] | OR[str] | None = None,
+        ocr_quality: NumericRange | None = None,
     ) -> FacetDataContainer:
         """Get facets for a search query.
 
@@ -344,6 +350,8 @@ class SearchResource(Resource):
                 (e.g., 'ch', 'de', 'lu').
             partner_id: Filter by partner institution ID(s).
             text_reuse_cluster_id: Filter by text reuse cluster ID(s).
+            ocr_quality: OCR quality range from 0 to 1, e.g. NumericRange(0.8, 1).
+                Use ~NumericRange(0.8, 1) to exclude a range.
 
         Returns:
             FacetDataContainer: Data container with facet results, including counts for each bucket.
@@ -375,6 +383,7 @@ class SearchResource(Resource):
             country=country,
             partner_id=partner_id,
             text_reuse_cluster_id=text_reuse_cluster_id,
+            ocr_quality=ocr_quality,
         )
 
         filters_pb = filters_as_protobuf(filters or [])
@@ -413,6 +422,7 @@ class SearchResource(Resource):
                 "country": country,
                 "partner_id": partner_id,
                 "text_reuse_cluster_id": text_reuse_cluster_id,
+                "ocr_quality": ocr_quality,
             },
             web_app_search_result_url=_build_web_app_facet_url(
                 f"{self._get_web_app_base_url()}/search",
@@ -460,6 +470,7 @@ class SearchResource(Resource):
             | OR[ContentItemCopyrightStatusLiteral]
             | None
         ) = None,
+        ocr_quality: NumericRange | None = None,
     ) -> list[Filter]:
         filters: list[Filter] = []
         if string:
@@ -504,6 +515,17 @@ class SearchResource(Resource):
             filters.extend(and_or_filter(str(copyright), "copyright"))
         if issue_id is not None:
             filters.extend(and_or_filter(issue_id, "issue"))
+
+        if ocr_quality is not None:
+            filters.append(
+                Filter(
+                    type="ocr_quality",
+                    q=Q(NumericRange._as_filter_value(ocr_quality)),
+                    context="exclude" if ocr_quality.inverted else "include",
+                    daterange=None,
+                    uids=None,
+                )
+            )
 
         return filters
 

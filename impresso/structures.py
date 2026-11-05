@@ -190,7 +190,7 @@ class NumericRange:
 
     """
 
-    def __init__(self, start: int, end: int):
+    def __init__(self, start: int | float, end: int | float):
         self.start = start
         self.end = end
         self.inverted = False

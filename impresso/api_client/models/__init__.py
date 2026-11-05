@@ -198,6 +198,7 @@ from .image_media_source_ref import ImageMediaSourceRef
 from .image_media_source_ref_type import ImageMediaSourceRefType
 from .impresso_embedding_response import ImpressoEmbeddingResponse
 from .impresso_image_embedding_request import ImpressoImageEmbeddingRequest
+from .impresso_image_embedding_request_model import ImpressoImageEmbeddingRequestModel
 from .impresso_image_embedding_request_search_target import ImpressoImageEmbeddingRequestSearchTarget
 from .impresso_named_entity_recognition_entity import ImpressoNamedEntityRecognitionEntity
 from .impresso_named_entity_recognition_entity_confidence import ImpressoNamedEntityRecognitionEntityConfidence
@@ -208,6 +209,7 @@ from .impresso_named_entity_recognition_request import ImpressoNamedEntityRecogn
 from .impresso_named_entity_recognition_request_method import ImpressoNamedEntityRecognitionRequestMethod
 from .impresso_named_entity_recognition_response import ImpressoNamedEntityRecognitionResponse
 from .impresso_text_embedding_request import ImpressoTextEmbeddingRequest
+from .impresso_text_embedding_request_model import ImpressoTextEmbeddingRequestModel
 from .impresso_text_embedding_request_search_target import ImpressoTextEmbeddingRequestSearchTarget
 from .interact_with_experiment_body import InteractWithExperimentBody
 from .media_source import MediaSource
@@ -441,6 +443,7 @@ __all__ = (
     "ImageMediaSourceRefType",
     "ImpressoEmbeddingResponse",
     "ImpressoImageEmbeddingRequest",
+    "ImpressoImageEmbeddingRequestModel",
     "ImpressoImageEmbeddingRequestSearchTarget",
     "ImpressoNamedEntityRecognitionEntity",
     "ImpressoNamedEntityRecognitionEntityConfidence",
@@ -451,6 +454,7 @@ __all__ = (
     "ImpressoNamedEntityRecognitionRequestMethod",
     "ImpressoNamedEntityRecognitionResponse",
     "ImpressoTextEmbeddingRequest",
+    "ImpressoTextEmbeddingRequestModel",
     "ImpressoTextEmbeddingRequestSearchTarget",
     "InteractWithExperimentBody",
     "MediaSource",

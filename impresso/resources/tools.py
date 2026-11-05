@@ -17,6 +17,10 @@ from impresso.api_client.models.impresso_embedding_response import (
 from impresso.api_client.models.impresso_image_embedding_request import (
     ImpressoImageEmbeddingRequest,
 )
+from impresso.api_client.models.impresso_image_embedding_request_model import (
+    ImpressoImageEmbeddingRequestModel,
+    ImpressoImageEmbeddingRequestModelLiteral,
+)
 from impresso.api_client.models.impresso_image_embedding_request_search_target import (
     ImpressoImageEmbeddingRequestSearchTarget,
     ImpressoImageEmbeddingRequestSearchTargetLiteral,
@@ -29,6 +33,10 @@ from impresso.api_client.models.impresso_named_entity_recognition_request_method
 )
 from impresso.api_client.models.impresso_text_embedding_request import (
     ImpressoTextEmbeddingRequest,
+)
+from impresso.api_client.models.impresso_text_embedding_request_model import (
+    ImpressoTextEmbeddingRequestModel,
+    ImpressoTextEmbeddingRequestModelLiteral,
 )
 from impresso.api_client.models.impresso_text_embedding_request_search_target import (
     ImpressoTextEmbeddingRequestSearchTarget,
@@ -207,13 +215,16 @@ class ToolsResource(Resource):
         self,
         image: bytes | Base64Str | str,
         target: ImpressoImageEmbeddingRequestSearchTargetLiteral,
+        model: ImpressoImageEmbeddingRequestModelLiteral | None = None,
     ) -> Embedding:
         """Embed an image into a vector space.
 
         Args:
             image: Image to embed. Can be raw bytes, a base64-encoded string, a URL of an image,
                 or a path to a file.
-            target: Target collection to embed the image into. Currently, only "image" is supported.
+            target: Target collection to embed the image into.
+            model: Embedding model compatible with the target. Uses the server default
+                for that target when omitted.
 
         Returns:
             Embedding: The image embedding as a base64 string prefixed with model tag.
@@ -238,9 +249,14 @@ class ToolsResource(Resource):
         if search_target == UNSET:
             raise ValueError(f"Invalid search target: {target}")
 
+        embedding_model = get_enum_from_literal(
+            model if model is not None else UNSET, ImpressoImageEmbeddingRequestModel
+        )
+
         result = perform_image_embedding.sync(
             client=self._api_client,
             body=ImpressoImageEmbeddingRequest(
+                model=embedding_model,
                 bytes_=image_as_base64,
                 search_target=cast(
                     ImpressoImageEmbeddingRequestSearchTarget, search_target
@@ -256,12 +272,15 @@ class ToolsResource(Resource):
         self,
         text: str,
         target: ImpressoTextEmbeddingRequestSearchTargetLiteral,
+        model: ImpressoTextEmbeddingRequestModelLiteral | None = None,
     ) -> Embedding:
         """Embed text into a vector space.
 
         Args:
             text: Text to embed.
             target: Target collection to embed the text into.
+            model: Embedding model compatible with the target. Uses the server default
+                for that target when omitted.
 
         Returns:
             Embedding: The text embedding as a base64 string prefixed with model tag.
@@ -273,9 +292,14 @@ class ToolsResource(Resource):
         if search_target == UNSET:
             raise ValueError(f"Invalid search target: {target}")
 
+        embedding_model = get_enum_from_literal(
+            model if model is not None else UNSET, ImpressoTextEmbeddingRequestModel
+        )
+
         result = perform_text_embedding.sync(
             client=self._api_client,
             body=ImpressoTextEmbeddingRequest(
+                model=embedding_model,
                 text=text,
                 search_target=cast(
                     ImpressoTextEmbeddingRequestSearchTarget, search_target

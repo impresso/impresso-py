@@ -916,6 +916,13 @@ class ImpressoImageEmbeddingRequest(BaseModel):
         Literal['image', 'multimodal'],
         Field(description='Which embedding space the embedding is going to be used in'),
     ]
+    model: Annotated[
+        Optional[Literal['dinov2-1024', 'openclip-768', 'siglip2-768']],
+        Field(
+            None,
+            description='Embedding model to use. Must be compatible with `searchTarget`: `image` supports `dinov2-1024` (default); `multimodal` supports `openclip-768` (default) and `siglip2-768`. When not provided, the default model for the `searchTarget` is used.',
+        ),
+    ]
     bytes: Annotated[
         str,
         Field(
@@ -952,6 +959,13 @@ class ImpressoTextEmbeddingRequest(BaseModel):
     searchTarget: Annotated[
         Literal['multimodal', 'text'],
         Field(description='Which embedding space the embedding is going to be used in'),
+    ]
+    model: Annotated[
+        Optional[Literal['openclip-768', 'siglip2-768', 'gte-768', 'gte-256']],
+        Field(
+            None,
+            description='Embedding model to use. Must be compatible with `searchTarget`: `multimodal` supports `openclip-768` (default) and `siglip2-768`; `text` supports only the text embedding model configured on the server (default). When not provided, the default model for the `searchTarget` is used.',
+        ),
     ]
     text: Annotated[str, Field(description='Text to be embedded', max_length=8000)]
 
