@@ -9,7 +9,7 @@ from ..models.media_source_type import MediaSourceType
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
-    from ..models.media_source_properties_item import MediaSourcePropertiesItem
+    from ..models.media_source_media_source_property import MediaSourceMediaSourceProperty
     from ..models.media_source_totals import MediaSourceTotals
 
 
@@ -30,9 +30,9 @@ class MediaSource:
         published_period_years (Union[Unset, List[int]]): The range of years this media source has been published for.
             Impresso may not have data for all this period. Is not defined if there is no information.
         available_dates_range (Union[Unset, List[datetime.datetime]]): The range of dates this media source has content
-            items for. This represents the earliest and the latest dates of the contet items.  Is not defined if there are
+            items for. This represents the earliest and the latest dates of the content items.  Is not defined if there are
             no content items for this source.
-        properties (Union[Unset, List['MediaSourcePropertiesItem']]):
+        properties (Union[Unset, List['MediaSourceMediaSourceProperty']]):
     """
 
     id: str
@@ -43,7 +43,7 @@ class MediaSource:
     totals: "MediaSourceTotals"
     published_period_years: Union[Unset, List[int]] = UNSET
     available_dates_range: Union[Unset, List[datetime.datetime]] = UNSET
-    properties: Union[Unset, List["MediaSourcePropertiesItem"]] = UNSET
+    properties: Union[Unset, List["MediaSourceMediaSourceProperty"]] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
         id = self.id
@@ -98,7 +98,7 @@ class MediaSource:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
-        from ..models.media_source_properties_item import MediaSourcePropertiesItem
+        from ..models.media_source_media_source_property import MediaSourceMediaSourceProperty
         from ..models.media_source_totals import MediaSourceTotals
 
         d = src_dict.copy()
@@ -126,7 +126,7 @@ class MediaSource:
         properties = []
         _properties = d.pop("properties", UNSET)
         for properties_item_data in _properties or []:
-            properties_item = MediaSourcePropertiesItem.from_dict(properties_item_data)
+            properties_item = MediaSourceMediaSourceProperty.from_dict(properties_item_data)
 
             properties.append(properties_item)
 

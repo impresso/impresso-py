@@ -9,7 +9,7 @@ T = TypeVar("T", bound="ContentItemAudioLocator")
 
 @_attrs_define
 class ContentItemAudioLocator:
-    """Content item audio locator. Links location of a segement in text with location in audio.
+    """Content item audio locator. Links location of a segment in text with location in audio.
 
     Attributes:
         time_code (Union[Unset, List[float]]): Represents the start offset and the length of the audio segment in

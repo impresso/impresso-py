@@ -19,9 +19,8 @@ class ContentItemMeta:
         source_type (ContentItemMetaSourceType): Type of the media source.
         source_medium (ContentItemMetaSourceMedium): Medium of the source (audio for audio radio broadcasts, print for
             newspapers, typescript for digitised radio bulletin typescripts).
+        media_id (str): Media title alias. Usually a 3 letter code of the media title (newspaper, radio station, etc.).
         date (datetime.datetime): Full date and time in ISO 8601 format
-        media_id (Union[Unset, str]): Media title alias. Usually a 3 letter code of the media title (newspaper, radio
-            station, etc.).
         media_title (Union[Unset, str]): Human-readable title of the media source identified by mediaId.
         partner_id (Union[Unset, str]): Identifier of the partner providing the content item.
         partner_title (Union[Unset, str]): Human-readable title of the partner identified by partnerId.
@@ -31,8 +30,8 @@ class ContentItemMeta:
 
     source_type: ContentItemMetaSourceType
     source_medium: ContentItemMetaSourceMedium
+    media_id: str
     date: datetime.datetime
-    media_id: Union[Unset, str] = UNSET
     media_title: Union[Unset, str] = UNSET
     partner_id: Union[Unset, str] = UNSET
     partner_title: Union[Unset, str] = UNSET
@@ -44,9 +43,9 @@ class ContentItemMeta:
 
         source_medium = self.source_medium.value
 
-        date = self.date.isoformat()
-
         media_id = self.media_id
+
+        date = self.date.isoformat()
 
         media_title = self.media_title
 
@@ -63,11 +62,10 @@ class ContentItemMeta:
             {
                 "sourceType": source_type,
                 "sourceMedium": source_medium,
+                "mediaId": media_id,
                 "date": date,
             }
         )
-        if media_id is not UNSET:
-            field_dict["mediaId"] = media_id
         if media_title is not UNSET:
             field_dict["mediaTitle"] = media_title
         if partner_id is not UNSET:
@@ -88,9 +86,9 @@ class ContentItemMeta:
 
         source_medium = ContentItemMetaSourceMedium(d.pop("sourceMedium"))
 
-        date = isoparse(d.pop("date"))
+        media_id = d.pop("mediaId")
 
-        media_id = d.pop("mediaId", UNSET)
+        date = isoparse(d.pop("date"))
 
         media_title = d.pop("mediaTitle", UNSET)
 
@@ -105,8 +103,8 @@ class ContentItemMeta:
         content_item_meta = cls(
             source_type=source_type,
             source_medium=source_medium,
-            date=date,
             media_id=media_id,
+            date=date,
             media_title=media_title,
             partner_id=partner_id,
             partner_title=partner_title,

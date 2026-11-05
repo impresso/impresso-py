@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar
 from attrs import define as _attrs_define
 
 if TYPE_CHECKING:
+    from ..models.find_text_reuse_clusters_response_info import FindTextReuseClustersResponseInfo
     from ..models.find_text_reuse_clusters_response_text_reuse_cluster_compound import (
         FindTextReuseClustersResponseTextReuseClusterCompound,
     )
@@ -17,11 +18,11 @@ class FindTextReuseClustersResponse:
 
     Attributes:
         clusters (List['FindTextReuseClustersResponseTextReuseClusterCompound']):
-        info (Any):
+        info (FindTextReuseClustersResponseInfo):
     """
 
     clusters: List["FindTextReuseClustersResponseTextReuseClusterCompound"]
-    info: Any
+    info: "FindTextReuseClustersResponseInfo"
 
     def to_dict(self) -> Dict[str, Any]:
         clusters = []
@@ -29,7 +30,7 @@ class FindTextReuseClustersResponse:
             clusters_item = clusters_item_data.to_dict()
             clusters.append(clusters_item)
 
-        info = self.info
+        info = self.info.to_dict()
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(
@@ -43,6 +44,7 @@ class FindTextReuseClustersResponse:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
+        from ..models.find_text_reuse_clusters_response_info import FindTextReuseClustersResponseInfo
         from ..models.find_text_reuse_clusters_response_text_reuse_cluster_compound import (
             FindTextReuseClustersResponseTextReuseClusterCompound,
         )
@@ -55,7 +57,7 @@ class FindTextReuseClustersResponse:
 
             clusters.append(clusters_item)
 
-        info = d.pop("info")
+        info = FindTextReuseClustersResponseInfo.from_dict(d.pop("info"))
 
         find_text_reuse_clusters_response = cls(
             clusters=clusters,

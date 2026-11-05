@@ -20,12 +20,14 @@ class ContentItemSemanticEnrichmentsMentions:
         locations (Union[Unset, List['ContentItemMention']]):
         organisations (Union[Unset, List['ContentItemMention']]):
         newsagencies (Union[Unset, List['ContentItemMention']]):
+        radiostations (Union[Unset, List['ContentItemMention']]):
     """
 
     persons: Union[Unset, List["ContentItemMention"]] = UNSET
     locations: Union[Unset, List["ContentItemMention"]] = UNSET
     organisations: Union[Unset, List["ContentItemMention"]] = UNSET
     newsagencies: Union[Unset, List["ContentItemMention"]] = UNSET
+    radiostations: Union[Unset, List["ContentItemMention"]] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
         persons: Union[Unset, List[Dict[str, Any]]] = UNSET
@@ -56,6 +58,13 @@ class ContentItemSemanticEnrichmentsMentions:
                 newsagencies_item = newsagencies_item_data.to_dict()
                 newsagencies.append(newsagencies_item)
 
+        radiostations: Union[Unset, List[Dict[str, Any]]] = UNSET
+        if not isinstance(self.radiostations, Unset):
+            radiostations = []
+            for radiostations_item_data in self.radiostations:
+                radiostations_item = radiostations_item_data.to_dict()
+                radiostations.append(radiostations_item)
+
         field_dict: Dict[str, Any] = {}
         field_dict.update({})
         if persons is not UNSET:
@@ -66,6 +75,8 @@ class ContentItemSemanticEnrichmentsMentions:
             field_dict["organisations"] = organisations
         if newsagencies is not UNSET:
             field_dict["newsagencies"] = newsagencies
+        if radiostations is not UNSET:
+            field_dict["radiostations"] = radiostations
 
         return field_dict
 
@@ -102,11 +113,19 @@ class ContentItemSemanticEnrichmentsMentions:
 
             newsagencies.append(newsagencies_item)
 
+        radiostations = []
+        _radiostations = d.pop("radiostations", UNSET)
+        for radiostations_item_data in _radiostations or []:
+            radiostations_item = ContentItemMention.from_dict(radiostations_item_data)
+
+            radiostations.append(radiostations_item)
+
         content_item_semantic_enrichments_mentions = cls(
             persons=persons,
             locations=locations,
             organisations=organisations,
             newsagencies=newsagencies,
+            radiostations=radiostations,
         )
 
         return content_item_semantic_enrichments_mentions

@@ -6,6 +6,7 @@ from ..models.entity_details_type import EntityDetailsType
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
+    from ..models.wikidata_item import WikidataItem
     from ..models.wikidata_location import WikidataLocation
     from ..models.wikidata_person import WikidataPerson
 
@@ -15,7 +16,7 @@ T = TypeVar("T", bound="EntityDetails")
 
 @_attrs_define
 class EntityDetails:
-    """An entity: location or person.
+    """An entity: location or person or item.
 
     Attributes:
         id (str): Unique identifier of the entity
@@ -24,7 +25,7 @@ class EntityDetails:
         wikidata_id (Union[Unset, str]): Wikidata identifier of the entity.
         total_mentions (Union[Unset, int]): Total number of mentions of the entity.
         total_content_items (Union[Unset, int]): Total number of content items the entity is mentioned in.
-        wikidata_details (Union['WikidataLocation', 'WikidataPerson', Unset]):
+        wikidata_details (Union['WikidataItem', 'WikidataLocation', 'WikidataPerson', Unset]):
     """
 
     id: str
@@ -33,9 +34,10 @@ class EntityDetails:
     wikidata_id: Union[Unset, str] = UNSET
     total_mentions: Union[Unset, int] = UNSET
     total_content_items: Union[Unset, int] = UNSET
-    wikidata_details: Union["WikidataLocation", "WikidataPerson", Unset] = UNSET
+    wikidata_details: Union["WikidataItem", "WikidataLocation", "WikidataPerson", Unset] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
+        from ..models.wikidata_location import WikidataLocation
         from ..models.wikidata_person import WikidataPerson
 
         id = self.id
@@ -56,6 +58,8 @@ class EntityDetails:
         if isinstance(self.wikidata_details, Unset):
             wikidata_details = UNSET
         elif isinstance(self.wikidata_details, WikidataPerson):
+            wikidata_details = self.wikidata_details.to_dict()
+        elif isinstance(self.wikidata_details, WikidataLocation):
             wikidata_details = self.wikidata_details.to_dict()
         else:
             wikidata_details = self.wikidata_details.to_dict()
@@ -83,6 +87,7 @@ class EntityDetails:
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
+        from ..models.wikidata_item import WikidataItem
         from ..models.wikidata_location import WikidataLocation
         from ..models.wikidata_person import WikidataPerson
 
@@ -104,7 +109,7 @@ class EntityDetails:
 
         total_content_items = d.pop("totalContentItems", UNSET)
 
-        def _parse_wikidata_details(data: object) -> Union["WikidataLocation", "WikidataPerson", Unset]:
+        def _parse_wikidata_details(data: object) -> Union["WikidataItem", "WikidataLocation", "WikidataPerson", Unset]:
             if isinstance(data, Unset):
                 return data
             try:
@@ -115,11 +120,19 @@ class EntityDetails:
                 return wikidata_details_type_0
             except:  # noqa: E722
                 pass
+            try:
+                if not isinstance(data, dict):
+                    raise TypeError()
+                wikidata_details_type_1 = WikidataLocation.from_dict(data)
+
+                return wikidata_details_type_1
+            except:  # noqa: E722
+                pass
             if not isinstance(data, dict):
                 raise TypeError()
-            wikidata_details_type_1 = WikidataLocation.from_dict(data)
+            wikidata_details_type_2 = WikidataItem.from_dict(data)
 
-            return wikidata_details_type_1
+            return wikidata_details_type_2
 
         wikidata_details = _parse_wikidata_details(d.pop("wikidataDetails", UNSET))
 

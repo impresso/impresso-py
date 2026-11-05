@@ -7,6 +7,7 @@ from dateutil.parser import isoparse
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
+    from ..models.content_item_access_rights import ContentItemAccessRights
     from ..models.image_image_types import ImageImageTypes
     from ..models.image_media_source_ref import ImageMediaSourceRef
 
@@ -30,6 +31,7 @@ class Image:
         image_types (Union[Unset, ImageImageTypes]):
         embeddings (Union[Unset, List[str]]): Precomputed embeddings for the image in the format:
             <model_type>:<base64_embedding_vector>.
+        access (Union[Unset, ContentItemAccessRights]): Access rights information
     """
 
     id: str
@@ -42,6 +44,7 @@ class Image:
     page_numbers: Union[Unset, List[int]] = UNSET
     image_types: Union[Unset, "ImageImageTypes"] = UNSET
     embeddings: Union[Unset, List[str]] = UNSET
+    access: Union[Unset, "ContentItemAccessRights"] = UNSET
 
     def to_dict(self) -> Dict[str, Any]:
         id = self.id
@@ -70,6 +73,10 @@ class Image:
         if not isinstance(self.embeddings, Unset):
             embeddings = self.embeddings
 
+        access: Union[Unset, Dict[str, Any]] = UNSET
+        if not isinstance(self.access, Unset):
+            access = self.access.to_dict()
+
         field_dict: Dict[str, Any] = {}
         field_dict.update(
             {
@@ -90,11 +97,14 @@ class Image:
             field_dict["imageTypes"] = image_types
         if embeddings is not UNSET:
             field_dict["embeddings"] = embeddings
+        if access is not UNSET:
+            field_dict["access"] = access
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
+        from ..models.content_item_access_rights import ContentItemAccessRights
         from ..models.image_image_types import ImageImageTypes
         from ..models.image_media_source_ref import ImageMediaSourceRef
 
@@ -124,6 +134,13 @@ class Image:
 
         embeddings = cast(List[str], d.pop("embeddings", UNSET))
 
+        _access = d.pop("access", UNSET)
+        access: Union[Unset, ContentItemAccessRights]
+        if isinstance(_access, Unset):
+            access = UNSET
+        else:
+            access = ContentItemAccessRights.from_dict(_access)
+
         image = cls(
             id=id,
             issue_id=issue_id,
@@ -135,6 +152,7 @@ class Image:
             page_numbers=page_numbers,
             image_types=image_types,
             embeddings=embeddings,
+            access=access,
         )
 
         return image

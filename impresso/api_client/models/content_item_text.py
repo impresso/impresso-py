@@ -2,8 +2,21 @@ from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
 
 from attrs import define as _attrs_define
 
+from ..models.content_item_text_advertisement import ContentItemTextAdvertisement
+from ..models.content_item_text_article import ContentItemTextArticle
+from ..models.content_item_text_chapter import ContentItemTextChapter
+from ..models.content_item_text_chronicle import ContentItemTextChronicle
+from ..models.content_item_text_discussion import ContentItemTextDiscussion
 from ..models.content_item_text_document_type import ContentItemTextDocumentType
-from ..models.content_item_text_item_type import ContentItemTextItemType
+from ..models.content_item_text_entertainment import ContentItemTextEntertainment
+from ..models.content_item_text_image import ContentItemTextImage
+from ..models.content_item_text_no_type_provided import ContentItemTextNoTypeProvided
+from ..models.content_item_text_obituary import ContentItemTextObituary
+from ..models.content_item_text_page import ContentItemTextPage
+from ..models.content_item_text_radio_broadcast_episode import ContentItemTextRadioBroadcastEpisode
+from ..models.content_item_text_radio_bulletin import ContentItemTextRadioBulletin
+from ..models.content_item_text_table import ContentItemTextTable
+from ..models.content_item_text_weather import ContentItemTextWeather
 from ..types import UNSET, Unset
 
 if TYPE_CHECKING:
@@ -20,7 +33,11 @@ class ContentItemText:
     Attributes:
         document_type (Union[Unset, ContentItemTextDocumentType]): Type of document, e.g., page (p) or content item
             (ci).
-        item_type (Union[Unset, ContentItemTextItemType]): Type of content item, e.g., article, section.
+        item_type (Union[ContentItemTextAdvertisement, ContentItemTextArticle, ContentItemTextChapter,
+            ContentItemTextChronicle, ContentItemTextDiscussion, ContentItemTextEntertainment, ContentItemTextImage,
+            ContentItemTextNoTypeProvided, ContentItemTextObituary, ContentItemTextPage,
+            ContentItemTextRadioBroadcastEpisode, ContentItemTextRadioBulletin, ContentItemTextTable,
+            ContentItemTextWeather, Unset]): Type of content item.
         item_type_label (Union[Unset, str]): Human-readable label for the itemType code.
         original_lang_code (Union[Unset, str]): Original language of the content item.
         lang_code (Union[Unset, str]): Computed language of the content item.
@@ -32,7 +49,23 @@ class ContentItemText:
     """
 
     document_type: Union[Unset, ContentItemTextDocumentType] = UNSET
-    item_type: Union[Unset, ContentItemTextItemType] = UNSET
+    item_type: Union[
+        ContentItemTextAdvertisement,
+        ContentItemTextArticle,
+        ContentItemTextChapter,
+        ContentItemTextChronicle,
+        ContentItemTextDiscussion,
+        ContentItemTextEntertainment,
+        ContentItemTextImage,
+        ContentItemTextNoTypeProvided,
+        ContentItemTextObituary,
+        ContentItemTextPage,
+        ContentItemTextRadioBroadcastEpisode,
+        ContentItemTextRadioBulletin,
+        ContentItemTextTable,
+        ContentItemTextWeather,
+        Unset,
+    ] = UNSET
     item_type_label: Union[Unset, str] = UNSET
     original_lang_code: Union[Unset, str] = UNSET
     lang_code: Union[Unset, str] = UNSET
@@ -47,8 +80,36 @@ class ContentItemText:
         if not isinstance(self.document_type, Unset):
             document_type = self.document_type.value
 
-        item_type: Union[Unset, str] = UNSET
-        if not isinstance(self.item_type, Unset):
+        item_type: Union[Unset, str]
+        if isinstance(self.item_type, Unset):
+            item_type = UNSET
+        elif isinstance(self.item_type, ContentItemTextPage):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextArticle):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextAdvertisement):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextImage):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextTable):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextObituary):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextWeather):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextChronicle):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextRadioBulletin):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextRadioBroadcastEpisode):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextNoTypeProvided):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextDiscussion):
+            item_type = self.item_type.value
+        elif isinstance(self.item_type, ContentItemTextEntertainment):
+            item_type = self.item_type.value
+        else:
             item_type = self.item_type.value
 
         item_type_label = self.item_type_label
@@ -109,12 +170,138 @@ class ContentItemText:
         else:
             document_type = ContentItemTextDocumentType(_document_type)
 
-        _item_type = d.pop("itemType", UNSET)
-        item_type: Union[Unset, ContentItemTextItemType]
-        if isinstance(_item_type, Unset):
-            item_type = UNSET
-        else:
-            item_type = ContentItemTextItemType(_item_type)
+        def _parse_item_type(
+            data: object,
+        ) -> Union[
+            ContentItemTextAdvertisement,
+            ContentItemTextArticle,
+            ContentItemTextChapter,
+            ContentItemTextChronicle,
+            ContentItemTextDiscussion,
+            ContentItemTextEntertainment,
+            ContentItemTextImage,
+            ContentItemTextNoTypeProvided,
+            ContentItemTextObituary,
+            ContentItemTextPage,
+            ContentItemTextRadioBroadcastEpisode,
+            ContentItemTextRadioBulletin,
+            ContentItemTextTable,
+            ContentItemTextWeather,
+            Unset,
+        ]:
+            if isinstance(data, Unset):
+                return data
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_0 = ContentItemTextPage(data)
+
+                return item_type_type_0
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_1 = ContentItemTextArticle(data)
+
+                return item_type_type_1
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_2 = ContentItemTextAdvertisement(data)
+
+                return item_type_type_2
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_3 = ContentItemTextImage(data)
+
+                return item_type_type_3
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_4 = ContentItemTextTable(data)
+
+                return item_type_type_4
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_5 = ContentItemTextObituary(data)
+
+                return item_type_type_5
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_6 = ContentItemTextWeather(data)
+
+                return item_type_type_6
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_7 = ContentItemTextChronicle(data)
+
+                return item_type_type_7
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_8 = ContentItemTextRadioBulletin(data)
+
+                return item_type_type_8
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_9 = ContentItemTextRadioBroadcastEpisode(data)
+
+                return item_type_type_9
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_10 = ContentItemTextNoTypeProvided(data)
+
+                return item_type_type_10
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_11 = ContentItemTextDiscussion(data)
+
+                return item_type_type_11
+            except:  # noqa: E722
+                pass
+            try:
+                if not isinstance(data, str):
+                    raise TypeError()
+                item_type_type_12 = ContentItemTextEntertainment(data)
+
+                return item_type_type_12
+            except:  # noqa: E722
+                pass
+            if not isinstance(data, str):
+                raise TypeError()
+            item_type_type_13 = ContentItemTextChapter(data)
+
+            return item_type_type_13
+
+        item_type = _parse_item_type(d.pop("itemType", UNSET))
 
         item_type_label = d.pop("itemTypeLabel", UNSET)
 

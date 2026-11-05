@@ -9,6 +9,7 @@ class GetTrPassagesFacetId(str, Enum):
     DATERANGE = "daterange"
     LANGUAGE = "language"
     LOCATION = "location"
+    MEDIASOURCE = "mediaSource"
     NAG = "nag"
     NEWSPAPER = "newspaper"
     ORGANISATION = "organisation"
@@ -32,6 +33,7 @@ GetTrPassagesFacetIdLiteral = Literal[
     "daterange",
     "language",
     "location",
+    "mediaSource",
     "nag",
     "newspaper",
     "organisation",
